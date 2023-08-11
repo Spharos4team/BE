@@ -18,15 +18,13 @@ public class UserEventList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false,columnDefinition = "int default 0")
+    @Column(nullable = false, columnDefinition = "int default 0")
     private Integer status;
-
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Event event;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
-
 
 }
