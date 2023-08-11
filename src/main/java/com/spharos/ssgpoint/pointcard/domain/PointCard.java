@@ -17,15 +17,17 @@ public class PointCard {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false,length = 45)
+    @Column(nullable = false, length = 45)
     private String name;
-    @Column(nullable = false,length = 100)
+
+    @Column(nullable = false, length = 100)
     private String number;
-    @Column(nullable = false,length = 20)
+
+    @Column(nullable = false, length = 20)
     private String agency;
+
     @Column(nullable = false)
     @Convert(converter = PointCardType.class)
     private PointCardType type;
-
 
 }

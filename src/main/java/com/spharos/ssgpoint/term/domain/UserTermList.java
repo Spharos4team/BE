@@ -13,11 +13,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserTermList {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false,columnDefinition = "int default 0")
+    @Column(nullable = false, columnDefinition = "int default 0")
     private Integer agreed;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -25,4 +26,5 @@ public class UserTermList {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Term term;
+
 }
