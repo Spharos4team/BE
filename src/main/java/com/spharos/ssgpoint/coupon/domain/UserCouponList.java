@@ -18,7 +18,7 @@ public class UserCouponList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false,columnDefinition = "int default 0")
+    @Column(nullable = false, columnDefinition = "int default 0")
     private Integer used;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -26,6 +26,5 @@ public class UserCouponList {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Coupon coupon;
-
 
 }

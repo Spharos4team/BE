@@ -13,34 +13,43 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class User {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true ,length = 100,nullable = false)
+    @Column(unique = true, length = 100, nullable = false)
     private String UUID;
-    @Column(length = 45,nullable = false)
+
+    @Column(length = 45, nullable = false)
     private String loginId;
-    @Column(length = 100,nullable = false)
+
+    @Column(length = 100, nullable = false)
     private String userName;
-    @Column(length = 100,nullable = false)
+
+    @Column(length = 100, nullable = false)
     private String password;
-    @Column(length =20,nullable = false)
+
+    @Column(length = 20, nullable = false)
     private String phone;
+
     @Column(length = 100)
     private String homeAddress;
+
     @Column(length = 100)
     private String officeAddress;
-    @Column(length = 45 ,nullable = false)
+
+    @Column(length = 45, nullable = false)
     private String email;
 
     //private String role;
 
-    @Column(length = 1 ,nullable = false,columnDefinition = "int default 1")
+    @Column(length = 1, nullable = false, columnDefinition = "int default 1")
     private Integer status;
-    @Column(length = 100 )
-    private String pointPassword;
-    @Column(length = 500 )
-    private String barCode;
 
+    @Column(length = 100)
+    private String pointPassword;
+
+    @Column(length = 500)
+    private String barCode;
 
 }
