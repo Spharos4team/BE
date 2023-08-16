@@ -17,7 +17,7 @@ public class PointCardConverter implements AttributeConverter<PointCardType, Str
         return EnumSet.allOf(PointCardType.class).stream()
                 .filter(c -> c.getCode().equals(dbData))
                 .findFirst()
-                .orElseThrow(() -> new NoSuchElementException("존재하지않는 포인트카드입니다."));
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 포인트 카드입니다."));
     }
 
 }
