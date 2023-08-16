@@ -36,4 +36,5 @@ public class Point {
     @ManyToOne(fetch = FetchType.LAZY)
     private PointCard pointCard;
 
+
 }

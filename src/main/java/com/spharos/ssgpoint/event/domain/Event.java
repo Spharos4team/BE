@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import java.util.Date;
 
 @Entity
 @Getter
@@ -26,7 +27,12 @@ public class Event {
     @Column(nullable = false)
     private String content;
 
-    @Column(nullable = false, columnDefinition = "int default 1")
+    @Column(nullable = false, columnDefinition = "int default 0")
     private Integer type;
 
+    @Column(nullable = false)
+    private Date startDate;
+
+    @Column(nullable = false)
+    private Date endDate;
 }
