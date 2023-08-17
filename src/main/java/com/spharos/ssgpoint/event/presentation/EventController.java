@@ -38,6 +38,6 @@ public class EventController {
     @PostMapping
     public ResponseEntity<Event> uploadEvent(@RequestParam("image") MultipartFile image, @RequestParam String title, @RequestParam String content, @RequestParam LocalDateTime startDate, @RequestParam LocalDateTime endDate, @RequestParam String relatedLink) {
         Event event = eventService.uploadEvent(title, content, startDate, endDate, relatedLink, image);
-        return ResponseEntity.ok(event);
+        return ResponseEntity.ok(event); // 200 OK
     }
 }

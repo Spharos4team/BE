@@ -31,18 +31,19 @@ public class Event {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    private Type type;
+    private Type type; // 이벤트 타입
 
     @Column(nullable = false)
-    private LocalDateTime startDate;
+    private LocalDateTime startDate; // 이벤트 시작일
 
     @Column(nullable = false)
-    private LocalDateTime endDate;
+    private LocalDateTime endDate; // 이벤트 종료일
 
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UserEvent> userEventLists;
+    private List<UserEvent> userEventLists; // 이벤트 참여자 목록
+
 
     public enum Type {
-        ONGOING, CLOSED, WINNER
+        ONGOING, CLOSED, WINNER  // 진행중, 종료, 당첨자 발표
     }
 }
