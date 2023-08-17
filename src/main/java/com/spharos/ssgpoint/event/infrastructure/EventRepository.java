@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface EventRepository extends JpaRepository<Event, Long> {
-    List<Event> findByType(Integer type);  // 'findBy' 메서드만 필요합니다.
+    List<Event> findByType(int i);
 }

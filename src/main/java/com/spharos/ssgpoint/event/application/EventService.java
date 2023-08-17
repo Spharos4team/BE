@@ -1,14 +1,12 @@
-
 package com.spharos.ssgpoint.event.application;
 
 import com.spharos.ssgpoint.event.domain.Event;
-import com.spharos.ssgpoint.event.dto.EventDetailResponseDto;
 import com.spharos.ssgpoint.event.infrastructure.EventRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.Date;
-import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class EventService {
@@ -36,17 +34,10 @@ public class EventService {
         return eventRepository.findById(id).orElse(null);
     }
 
-    public Event uploadEvent(String title, String content, Date startDate, Date endDate, String relatedLink, MultipartFile image) {
+    public Event uploadEvent(String title, String content, LocalDateTime startDate, LocalDateTime endDate, String relatedLink, MultipartFile image) {
         String imageUrl = uploadImage(image);
 
-        Event event = Event.builder()
-                .title(title)
-                .content(content)
-                .startDate(startDate)
-                .endDate(endDate)
-                .content(relatedLink)
-                .thumbnail(imageUrl)
-                .build();
+        Event event = Event.builder().title(title).contentImageUrl(content).startDate(startDate).endDate(endDate).contentImageUrl(relatedLink).thumbnailUrl(imageUrl).build();
 
         return eventRepository.save(event);
     }

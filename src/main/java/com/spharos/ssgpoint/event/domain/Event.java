@@ -5,7 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import java.util.Date;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -22,17 +24,25 @@ public class Event {
     private String title;
 
     @Column(nullable = false)
-    private String thumbnail; //todo:s3확인해야됨
+    private String thumbnailUrl; // S3나 다른 스토리지 서비스에 저장된 이미지의 URL
 
     @Column(nullable = false)
-    private String content;
+    private String contentImageUrl; // S3나 다른 스토리지 서비스에 저장된 이미지의 URL
 
-    @Column(nullable = false, columnDefinition = "int default 0")
-    private Integer type;
-
-    @Column(nullable = false)
-    private Date startDate;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private Type type;
 
     @Column(nullable = false)
-    private Date endDate;
+    private LocalDateTime startDate;
+
+    @Column(nullable = false)
+    private LocalDateTime endDate;
+
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserEvent> userEventLists;
+
+    public enum Type {
+        ONGOING, CLOSED, WINNER
+    }
 }
