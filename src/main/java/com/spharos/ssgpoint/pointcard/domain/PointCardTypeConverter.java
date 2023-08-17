@@ -5,7 +5,7 @@ import jakarta.persistence.AttributeConverter;
 import java.util.EnumSet;
 import java.util.NoSuchElementException;
 
-public class PointCardConverter implements AttributeConverter<PointCardType,String> {
+public class PointCardTypeConverter implements AttributeConverter<PointCardType,String> {
 
 
     @Override

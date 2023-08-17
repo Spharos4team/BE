@@ -24,7 +24,7 @@ public class PointCard {
     @Column(nullable = false,length = 20)
     private String agency;
     @Column(nullable = false)
-    @Convert(converter = PointCardType.class)
+    @Convert(converter = PointCardTypeConverter .class)
     private PointCardType type;
 
 
