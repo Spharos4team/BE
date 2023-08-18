@@ -34,7 +34,16 @@ public class PointCardServiceImpl implements PointCardService {
     }
 
     @Override
-    public List<PointCardGetDto> getPointCardByUser(Long userId) {
-        return null;
+    public List<PointCardGetDto> getPointCardByUser(String UUID) {
+        List<PointCard> pointCardList = pointCardRepository.findByUUID(UUID);
+        List<PointCardGetDto> pointCardGetDtoList = pointCardList.stream().map(pointCard -> {
+            return PointCardGetDto.builder()
+                    .name(pointCard.getName())
+                    .number(pointCard.getNumber())
+                    .agency(pointCard.getAgency())
+                    .build();
+        }).toList();
+
+        return pointCardGetDtoList;
     }
 }
