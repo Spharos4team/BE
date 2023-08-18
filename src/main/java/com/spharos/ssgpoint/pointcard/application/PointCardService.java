@@ -8,6 +8,6 @@ import java.util.List;
 public interface PointCardService {
 
     void createPointCard(String UUID, PointCardCreateDto pointCardCreateDto);
-    List<PointCardGetDto> getPointCardByUser(Long userId);
+    List<PointCardGetDto> getPointCardByUser(String UUID);
 
 }
