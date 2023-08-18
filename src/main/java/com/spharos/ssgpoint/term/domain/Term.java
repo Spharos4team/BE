@@ -1,10 +1,7 @@
 package com.spharos.ssgpoint.term.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
@@ -22,5 +19,6 @@ public class Term {
 
     @Column(columnDefinition = "text")
     private String content; //todo:text확인
+
 
 }

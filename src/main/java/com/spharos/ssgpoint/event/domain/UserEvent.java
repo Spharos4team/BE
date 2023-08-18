@@ -1,4 +1,4 @@
-package com.spharos.ssgpoint.coupon.domain;
+package com.spharos.ssgpoint.event.domain;
 
 import com.spharos.ssgpoint.user.domain.User;
 import jakarta.persistence.*;
@@ -12,19 +12,19 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserCouponList {
+public class UserEvent {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, columnDefinition = "int default 0")
-    private Integer used;
+    private Integer status;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Event event;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Coupon coupon;
-
 }
+
