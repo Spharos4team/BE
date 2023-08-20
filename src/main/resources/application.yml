@@ -15,7 +15,7 @@ logging.level:
   org.hibernate.SQL: debug
 
 JWT:
-  SECRET_KEY: 86904d2e211cae4857a4078bd81e1b6d8d7080833e815d964060bf7bff170fa7
+  SECRET_KEY: fbcb542e08e7feed1c9ebc3740ee092f43304e0b8a666d63bc36fbe785ad447a
   EXPIRATION_TIME: 14400000
   header: Authorization
   prefix: Bearer

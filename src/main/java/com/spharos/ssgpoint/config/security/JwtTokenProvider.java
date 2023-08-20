@@ -42,7 +42,7 @@ public class JwtTokenProvider {
      * 주어진 JWT 토큰에서 모든 클레임을 추출하여 반환합니다.
      * 토큰의 서명을 확인하기 위해 사용할 서명 키(getSigningKey())를 설정하고 토큰을 파싱하여 클레임들을 추출합니다.
      */
-    private Claims extractAllClaims(String token) {
+    public Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())
                 .build()
@@ -54,6 +54,7 @@ public class JwtTokenProvider {
      */
     private Key getSigningKey() {
         byte[] keyByte = Decoders.BASE64.decode(env.getProperty("JWT.SECRET_KEY"));
+        log.info("secret key={}",env.getProperty("JWT.SECRET_KEY"));
         return Keys.hmacShaKeyFor(keyByte);
     }
 
@@ -100,8 +101,8 @@ public class JwtTokenProvider {
      * 만료 비교
      */
     public boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new java.util.Date())
-                ;    }
+        return extractExpiration(token).before(new java.util.Date());
+    }
 
     /** 8
      * 주어진 JWT 토큰에서 만료 시간 클레임을 추출하여 반환합니다.

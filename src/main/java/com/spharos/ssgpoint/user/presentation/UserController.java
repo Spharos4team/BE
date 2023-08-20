@@ -1,10 +1,16 @@
 package com.spharos.ssgpoint.user.presentation;
 
+import com.spharos.ssgpoint.config.security.JwtTokenProvider;
 import com.spharos.ssgpoint.user.application.UserService;
 import com.spharos.ssgpoint.user.dto.*;
 import com.spharos.ssgpoint.user.vo.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.springframework.core.env.Environment;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,18 +22,22 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final Environment env;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @PostMapping("/user")
     public void createUser(@RequestBody UserSignUpIn userSignUpIn) {
         log.info("INPUT Object Data is : {}" , userSignUpIn);
-        UserSignUpDto userSignUpDto = UserSignUpDto.builder()
+        ModelMapper modelMapper = new ModelMapper();
+        UserSignUpDto userSignUpDto = modelMapper.map(userSignUpIn,UserSignUpDto.class);
+        /*UserSignUpDto userSignUpDto = UserSignUpDto.builder()
                 .loginId(userSignUpIn.getLoginId())
                 .password(userSignUpIn.getPassword())
                 .name(userSignUpIn.getName())
                 .email(userSignUpIn.getEmail())
                 .phone(userSignUpIn.getPhone())
                 .address(userSignUpIn.getAddress())
-                .build();
+                .build();*/
         userService.createUser(userSignUpDto);
     }
 
@@ -38,7 +48,7 @@ public class UserController {
         log.info("OUTPUT userGetDto is : {}" , userGetDto);
         UserGetOut userGetOut = UserGetOut.builder()
                 .loginId(userGetDto.getLoginId())
-                .userName(userGetDto.getUserName())
+                .name(userGetDto.getName())
                 .email(userGetDto.getEmail())
                 .phone(userGetDto.getPhone())
                 .address(userGetDto.getAddress())
@@ -50,7 +60,7 @@ public class UserController {
     /**
      * 회원 수정
      */
-    @PutMapping("/user/update/{UUID}")
+    @PutMapping("/user")
     public void updateUser(@PathVariable String UUID,@RequestBody UserInfoIn userInfoIn){
         UserUpdateDto userUpdateDto = UserUpdateDto.builder()
                 .address(userInfoIn.getAddress())
@@ -73,8 +83,15 @@ public class UserController {
     /**
      * 비밀번호 찾기인데 하면 리셋해라함
      */
-    @PutMapping("/user/reset-password/{UUID}")
-    public void resetPassword(@PathVariable String UUID,@RequestBody PasswordResetInfo passwordResetInfo){
+    @PutMapping("/user/reset-password")
+    public void resetPassword(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader
+            ,@RequestBody PasswordResetInfo passwordResetInfo){
+
+        String jwtToken = authorizationHeader.substring(7);
+        log.info("claims={}",jwtToken);
+        String UUID = jwtTokenProvider.getUUID(jwtToken);
+
+        log.info("uuid={}",UUID);
         PasswordResetDto passwordUpdateDto = PasswordResetDto.builder()
                 .password(passwordResetInfo.getPassword())
                 .build();

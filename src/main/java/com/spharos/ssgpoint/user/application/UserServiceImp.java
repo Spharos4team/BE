@@ -51,7 +51,7 @@ public class UserServiceImp implements UserService{
             log.info("user is : {}", user);
             UserGetDto userGetDto = UserGetDto.builder()
                     .loginId(user.getLoginId())
-                    .userName(user.getUsername())
+                    .name(user.getUsername())
                     .email(user.getEmail())
                     .phone(user.getPhone())
                     .address(user.getAddress())
@@ -70,7 +70,7 @@ public class UserServiceImp implements UserService{
         log.info("user is : {}" , user);
         UserGetDto userGetDto = UserGetDto.builder()
                 .loginId(user.getLoginId())
-                .userName(user.getUsername())
+                .name(user.getName())
                 .email(user.getEmail())
                 .phone(user.getPhone())
                 .address(user.getAddress())
@@ -116,7 +116,6 @@ public class UserServiceImp implements UserService{
     public void resetPassword(String UUID, PasswordResetDto passwordResetDto) {
         User user = userRepository.findByUuid(UUID).orElseThrow(() -> new IllegalArgumentException("UUID정보 없음 = " + UUID));
         user.hashPassword(passwordResetDto.getPassword());
-        log.info("userpass={}",user.getPassword());
     }
 
     /**

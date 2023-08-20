@@ -25,8 +25,6 @@ public class AuthenticationService {
     public AuthenticationResponse signup(UserSignUpDto userSignUpDto) {
         UUID uuid = UUID.randomUUID();
         String uuidString = uuid.toString();
-
-        log.info("userSignUpDto is : {}" , userSignUpDto);
         log.info("userSignUpDto name={}", userSignUpDto.getName() );
         User user = User.builder()
                 .loginId(userSignUpDto.getLoginId())
@@ -40,6 +38,10 @@ public class AuthenticationService {
                 .build();
         user.hashPassword(user.getPassword());
         log.info("user info={}", user.getName() );
+        //todo: 바코드 추가해야함
+
+
+
         userRepository.save(user);
 
         String JwtToken = jwtTokenProvider.generateToken(user);
@@ -47,6 +49,7 @@ public class AuthenticationService {
         return AuthenticationResponse.builder()
                 .token(JwtToken)
                 .build();
+
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest) {
@@ -60,7 +63,7 @@ public class AuthenticationService {
         User user = userRepository.findByLoginId(authenticationRequest.getLoginId()).orElseThrow();
 
         String JwtToken = jwtTokenProvider.generateToken(user);
-
+        log.info("JwtToken is : {}" , JwtToken);
         return AuthenticationResponse.builder()
                 .token(JwtToken)
                 .build();
