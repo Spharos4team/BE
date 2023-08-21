@@ -13,12 +13,12 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/point")
+@RequestMapping("/api/v1")
 public class PointController {
 
     private final PointService pointService;
 
-    @GetMapping("/{userId}")
+    @GetMapping("/point/{userId}")
     public List<PointGetVo> getPointByUser(@PathVariable Long userId) {
         List<PointGetDto> pointGetDtoList = pointService.getPointByUser(userId);
         List<PointGetVo> pointGetVoList = pointGetDtoList.stream().map(pointGetDto -> {

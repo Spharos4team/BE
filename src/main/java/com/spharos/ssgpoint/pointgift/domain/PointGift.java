@@ -1,4 +1,4 @@
-package com.spharos.ssgpoint.pointcard.domain;
+package com.spharos.ssgpoint.pointgift.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,26 +11,22 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PointCard {
+public class PointGift {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 45)
-    private String name;
+    @Column(nullable = false, length = 150)
+    private String message;
 
-    @Column(length = 100)
-    private String number;
-
-    @Column(nullable = false, length = 20)
-    private String agency;
+    @Column(nullable = false, columnDefinition = "int default 0")
+    private Integer access;
 
     @Column(nullable = false, length = 100)
     private String UUID;
 
-    @Column(nullable = false)
-    @Convert(converter = PointCardTypeConverter.class)
-    private PointCardType type;
+    @Column(nullable = false, length = 45)
+    private String loginId;
 
 }
