@@ -18,7 +18,7 @@ public class PointCardController {
     private final PointCardService pointCardService;
 
     @PostMapping("/point-card")
-    void createPointCard(@RequestParam("UUID") String UUID, @RequestBody PointCardCreateVo pointCardCreateVo) {
+    public void createPointCard(@RequestParam("UUID") String UUID, @RequestBody PointCardCreateVo pointCardCreateVo) {
         PointCardCreateDto pointCardCreateDto = PointCardCreateDto.builder()
                 .number(pointCardCreateVo.getNumber())
                 .agency(pointCardCreateVo.getAgency())

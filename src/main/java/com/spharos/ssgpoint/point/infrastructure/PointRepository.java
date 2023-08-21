@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface PointRepository extends JpaRepository<Point, Long> {
 
-    List<Point> findByUserId(Long userId);
+    List<Point> findByUUID(String UUID);
 
 }

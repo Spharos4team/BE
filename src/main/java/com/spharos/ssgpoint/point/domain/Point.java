@@ -28,13 +28,12 @@ public class Point {
     @Column(nullable = false, columnDefinition = "int default 1")
     private Integer status;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+    @Column(nullable = false, length = 100)
+    private String UUID;
 
     //todo: 포인트 타입
 
     @ManyToOne(fetch = FetchType.LAZY)
     private PointCard pointCard;
-
 
 }
