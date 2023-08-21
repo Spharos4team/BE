@@ -1,2 +1,2 @@
 # ssg-point-BE
-SSG point app Back-End Repository
+2023 Spharos Academy 3기 1차 프로젝트
