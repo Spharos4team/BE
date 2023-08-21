@@ -8,12 +8,11 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PointGiftCreateDto {
+public class PointGiftGetDto {
 
     private Integer point;
     private String message;
     private Integer access;
     private String UUID;
-    private String loginId;
 
 }

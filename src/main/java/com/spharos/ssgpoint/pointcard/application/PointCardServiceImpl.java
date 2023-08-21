@@ -18,6 +18,7 @@ public class PointCardServiceImpl implements PointCardService {
 
     private final PointCardRepository pointCardRepository;
 
+    // 포인트 카드 생성
     @Override
     @Convert(converter = PointCardTypeConverter.class)
     public void createPointCard(String UUID, PointCardCreateDto pointCardCreateDto) {
@@ -33,6 +34,7 @@ public class PointCardServiceImpl implements PointCardService {
                 .build());
     }
 
+    // 포인트 카드 목록
     @Override
     public List<PointCardGetDto> getPointCardByUser(String UUID) {
         List<PointCard> pointCardList = pointCardRepository.findByUUID(UUID);

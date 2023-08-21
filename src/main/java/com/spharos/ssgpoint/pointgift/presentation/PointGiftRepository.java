@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface PointGiftRepository extends JpaRepository<PointGift, Long> {
 
+    List<PointGift> findByUUID(String UUID);
+
 }

@@ -17,6 +17,9 @@ public class PointGift {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, columnDefinition = "int default 0")
+    private Integer point;
+
     @Column(nullable = false, length = 150)
     private String message;
 

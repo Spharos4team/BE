@@ -17,6 +17,7 @@ public class PointController {
 
     private final PointService pointService;
 
+    // 포인트 생성
     @PostMapping("/point")
     public void createPoint(@RequestParam("UUID") String UUID, @RequestBody PointCreateVo pointCreateVo) {
         PointCreateDto pointCreateDto = PointCreateDto.builder()
@@ -29,6 +30,7 @@ public class PointController {
         pointService.createPoint(UUID, pointCreateDto);
     }
 
+    // 포인트 목록
     @GetMapping("/point")
     public List<PointGetVo> getPointByUser(@RequestParam("UUID") String UUID) {
         List<PointGetDto> pointGetDtoList = pointService.getPointByUser(UUID);
