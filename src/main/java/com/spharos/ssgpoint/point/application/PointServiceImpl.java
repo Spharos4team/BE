@@ -15,6 +15,7 @@ public class PointServiceImpl implements PointService {
 
     private final PointRepository pointRepository;
 
+    // 포인트 생성
     @Override
     public void createPoint(String UUID, PointCreateDto pointCreateDto) {
         pointRepository.save(Point.builder()
@@ -25,6 +26,7 @@ public class PointServiceImpl implements PointService {
                 .build());
     }
 
+    // 포인트 목록
     @Override
     public List<PointGetDto> getPointByUser(String UUID) {
         List<Point> pointList = pointRepository.findByUUID(UUID);

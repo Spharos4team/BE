@@ -7,7 +7,9 @@ import java.util.List;
 
 public interface PointService {
 
+    // 포인트 생성
     void createPoint(String UUID, PointCreateDto pointCreateDto);
+    // 포인트 목록
     List<PointGetDto> getPointByUser(String UUID);
 
 }

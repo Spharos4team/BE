@@ -15,6 +15,7 @@ public class PointGiftServiceImpl implements PointGiftService {
 
     private final PointGiftRepository pointGiftRepository;
 
+    // 포인트 선물 보내기
     @Override
     public void createPointGift(String UUID, PointGiftCreateDto pointGiftCreateDto) {
         pointGiftRepository.save(PointGift.builder()
@@ -26,6 +27,7 @@ public class PointGiftServiceImpl implements PointGiftService {
                 .build());
     }
 
+    // 포인트 선물 목록
     @Override
     public List<PointGiftGetDto> getPointByUser(String UUID) {
         List<PointGift> pointGiftList = pointGiftRepository.findByUUID(UUID);

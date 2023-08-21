@@ -17,6 +17,7 @@ public class PointCardController {
 
     private final PointCardService pointCardService;
 
+    // 포인트 카드 생성
     @PostMapping("/point-card")
     public void createPointCard(@RequestParam("UUID") String UUID, @RequestBody PointCardCreateVo pointCardCreateVo) {
         PointCardCreateDto pointCardCreateDto = PointCardCreateDto.builder()
@@ -28,6 +29,7 @@ public class PointCardController {
         pointCardService.createPointCard(UUID, pointCardCreateDto);
     }
 
+    // 포인트 카드 목록
     @GetMapping("/point-card")
     public List<PointCardGetVo> getPointCardByUser(@RequestParam("UUID") String UUID) {
         List<PointCardGetDto> pointCardGetDtoList = pointCardService.getPointCardByUser(UUID);
