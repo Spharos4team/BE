@@ -4,7 +4,6 @@ import lombok.Getter;
 
 @Getter
 public class PasswordUpdateInfo {
-    private String currentPassword;
-    private String updatePassword;
+    private String password;
 
 }
