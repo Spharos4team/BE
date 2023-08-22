@@ -1,5 +1,6 @@
 package com.spharos.ssgpoint.config.security;
 
+
 import com.spharos.ssgpoint.user.infrastructure.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
