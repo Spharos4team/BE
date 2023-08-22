@@ -1,7 +1,6 @@
 package com.spharos.ssgpoint.point.domain;
 
 import com.spharos.ssgpoint.pointcard.domain.PointCard;
-import com.spharos.ssgpoint.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,8 +27,8 @@ public class Point {
     @Column(nullable = false, columnDefinition = "int default 1")
     private Integer status;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+    @Column(nullable = false, length = 100)
+    private String UUID;
 
     //todo: 포인트 타입
 
