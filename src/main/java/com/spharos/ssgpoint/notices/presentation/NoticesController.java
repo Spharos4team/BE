@@ -46,8 +46,7 @@ public class NoticesController {
                 notices.getId(),
                 notices.getType(),
                 notices.getTitle(),
-                notices.getContent(),
-                notices.getRegDate()
+                notices.getContent()
         );
     }
 }

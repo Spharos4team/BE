@@ -1,9 +1,10 @@
 package com.spharos.ssgpoint.coupon.domain;
 
 import jakarta.persistence.*;
-import lombok.*;
-
-import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
@@ -24,12 +25,6 @@ public class Coupon {
 
     @Column(length = 255, nullable = true)
     private String barCode;
-
-    @Column(nullable = false)
-    private LocalDateTime startDate;
-
-    @Column(nullable = false)
-    private LocalDateTime endDate;
 
     @Column(length = 45)
     private String store;

@@ -2,9 +2,10 @@ package com.spharos.ssgpoint.coupon.domain;
 
 import com.spharos.ssgpoint.user.domain.User;
 import jakarta.persistence.*;
-import lombok.*;
-
-import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
@@ -18,8 +19,8 @@ public class UserCoupon {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "uuid")
+    private User UUID;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "coupon_id")
@@ -28,15 +29,6 @@ public class UserCoupon {
     @Column(nullable = false)
     private boolean used;
 
-    @Column(nullable = true)
-    private LocalDateTime usedDate;
-
-    @Column(nullable = false)
-    private LocalDateTime downloadDate;
-
     public void setUser(User user) {
-    }
-
-    public void setCoupon(Coupon coupon) {
     }
 }

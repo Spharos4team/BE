@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
 @Entity
 @Getter
 @Setter
@@ -29,9 +27,6 @@ public class Notices {
 
     @Column(name = "content", nullable = false, columnDefinition = "TEXT")
     private String content;
-
-    @Column(name = "reg_date", nullable = false)
-    private LocalDateTime regDate;
 
     public enum NoticeType {
         NOTICE, EVENT
