@@ -38,15 +38,16 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
-    public UserCoupon assignCouponToUser(User user, Coupon coupon) {
-        // Check if the user already has this coupon
-        Optional<UserCoupon> existingUserCoupon = userCouponRepository.findByUserAndCoupon(user, coupon);
+    public UserCoupon assignCouponToUser(User uuid, Coupon coupon) {
+        // 사용자에게 쿠폰이 이미 할당되어 있는지 확인합니다.
+        Optional<UserCoupon> existingUserCoupon = userCouponRepository.findByUUIDAndCoupon(uuid, coupon);
         if (existingUserCoupon.isPresent()) {
             throw new RuntimeException("유저가 이미 해당 쿠폰을 가지고 있습니다.");
         }
 
+        // 쿠폰을 사용자에게 할당합니다.
         return userCouponRepository.save(UserCoupon.builder()
-                .UUID(user)
+                .UUID(uuid)
                 .coupon(coupon)
                 .build());
     }
