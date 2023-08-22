@@ -18,11 +18,14 @@ public class Point {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false,columnDefinition = "int default 0")
+
+    @Column(nullable = false, columnDefinition = "int default 0")
     private Integer totalPoint;
-    @Column(nullable = false,columnDefinition = "int default 0")
+
+    @Column(nullable = false, columnDefinition = "int default 0")
     private Integer point;
-    @Column(nullable = false,columnDefinition = "int default 1")
+
+    @Column(nullable = false, columnDefinition = "int default 1")
     private Integer status;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -32,4 +35,6 @@ public class Point {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private PointCard pointCard;
+
+
 }
