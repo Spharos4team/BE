@@ -1,10 +1,9 @@
 package com.spharos.ssgpoint.coupon.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -12,17 +11,26 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Coupon {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false,length = 45)
+    @Column(length = 45, nullable = true)
     private String title;
-    @Column(nullable = false,length = 45)
-    private String number;
-    @Column(nullable = false)
-    private String barCode;
-    @Column(nullable = false,length = 45)
-    private String store;
 
+    @Column(nullable = false)
+    private int number;
+
+    @Column(length = 255, nullable = true)
+    private String barCode;
+
+    @Column(nullable = false)
+    private LocalDateTime startDate;
+
+    @Column(nullable = false)
+    private LocalDateTime endDate;
+
+    @Column(length = 45)
+    private String store;
 }

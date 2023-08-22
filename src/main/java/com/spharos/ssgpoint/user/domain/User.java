@@ -64,6 +64,9 @@ public class User implements UserDetails {
     }
 
 
+    public void generateBarcode(String barcode){
+        this.pointPassword = barcode;
+    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
