@@ -21,5 +21,4 @@ public class FAQController {
         return faqService.getAllFAQs();
     }
 
-    // ... more endpoints for CRUD operations
 }
