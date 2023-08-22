@@ -7,7 +7,7 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PasswordUpdateDto {
+public class PointPasswordUpdateDto {
+    private String pointPassword;
 
-    private String password;
 }

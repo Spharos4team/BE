@@ -8,9 +8,13 @@ public interface UserService {
     void createUser(UserSignUpDto userSignUpDto);
     UserGetDto getUserByLoginId(String loginId);
     UserGetDto getUserByUUID(String UUID);
-    List<UserGetDto> getAllUsers();
+
     void updateUserInfo(String UUID, UserUpdateDto userUpdateRequestDto);
-    void validateDuplicateLoginId(UserSignUpDto userSignUpDto); // UserSignUpDto에서 loginId만
+    Boolean validateDuplicateLoginId(UserSignUpDto userSignUpDto); // UserSignUpDto에서 loginId만
     void resetPassword(String UUID, PasswordResetDto passwordResetDto);
     void updatePassword(String UUID, PasswordUpdateDto passwordUpdateDto);
+
+    //void validateDuplicateBarCode(UserSignUpDto userSignUpDto);
+
+    void updatePointPassword(String UUID, PointPasswordUpdateDto pointPasswordUpdateDto);
 }

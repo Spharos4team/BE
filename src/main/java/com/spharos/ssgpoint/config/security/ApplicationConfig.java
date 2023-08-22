@@ -2,6 +2,7 @@ package com.spharos.ssgpoint.config.security;
 
 import com.spharos.ssgpoint.user.infrastructure.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,14 +16,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @RequiredArgsConstructor
+
 public class ApplicationConfig  {
 
     private final UserRepository userRepository;
 
     @Bean
     public UserDetailsService userDetailsService() {
+
         return loginId -> userRepository.findByLoginId(loginId)
                 .orElseThrow(()-> new UsernameNotFoundException("user not found = "+loginId));
+
     }
 
     @Bean

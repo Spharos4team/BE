@@ -6,15 +6,19 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.util.Date;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 @Slf4j
@@ -22,7 +26,21 @@ import java.util.function.Function;
 @RequiredArgsConstructor
 public class JwtTokenProvider {
 
-    private final Environment env;
+    private final RedisTemplate<String, String> redisTemplate;
+
+    @Value("${JWT.secret_key}")
+    private String secretKey;
+
+    @Value("${JWT.token.access-expiration-time}")
+    private long accessExpirationTime;
+
+    @Value("${JWT.token.refresh-expiration-time}")
+    private long refreshExpirationTime;
+
+    @Value("${JWT.expiration_time}")
+    private long expirationTime;
+
+
 
     /**
      * 2
@@ -53,30 +71,58 @@ public class JwtTokenProvider {
      *  JWT 토큰의 서명을 확인하기 위해 사용할 서명 키를 생성하여 반환합니다
      */
     private Key getSigningKey() {
-        byte[] keyByte = Decoders.BASE64.decode(env.getProperty("JWT.SECRET_KEY"));
-        log.info("secret key={}",env.getProperty("JWT.SECRET_KEY"));
+        byte[] keyByte = Decoders.BASE64.decode(secretKey);
+        log.info("secret key={}",secretKey);
         return Keys.hmacShaKeyFor(keyByte);
     }
 
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(Map.of(), userDetails);
-    }
     /**
      * 1.
-     * @param extractClaims 생성할 jwt토큰의 클레임 정보
      * @param userDetails 사용자 정보
      * @return 클레임 정보와 사용자 정보를 기반으로 jwt 토큰 생성
      * 클레임 정보, 사용자 ID, 생성 시간, 만료 시간 등을 설정하고, 서명 알고리즘과 서명 키를 사용하여 토큰을 생성합니다.
+     * Access TOken 역활
      */
+    public String generateToken(UserDetails userDetails) {
+        return generateToken(Map.of(), userDetails);
+    }
     public String generateToken(Map<String,Object> extractClaims, UserDetails userDetails){
-        return Jwts.builder()
-                .setClaims(extractClaims)
-                .setSubject(userDetails.getUsername()) //UUID 넘어온다
-                .setIssuedAt(new java.util.Date(System.currentTimeMillis())) //생성일
-                .setExpiration(new java.util.Date(System.currentTimeMillis() + env.getProperty("JWT.EXPIRATION_TIME",Long.class))) //만료일
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256) // 알고리즘
+        return buildToken(extractClaims, userDetails, accessExpirationTime);
+    }
+
+
+    private String buildToken(
+            Map<String, Object> extraClaims,
+            UserDetails userDetails,
+            long expiration
+    ) {
+        return Jwts
+                .builder()
+                .setClaims(extraClaims)
+                .setSubject(userDetails.getUsername())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
+
+
+    /**
+     * Refresh 토큰 생성
+     */
+    public String generateRefreshToken(UserDetails userDetails){
+
+        String refreshToken = buildToken(Map.of(), userDetails, refreshExpirationTime);
+        // redis에 저장
+        redisTemplate.opsForValue().set(
+                userDetails.getUsername(),
+                refreshToken,
+                refreshExpirationTime,
+                TimeUnit.MILLISECONDS
+        );
+        return refreshToken;
+    }
+
 
     /**
      * 5
@@ -101,7 +147,7 @@ public class JwtTokenProvider {
      * 만료 비교
      */
     public boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new java.util.Date());
+        return extractExpiration(token).before(new Date());
     }
 
     /** 8
@@ -110,6 +156,13 @@ public class JwtTokenProvider {
     private Date extractExpiration(String token) {
         return extractClaims(token,Claims::getExpiration);
     }
+
+    private Key getSignInKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+
 
 
 

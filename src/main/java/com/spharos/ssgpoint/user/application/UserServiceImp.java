@@ -38,6 +38,7 @@ public class UserServiceImp implements UserService{
                 .status(1)
                 .build();
         userRepository.save(user);
+        log.info("user id={}",user.getId());
     }
 
     @Override
@@ -78,11 +79,6 @@ public class UserServiceImp implements UserService{
         return userGetDto;
     }
 
-    @Override
-    public List<UserGetDto> getAllUsers() {
-        return null;
-    }
-
     /**
      * 회원정보 수정
      */
@@ -98,16 +94,15 @@ public class UserServiceImp implements UserService{
     /**
      * 회원가입시 아이디 중복 확인
      */
-    @Override
-    public void validateDuplicateLoginId(UserSignUpDto userSignUpDto) {
-        log.info("userSignUpDto={}",userSignUpDto.getLoginId());
-        Optional<User> byLoginId = userRepository.findByLoginId(userSignUpDto.getLoginId());
-        log.info("byLoginId={}",byLoginId);
-        if (byLoginId.isPresent()) {
-            throw new IllegalStateException("이미 존재하는 아이디");
-        }
 
+    public Boolean validateDuplicateLoginId(UserSignUpDto userSignUpDto) {
+        log.info("userSignUpDto={}", userSignUpDto.getLoginId());
+        Optional<User> byLoginId = userRepository.findByLoginId(userSignUpDto.getLoginId());
+        log.info("byLoginId={}", byLoginId);
+        return byLoginId.isPresent();
     }
+
+
     /**
      * 비밀번호 찾기 하면 리셋
      */
@@ -125,13 +120,18 @@ public class UserServiceImp implements UserService{
     @Override
     public void updatePassword(String UUID, PasswordUpdateDto passwordUpdateDto) {
         User user = userRepository.findByUuid(UUID).orElseThrow(() -> new IllegalArgumentException("UUID정보 없음 = " + UUID));
-        log.info("dto current password={}",passwordUpdateDto.getCurrentPassword());
-        log.info("dto new password={}",passwordUpdateDto.getUpdatePassword());
-        if (!passwordEncoder.matches(passwordUpdateDto.getCurrentPassword(), user.getPassword())) {
-            throw new AllException("현재비밀번호랑 다름");
-        }
+        user.hashPassword(passwordUpdateDto.getPassword());
+    }
 
-        user.hashPassword(passwordUpdateDto.getUpdatePassword());
+    /**
+     * 포인트 비밀번호 초기설정 + 변경
+     */
+    @Transactional
+    @Override
+    public void updatePointPassword(String UUID, PointPasswordUpdateDto pointPasswordUpdateDto) {
+        User user = userRepository.findByUuid(UUID).orElseThrow(() -> new IllegalArgumentException("UUID정보 없음 = " + UUID));
+        log.info("pointpass={}",pointPasswordUpdateDto.getPointPassword());
+        user.updatePointPassword(pointPasswordUpdateDto.getPointPassword());
     }
 
 

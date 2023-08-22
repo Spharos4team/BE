@@ -4,13 +4,10 @@ import com.spharos.ssgpoint.config.security.JwtTokenProvider;
 import com.spharos.ssgpoint.user.application.UserService;
 import com.spharos.ssgpoint.user.dto.*;
 import com.spharos.ssgpoint.user.vo.*;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.core.env.Environment;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,21 +20,12 @@ public class UserController {
 
     private final UserService userService;
     private final Environment env;
-    private final JwtTokenProvider jwtTokenProvider;
 
     @PostMapping("/user")
     public void createUser(@RequestBody UserSignUpIn userSignUpIn) {
         log.info("INPUT Object Data is : {}" , userSignUpIn);
         ModelMapper modelMapper = new ModelMapper();
         UserSignUpDto userSignUpDto = modelMapper.map(userSignUpIn,UserSignUpDto.class);
-        /*UserSignUpDto userSignUpDto = UserSignUpDto.builder()
-                .loginId(userSignUpIn.getLoginId())
-                .password(userSignUpIn.getPassword())
-                .name(userSignUpIn.getName())
-                .email(userSignUpIn.getEmail())
-                .phone(userSignUpIn.getPhone())
-                .address(userSignUpIn.getAddress())
-                .build();*/
         userService.createUser(userSignUpDto);
     }
 
@@ -58,14 +46,13 @@ public class UserController {
     }
 
     /**
-     * 회원 수정
+     * 회원 정보 수정
      */
+
     @PutMapping("/user")
-    public void updateUser(@PathVariable String UUID,@RequestBody UserInfoIn userInfoIn){
-        UserUpdateDto userUpdateDto = UserUpdateDto.builder()
-                .address(userInfoIn.getAddress())
-                .email(userInfoIn.getEmail())
-                .build();
+    public void updateUser(@PathVariable String UUID,@RequestBody UserUpdateIn userUpdateIn){
+        ModelMapper modelMapper = new ModelMapper();
+        UserUpdateDto userUpdateDto = modelMapper.map(userUpdateIn,UserUpdateDto.class);
         userService.updateUserInfo(UUID,userUpdateDto);
     }
     /**
@@ -74,38 +61,44 @@ public class UserController {
     @GetMapping("/user/check-loginId")
     public void validateDuplicateLoginId(@RequestBody UserSignUpIn userSignUpIn){
         log.info("INPUT Object Data is : {}" , userSignUpIn);
-        UserSignUpDto userSignUpDto = UserSignUpDto.builder()
-                .loginId(userSignUpIn.getLoginId())
-                .build();
+        ModelMapper modelMapper = new ModelMapper();
+        UserSignUpDto userSignUpDto = modelMapper.map(userSignUpIn,UserSignUpDto.class);
         userService.validateDuplicateLoginId(userSignUpDto);
     }
 
-    /**
-     * 비밀번호 찾기인데 하면 리셋해라함
-     */
-    @PutMapping("/user/reset-password")
-    public void resetPassword(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader
-            ,@RequestBody PasswordResetInfo passwordResetInfo){
 
-        String jwtToken = authorizationHeader.substring(7);
-        log.info("claims={}",jwtToken);
-        String UUID = jwtTokenProvider.getUUID(jwtToken);
-
-        log.info("uuid={}",UUID);
-        PasswordResetDto passwordUpdateDto = PasswordResetDto.builder()
-                .password(passwordResetInfo.getPassword())
-                .build();
-        userService.resetPassword(UUID,passwordUpdateDto);
-    }
     /**
      * 비밀번호 변경
      */
-    @PutMapping("/user/update-password/{UUID}")
+    /*@PutMapping("/user/password/{UUID}")
     public void updatePassword(@PathVariable String UUID,@RequestBody PasswordUpdateInfo passwordUpdateInfo){
-        PasswordUpdateDto passwordUpdateDto = PasswordUpdateDto.builder()
-                .currentPassword(passwordUpdateInfo.getCurrentPassword())
-                .updatePassword(passwordUpdateInfo.getUpdatePassword())
-                .build();
+        ModelMapper modelMapper = new ModelMapper();
+        PasswordUpdateDto passwordUpdateDto = modelMapper.map(passwordUpdateInfo,PasswordUpdateDto.class);
         userService.updatePassword(UUID,passwordUpdateDto);
+    }*/
+  /*  @PutMapping("/user/password/{UUID}")
+    public ResponseEntity<String> updatePassword(@PathVariable String UUID, @RequestBody PasswordUpdateInfo passwordUpdateInfo) {
+        ModelMapper modelMapper = new ModelMapper();
+        PasswordUpdateDto passwordUpdateDto = modelMapper.map(passwordUpdateInfo, PasswordUpdateDto.class);
+
+        boolean isUpdated = userService.updatePassword(UUID, passwordUpdateDto);
+
+        if (isUpdated) {
+            return ResponseEntity.status(HttpStatus.OK).body("Password updated successfully.");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Password update failed.");
+        }
+    }
+*/
+
+
+    /**
+     *  포인트 비밀번호 초기설정+변경
+     */
+    @PutMapping("/user/point/{UUID}")
+    public void updatePointPassword(@PathVariable String UUID,@RequestBody PointPasswordUpdateInfo pointPasswordUpdateInfo){
+        ModelMapper modelMapper = new ModelMapper();
+        PointPasswordUpdateDto pointPasswordUpdateDto = modelMapper.map(pointPasswordUpdateInfo,PointPasswordUpdateDto.class);
+        userService.updatePointPassword(UUID,pointPasswordUpdateDto);
     }
 }
