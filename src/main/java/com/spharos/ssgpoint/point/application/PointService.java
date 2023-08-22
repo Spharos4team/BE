@@ -1,12 +1,15 @@
 package com.spharos.ssgpoint.point.application;
 
+import com.spharos.ssgpoint.point.dto.PointCreateDto;
 import com.spharos.ssgpoint.point.dto.PointGetDto;
-import com.spharos.ssgpoint.pointcard.dto.PointCardGetDto;
 
 import java.util.List;
 
 public interface PointService {
 
-    List<PointGetDto> getPointByUser(Long userId);
+    // 포인트 생성
+    void createPoint(String UUID, PointCreateDto pointCreateDto);
+    // 포인트 목록
+    List<PointGetDto> getPointByUser(String UUID);
 
 }

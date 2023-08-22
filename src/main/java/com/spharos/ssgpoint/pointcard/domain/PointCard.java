@@ -26,7 +26,7 @@ public class PointCard {
     @Column(nullable = false, length = 20)
     private String agency;
 
-    // @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 100)
     private String UUID;
 
     @Column(nullable = false)

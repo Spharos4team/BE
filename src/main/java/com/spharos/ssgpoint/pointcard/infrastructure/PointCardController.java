@@ -1,7 +1,5 @@
 package com.spharos.ssgpoint.pointcard.infrastructure;
 
-import com.spharos.ssgpoint.point.dto.PointGetDto;
-import com.spharos.ssgpoint.point.vo.PointGetVo;
 import com.spharos.ssgpoint.pointcard.application.PointCardService;
 import com.spharos.ssgpoint.pointcard.dto.PointCardCreateDto;
 import com.spharos.ssgpoint.pointcard.dto.PointCardGetDto;
@@ -14,13 +12,14 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/pointCard")
+@RequestMapping("/api/v1")
 public class PointCardController {
 
     private final PointCardService pointCardService;
 
-    @PostMapping("/create")
-    void createPointCard(@RequestHeader("UUID") String UUID, @RequestBody PointCardCreateVo pointCardCreateVo) {
+    // 포인트 카드 생성
+    @PostMapping("/point-card")
+    public void createPointCard(@RequestParam("UUID") String UUID, @RequestBody PointCardCreateVo pointCardCreateVo) {
         PointCardCreateDto pointCardCreateDto = PointCardCreateDto.builder()
                 .number(pointCardCreateVo.getNumber())
                 .agency(pointCardCreateVo.getAgency())
@@ -30,8 +29,9 @@ public class PointCardController {
         pointCardService.createPointCard(UUID, pointCardCreateDto);
     }
 
-    @GetMapping("")
-    public List<PointCardGetVo> getPointCardByUser(@RequestHeader("UUID") String UUID) {
+    // 포인트 카드 목록
+    @GetMapping("/point-card")
+    public List<PointCardGetVo> getPointCardByUser(@RequestParam("UUID") String UUID) {
         List<PointCardGetDto> pointCardGetDtoList = pointCardService.getPointCardByUser(UUID);
         List<PointCardGetVo> pointCardGetVoList = pointCardGetDtoList.stream().map(pointCardGetDto -> {
             return PointCardGetVo.builder()
