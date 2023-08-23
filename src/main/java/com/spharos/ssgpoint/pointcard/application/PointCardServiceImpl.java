@@ -5,7 +5,7 @@ import com.spharos.ssgpoint.pointcard.domain.PointCardType;
 import com.spharos.ssgpoint.pointcard.domain.PointCardTypeConverter;
 import com.spharos.ssgpoint.pointcard.dto.PointCardCreateDto;
 import com.spharos.ssgpoint.pointcard.dto.PointCardGetDto;
-import com.spharos.ssgpoint.pointcard.presentation.PointCardRepository;
+import com.spharos.ssgpoint.pointcard.infrastructure.PointCardRepository;
 import jakarta.persistence.Convert;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

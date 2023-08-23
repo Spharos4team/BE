@@ -1,4 +1,4 @@
-package com.spharos.ssgpoint.pointcard.infrastructure;
+package com.spharos.ssgpoint.pointcard.presentation;
 
 import com.spharos.ssgpoint.pointcard.application.PointCardService;
 import com.spharos.ssgpoint.pointcard.dto.PointCardCreateDto;
