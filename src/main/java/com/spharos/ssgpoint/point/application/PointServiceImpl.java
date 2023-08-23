@@ -1,6 +1,8 @@
 package com.spharos.ssgpoint.point.application;
 
 import com.spharos.ssgpoint.point.domain.Point;
+import com.spharos.ssgpoint.point.domain.PointType;
+import com.spharos.ssgpoint.point.domain.PointTypeConverter;
 import com.spharos.ssgpoint.point.dto.PointCreateDto;
 import com.spharos.ssgpoint.point.dto.PointGetDto;
 import com.spharos.ssgpoint.point.infrastructure.PointRepository;
@@ -18,10 +20,15 @@ public class PointServiceImpl implements PointService {
     // 포인트 생성
     @Override
     public void createPoint(String UUID, PointCreateDto pointCreateDto) {
+
+        PointType pointType = new PointTypeConverter().convertToEntityAttribute(pointCreateDto.getType());
+
         pointRepository.save(Point.builder()
                 .totalPoint(pointCreateDto.getTotalPoint())
                 .point(pointCreateDto.getPoint())
-                .status(pointCreateDto.getStatus())
+                .pointTitle(pointCreateDto.getPointTitle())
+                .pointContent(pointCreateDto.getPointContent())
+                .type(pointType)
                 .UUID(pointCreateDto.getUUID())
                 .build());
     }
@@ -33,8 +40,11 @@ public class PointServiceImpl implements PointService {
 
         return pointList.stream().map(point ->
                 PointGetDto.builder()
+                        .totalPoint(point.getTotalPoint())
                         .point(point.getPoint())
-                        .status(point.getStatus())
+                        .pointTitle(point.getPointTitle())
+                        .pointContent(point.getPointContent())
+                        .type(String.valueOf(point.getType()))
                         .build()
         ).toList();
     }

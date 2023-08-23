@@ -23,7 +23,9 @@ public class PointController {
         PointCreateDto pointCreateDto = PointCreateDto.builder()
                 .totalPoint(pointCreateVo.getTotalPoint())
                 .point(pointCreateVo.getPoint())
-                .status(pointCreateVo.getStatus())
+                .pointTitle(pointCreateVo.getPointTitle())
+                .pointContent(pointCreateVo.getPointContent())
+                .type(pointCreateVo.getType())
                 .UUID(UUID)
                 .build();
 
@@ -37,8 +39,11 @@ public class PointController {
 
         return pointGetDtoList.stream().map(pointGetDto ->
                 PointGetVo.builder()
+                        .totalPoint(pointGetDto.getTotalPoint())
                         .point(pointGetDto.getPoint())
-                        .status(pointGetDto.getStatus())
+                        .pointTitle(pointGetDto.getPointTitle())
+                        .pointContent(pointGetDto.getPointContent())
+                        .type(pointGetDto.getType())
                         .build()
         ).toList();
     }

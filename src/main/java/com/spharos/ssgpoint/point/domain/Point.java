@@ -30,13 +30,12 @@ public class Point {
     @Column(nullable = false)
     private String pointContent;
 
-    @Column(nullable = false, columnDefinition = "int default 1")
-    private Integer status;
+    @Column(nullable = false)
+    @Convert(converter = PointTypeConverter.class)
+    private PointType type;
 
     @Column(nullable = false, length = 100)
     private String UUID;
-
-    //todo: 포인트 타입
 
     @ManyToOne(fetch = FetchType.LAZY)
     private PointCard pointCard;

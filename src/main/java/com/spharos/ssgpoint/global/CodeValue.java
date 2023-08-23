@@ -1,9 +1,8 @@
-package com.spharos.ssgpoint.pointcard.domain;
+package com.spharos.ssgpoint.global;
 
 public interface CodeValue {
 
     String getCode();
-
     String getValue();
 
 }

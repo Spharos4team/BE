@@ -30,9 +30,6 @@ public class PointGiftServiceImpl implements PointGiftService {
                 .loginId(pointGiftCreateDto.getLoginId())
                 .build());
 
-        pointRepository.save(Point.builder()
-                .point(pointCreateDto.getPoint())
-                .build());
     }
 
     // 포인트 선물 목록

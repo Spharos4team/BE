@@ -15,6 +15,6 @@ public class PointGetDto {
     private Integer point;
     private String pointTitle;
     private String pointContent;
-    private Integer status;
+    private String type;
 
 }

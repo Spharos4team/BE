@@ -1,19 +1,20 @@
-package com.spharos.ssgpoint.pointcard.domain;
+package com.spharos.ssgpoint.point.domain;
 
 import com.spharos.ssgpoint.global.CodeValue;
 import lombok.Getter;
 
 @Getter
-public enum PointCardType implements CodeValue {
+public enum PointType implements CodeValue {
 
-    ONLINE("ON", "온라인"),
-    OFFLINE("OFF", "오프라인"),
-    ALLIANCE("A", "제휴");
+    일반적립("1", "일반적립"),
+    이벤트적립("2", "이벤트적립"),
+    일반사용("3", "일반사용"),
+    이벤트사용("4", "이벤트사용");
 
     private final String code;
     private final String value;
 
-    PointCardType(String code, String value) {
+    PointType(String code, String value) {
         this.code = code;
         this.value = value;
     }
