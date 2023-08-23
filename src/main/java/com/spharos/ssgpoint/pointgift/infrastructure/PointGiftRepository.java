@@ -1,4 +1,4 @@
-package com.spharos.ssgpoint.pointgift.presentation;
+package com.spharos.ssgpoint.pointgift.infrastructure;
 
 import com.spharos.ssgpoint.pointgift.domain.PointGift;
 import org.springframework.data.jpa.repository.JpaRepository;

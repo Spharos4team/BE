@@ -3,7 +3,7 @@ package com.spharos.ssgpoint.pointgift.application;
 import com.spharos.ssgpoint.pointgift.domain.PointGift;
 import com.spharos.ssgpoint.pointgift.dto.PointGiftCreateDto;
 import com.spharos.ssgpoint.pointgift.dto.PointGiftGetDto;
-import com.spharos.ssgpoint.pointgift.presentation.PointGiftRepository;
+import com.spharos.ssgpoint.pointgift.infrastructure.PointGiftRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

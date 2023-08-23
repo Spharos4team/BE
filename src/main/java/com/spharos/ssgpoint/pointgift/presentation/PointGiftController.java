@@ -1,4 +1,4 @@
-package com.spharos.ssgpoint.pointgift.infrastructure;
+package com.spharos.ssgpoint.pointgift.presentation;
 
 import com.spharos.ssgpoint.pointgift.application.PointGiftService;
 import com.spharos.ssgpoint.pointgift.dto.PointGiftCreateDto;
