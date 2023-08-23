@@ -11,7 +11,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "notices")
 public class Notices {
 
     @Id
@@ -19,16 +18,16 @@ public class Notices {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "type")
+    @Column(nullable = false, length = 10)
     private NoticeType type;
 
-    @Column(name = "title", nullable = false)
+    @Column(nullable = false)
     private String title;
 
-    @Column(name = "content", nullable = false, columnDefinition = "TEXT")
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
     public enum NoticeType {
-        NOTICE, EVENT
+        IMAGE, TEXT
     }
 }

@@ -5,16 +5,13 @@ import com.spharos.ssgpoint.coupon.domain.UserCoupon;
 import com.spharos.ssgpoint.coupon.infrastructure.CouponRepository;
 import com.spharos.ssgpoint.coupon.infrastructure.UserCouponRepository;
 import com.spharos.ssgpoint.user.domain.User;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-@Builder
 @RequiredArgsConstructor
 public class CouponServiceImpl implements CouponService {
 
