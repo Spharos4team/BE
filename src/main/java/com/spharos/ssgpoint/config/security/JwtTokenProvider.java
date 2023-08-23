@@ -120,6 +120,9 @@ public class JwtTokenProvider {
                 refreshExpirationTime,
                 TimeUnit.MILLISECONDS
         );
+        log.info("refreshExpirationTime={}",refreshExpirationTime);
+        log.info("TimeUnit.MILLISECONDS={}",TimeUnit.MILLISECONDS);
+
         return refreshToken;
     }
 

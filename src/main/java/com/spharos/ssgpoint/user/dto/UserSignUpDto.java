@@ -2,6 +2,8 @@ package com.spharos.ssgpoint.user.dto;
 
 import lombok.*;
 
+import java.util.Map;
+
 @Builder
 @Getter @Setter
 @AllArgsConstructor
@@ -13,4 +15,5 @@ public class UserSignUpDto {
     private String email;
     private String phone;
     private String address;
+    private Map<String, Boolean> term;
 }

@@ -4,6 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spharos.ssgpoint.auth.vo.AuthenticationRequest;
 import com.spharos.ssgpoint.auth.vo.AuthenticationResponse;
 import com.spharos.ssgpoint.config.security.JwtTokenProvider;
+import com.spharos.ssgpoint.term.domain.UserTermList;
+import com.spharos.ssgpoint.term.infrastructure.TermRepository;
+import com.spharos.ssgpoint.token.domain.RefreshToken;
+import com.spharos.ssgpoint.token.infrastructure.RefreshTokenRepository;
 import com.spharos.ssgpoint.user.domain.User;
 import com.spharos.ssgpoint.user.dto.UserSignUpDto;
 import com.spharos.ssgpoint.user.infrastructure.UserRepository;
@@ -21,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.net.http.HttpResponse;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
@@ -32,13 +37,18 @@ public class AuthenticationService {
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManager authenticationManager;
-
+    private final TermRepository termRepository;
+    private final RefreshTokenRepository tokenRepository;
 
     @Transactional
     public AuthenticationResponse signup(UserSignUpDto userSignUpDto) {
         UUID uuid = UUID.randomUUID();
         String uuidString = uuid.toString();
         log.info("userSignUpDto name={}", userSignUpDto.getName() );
+        Map<String, Boolean> term = userSignUpDto.getTerm();
+        UserTermList userTermList = new UserTermList();
+        UserTermList termList = userTermList.builder().termJson(term).build();
+
         User user = User.builder()
                 .loginId(userSignUpDto.getLoginId())
                 .uuid(uuidString)
@@ -47,19 +57,22 @@ public class AuthenticationService {
                 .email(userSignUpDto.getEmail())
                 .phone(userSignUpDto.getPhone())
                 .address(userSignUpDto.getAddress())
+                .term(termList)
                 .status(1)
+
                 .build();
+
+        String jwtToken = jwtTokenProvider.generateToken(user);
+        String refreshToken = jwtTokenProvider.generateRefreshToken(user);
+
         user.hashPassword(user.getPassword());
-        log.info("user info={}", user.getName() );
         User saveUser = userRepository.save(user);
 
+        //저장후 바코드 생성
         String pointBardCode = createPointBardCode(user);
-        log.info("pointBardCode is : {}" , pointBardCode);
-
         String validateBarcode = validateBarcode(pointBardCode);
-        log.info("validateBarcode is : {}" , validateBarcode);
-
         saveUser.generateBarcode(validateBarcode);
+
 
         //16자리랑 12자리 비교랑 차이난다 정규식 뒤에 4->8->12자리로
         //userid칸을 늘리단 8-> 11자리로
@@ -73,7 +86,13 @@ public class AuthenticationService {
         // 그러면 1억게 다 조회하는데...
 
 
-        return AuthenticationResponse.builder().build();
+        return AuthenticationResponse.builder()
+                        .accessToken(jwtToken)
+                .refreshToken(refreshToken)
+                .build();
+
+
+
 
     }
 
@@ -97,7 +116,7 @@ public class AuthenticationService {
     }
     /**
      * 바코드 앞에 7자리 일단 랜덤숫자는 222 테스트할려고 고정
-     * @return
+     *
      */
     private String generateBarcode() {
         String fixNumber = "9350";
@@ -124,8 +143,6 @@ public class AuthenticationService {
         }
     }
 
-
-
     /**
      * 로그인 인증
      * @param authenticationRequest json 요청
@@ -141,14 +158,16 @@ public class AuthenticationService {
                 )
         );
 
-        User user = userRepository.findByLoginId(authenticationRequest.getLoginId()).orElseThrow();
+        User user = userRepository.findByLoginId(authenticationRequest.getLoginId()).orElseThrow(()-> new IllegalArgumentException("아이디가 존재하지 않습니다."));
         log.info("user is : {}" , user);
         String accessToken = jwtTokenProvider.generateToken(user);
         String refreshToken = jwtTokenProvider.generateRefreshToken(user);
+        String uuid = jwtTokenProvider.getUUID(accessToken);
 
         response.setHeader("authorization", "bearer "+ accessToken);
         response.setHeader("refreshToken", "bearer "+ refreshToken);
 
+        log.info("uuid is : {}" , uuid);
         log.info("accessToken is : {}" , accessToken);
         log.info("refreshToken is : {}" , refreshToken);
 
@@ -157,6 +176,54 @@ public class AuthenticationService {
                 .refreshToken(refreshToken)
                 .build();
     }
+  /*  public void refreshToken(
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) throws IOException {
+        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        final String refreshToken;
+        final String UUID;
+        if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
+            return;
+        }
+        refreshToken = authHeader.substring(7);
+        UUID = jwtTokenProvider.getUUID(refreshToken);
+        if (UUID != null) {
+            User user = this.userRepository.findByUuid(UUID)
+                    .orElseThrow();
+            if (jwtTokenProvider.validateToken(refreshToken, user)) {
+                var accessToken = jwtTokenProvider.generateToken(user);
+                revokeAllUserTokens(user);
+                saveUserToken(user, accessToken);
+                var authResponse = AuthenticationResponse.builder()
+                        .accessToken(accessToken)
+                        .refreshToken(refreshToken)
+                        .build();
+                new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
+            }
+        }
+    }
+    private void saveUserToken(User user, String jwtToken) {
+        var token = RefreshToken.builder()
+                .user(user)
+                .token(jwtToken)
+                .tokenType(TokenType.BEARER)
+                .expired(false)
+                .revoked(false)
+                .build();
+        tokenRepository.save(token);
+    }
+
+    private void revokeAllUserTokens(User user) {
+        var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getUuid());
+        if (validUserTokens.isEmpty())
+            return;
+        validUserTokens.forEach(token -> {
+            token.setExpired(true);
+            token.setRevoked(true);
+        });
+        tokenRepository.saveAll(validUserTokens);
+    }*/
 
 
 }
