@@ -23,8 +23,10 @@ public class PointController {
         PointCreateDto pointCreateDto = PointCreateDto.builder()
                 .totalPoint(pointCreateVo.getTotalPoint())
                 .point(pointCreateVo.getPoint())
-                .status(pointCreateVo.getStatus())
-                .UUID(UUID)
+                .pointTitle(pointCreateVo.getPointTitle())
+                .pointContent(pointCreateVo.getPointContent())
+                .type(pointCreateVo.getType())
+                .user(UUID)
                 .build();
 
         pointService.createPoint(UUID, pointCreateDto);
@@ -34,14 +36,16 @@ public class PointController {
     @GetMapping("/point")
     public List<PointGetVo> getPointByUser(@RequestParam("UUID") String UUID) {
         List<PointGetDto> pointGetDtoList = pointService.getPointByUser(UUID);
-        List<PointGetVo> pointGetVoList = pointGetDtoList.stream().map(pointGetDto -> {
-            return PointGetVo.builder()
-                    .point(pointGetDto.getPoint())
-                    .status(pointGetDto.getStatus())
-                    .build();
-        }).toList();
 
-        return pointGetVoList;
+        return pointGetDtoList.stream().map(pointGetDto ->
+                PointGetVo.builder()
+                        .totalPoint(pointGetDto.getTotalPoint())
+                        .point(pointGetDto.getPoint())
+                        .pointTitle(pointGetDto.getPointTitle())
+                        .pointContent(pointGetDto.getPointContent())
+                        .type(pointGetDto.getType())
+                        .build()
+        ).toList();
     }
 
 }

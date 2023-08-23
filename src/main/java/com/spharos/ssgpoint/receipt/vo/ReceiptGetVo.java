@@ -1,4 +1,4 @@
-package com.spharos.ssgpoint.point.vo;
+package com.spharos.ssgpoint.receipt.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,12 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PointGetVo {
+public class ReceiptGetVo {
 
+    private String storeName;
     private Integer point;
-    private Integer totalPoint;
-    private String pointTitle;
-    private String pointContent;
-    private String type;
 
 }
