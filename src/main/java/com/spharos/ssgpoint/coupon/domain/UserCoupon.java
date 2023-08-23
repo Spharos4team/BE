@@ -19,11 +19,9 @@ public class UserCoupon {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "uuid")
     private User UUID;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "coupon_id")
     private Coupon coupon;
 
     @Column(nullable = false)
