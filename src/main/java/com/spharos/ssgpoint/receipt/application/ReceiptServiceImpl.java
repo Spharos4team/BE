@@ -14,7 +14,7 @@ public class ReceiptServiceImpl implements ReceiptService {
 
     private final ReceiptRepository receiptRepository;
 
-    // 영수증
+    // 영수증 일련번호로 영수증 정보 조회
     @Override
     public List<ReceiptGetDto> getReceiptByNumber(String number) {
         List<Receipt> receiptList = receiptRepository.findByNumber(number);

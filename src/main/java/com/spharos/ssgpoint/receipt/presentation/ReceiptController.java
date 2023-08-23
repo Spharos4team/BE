@@ -18,7 +18,7 @@ public class ReceiptController {
 
     private final ReceiptService receiptService;
 
-    // 영수증
+    // 영수증 일련번호로 영수증 정보 조회
     @GetMapping("/point/receipt")
     public List<ReceiptGetVo> getReceiptByNumber(@RequestParam("number") String number) {
         List<ReceiptGetDto> receiptGetDtoList = receiptService.getReceiptByNumber(number);
