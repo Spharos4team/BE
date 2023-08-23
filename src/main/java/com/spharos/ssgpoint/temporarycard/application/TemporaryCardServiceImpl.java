@@ -14,7 +14,7 @@ public class TemporaryCardServiceImpl implements TemporaryCardService {
 
     private final TemporaryCardRepository temporaryCardRepository;
 
-    // 임시 카드 조회
+    // 임시 발급 카드 조회
     @Override
     public List<TemporaryCardGetDto> getTemporaryCardByNumber(String number) {
         List<TemporaryCard> temporaryCardList = temporaryCardRepository.findByNumber(number);

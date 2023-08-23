@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface TemporaryCardService {
 
-    // 임시 카드 조회
+    // 임시 발급 카드 조회
     List<TemporaryCardGetDto> getTemporaryCardByNumber(String number);
 
 }

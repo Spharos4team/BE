@@ -19,7 +19,7 @@ public class TemporaryCardController {
 
     private final TemporaryCardService temporaryCardService;
 
-    // 임시 카드 조회
+    // 임시 발급 카드 조회
     @GetMapping("/temporary-card")
     public List<TemporaryCardGetVo> getTemporaryCardByNumber(String number) {
         List<TemporaryCardGetDto> temporaryCardGetDtoList = temporaryCardService.getTemporaryCardByNumber(number);
