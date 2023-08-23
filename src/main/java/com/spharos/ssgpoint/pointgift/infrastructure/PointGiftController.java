@@ -1,5 +1,7 @@
 package com.spharos.ssgpoint.pointgift.infrastructure;
 
+import com.spharos.ssgpoint.point.dto.PointCreateDto;
+import com.spharos.ssgpoint.point.vo.PointCreateVo;
 import com.spharos.ssgpoint.pointgift.application.PointGiftService;
 import com.spharos.ssgpoint.pointgift.dto.PointGiftCreateDto;
 import com.spharos.ssgpoint.pointgift.dto.PointGiftGetDto;
@@ -19,7 +21,7 @@ public class PointGiftController {
 
     // 포인트 선물 보내기
     @PostMapping("/point/gift")
-    public void createPointGift(@RequestParam("UUID") String UUID, @RequestBody PointGiftCreateVo pointGiftCreateVo) {
+    public void createPointGift(@RequestParam("UUID") String UUID, @RequestBody PointGiftCreateVo pointGiftCreateVo, @RequestBody PointCreateVo pointCreateVo) {
         PointGiftCreateDto pointGiftCreateDto = PointGiftCreateDto.builder()
                 .point(pointGiftCreateVo.getPoint())
                 .message(pointGiftCreateVo.getMessage())
@@ -27,23 +29,27 @@ public class PointGiftController {
                 .UUID(UUID)
                 .loginId(pointGiftCreateVo.getLoginId())
                 .build();
-        pointGiftService.createPointGift(UUID, pointGiftCreateDto);
+
+        PointCreateDto pointCreateDto = PointCreateDto.builder()
+                .point(pointCreateVo.getPoint())
+                .build();
+
+        pointGiftService.createPointGift(UUID, pointGiftCreateDto, pointCreateDto);
     }
 
     // 포인트 선물 목록
     @GetMapping("/point/gift")
     public List<PointGiftGetVo> getPointGiftByUser(@RequestParam("UUID") String UUID) {
         List<PointGiftGetDto> pointGiftGetDtoList = pointGiftService.getPointByUser(UUID);
-        List<PointGiftGetVo> pointGiftGetVoList = pointGiftGetDtoList.stream().map(pointGiftGetDto -> {
-            return PointGiftGetVo.builder()
+
+        return pointGiftGetDtoList.stream().map(pointGiftGetDto ->
+            PointGiftGetVo.builder()
                     .point(pointGiftGetDto.getPoint())
                     .message(pointGiftGetDto.getMessage())
                     .access(String.valueOf(pointGiftGetDto.getAccess()))
                     .UUID(UUID)
-                    .build();
-        }).toList();
-
-        return pointGiftGetVoList;
+                    .build()
+        ).toList();
     }
 
 }

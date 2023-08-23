@@ -13,6 +13,8 @@ public class PointGetDto {
     private Long pointId;
     private Integer totalPoint;
     private Integer point;
+    private String pointTitle;
+    private String pointContent;
     private Integer status;
 
 }

@@ -30,14 +30,13 @@ public class PointServiceImpl implements PointService {
     @Override
     public List<PointGetDto> getPointByUser(String UUID) {
         List<Point> pointList = pointRepository.findByUUID(UUID);
-        List<PointGetDto> pointGetDtoList = pointList.stream().map(point -> {
-            return PointGetDto.builder()
-                    .point(point.getPoint())
-                    .status(point.getStatus())
-                    .build();
-        }).toList();
 
-        return pointGetDtoList;
+        return pointList.stream().map(point ->
+                PointGetDto.builder()
+                        .point(point.getPoint())
+                        .status(point.getStatus())
+                        .build()
+        ).toList();
     }
 
 }

@@ -34,14 +34,13 @@ public class PointController {
     @GetMapping("/point")
     public List<PointGetVo> getPointByUser(@RequestParam("UUID") String UUID) {
         List<PointGetDto> pointGetDtoList = pointService.getPointByUser(UUID);
-        List<PointGetVo> pointGetVoList = pointGetDtoList.stream().map(pointGetDto -> {
-            return PointGetVo.builder()
-                    .point(pointGetDto.getPoint())
-                    .status(pointGetDto.getStatus())
-                    .build();
-        }).toList();
 
-        return pointGetVoList;
+        return pointGetDtoList.stream().map(pointGetDto ->
+                PointGetVo.builder()
+                        .point(pointGetDto.getPoint())
+                        .status(pointGetDto.getStatus())
+                        .build()
+        ).toList();
     }
 
 }

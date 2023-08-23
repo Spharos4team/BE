@@ -24,6 +24,12 @@ public class Point {
     @Column(nullable = false, columnDefinition = "int default 0")
     private Integer point;
 
+    @Column(nullable = false)
+    private String pointTitle;
+
+    @Column(nullable = false)
+    private String pointContent;
+
     @Column(nullable = false, columnDefinition = "int default 1")
     private Integer status;
 
