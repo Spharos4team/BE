@@ -26,7 +26,7 @@ public class PointController {
                 .pointTitle(pointCreateVo.getPointTitle())
                 .pointContent(pointCreateVo.getPointContent())
                 .type(pointCreateVo.getType())
-                .UUID(UUID)
+                .user(UUID)
                 .build();
 
         pointService.createPoint(UUID, pointCreateDto);

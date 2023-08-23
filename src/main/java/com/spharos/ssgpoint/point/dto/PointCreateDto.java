@@ -15,7 +15,7 @@ public class PointCreateDto {
     private String pointTitle;
     private String pointContent;
     private String type;
-    private String UUID;
+    private String user;
     private Long pointCardId;
 
 }
