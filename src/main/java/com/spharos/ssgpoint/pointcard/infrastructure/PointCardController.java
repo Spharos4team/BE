@@ -26,6 +26,7 @@ public class PointCardController {
                 .UUID(UUID)
                 .pointCardType(pointCardCreateVo.getPointCardType())
                 .build();
+
         pointCardService.createPointCard(UUID, pointCardCreateDto);
     }
 

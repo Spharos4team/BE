@@ -22,7 +22,6 @@ public class PointCardServiceImpl implements PointCardService {
     @Override
     @Convert(converter = PointCardTypeConverter.class)
     public void createPointCard(String UUID, PointCardCreateDto pointCardCreateDto) {
-
         PointCardType pointCardType
                 = new PointCardTypeConverter().convertToEntityAttribute(pointCardCreateDto.getPointCardType());
 

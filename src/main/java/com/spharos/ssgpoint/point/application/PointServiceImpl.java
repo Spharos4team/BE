@@ -23,7 +23,6 @@ public class PointServiceImpl implements PointService {
     // 포인트 생성
     @Override
     public void createPoint(String UUID, PointCreateDto pointCreateDto) {
-
         PointType pointType = new PointTypeConverter().convertToEntityAttribute(pointCreateDto.getType());
         User user = userRepository.findByUuid(UUID).orElseThrow(() ->
                 new IllegalArgumentException("UUID 정보 없음 = " + UUID));
