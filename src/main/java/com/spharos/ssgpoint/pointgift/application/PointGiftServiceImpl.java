@@ -1,8 +1,5 @@
 package com.spharos.ssgpoint.pointgift.application;
 
-import com.spharos.ssgpoint.point.domain.Point;
-import com.spharos.ssgpoint.point.dto.PointCreateDto;
-import com.spharos.ssgpoint.point.infrastructure.PointRepository;
 import com.spharos.ssgpoint.pointgift.domain.PointGift;
 import com.spharos.ssgpoint.pointgift.dto.PointGiftCreateDto;
 import com.spharos.ssgpoint.pointgift.dto.PointGiftGetDto;
@@ -16,12 +13,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PointGiftServiceImpl implements PointGiftService {
 
-    private final PointRepository pointRepository;
     private final PointGiftRepository pointGiftRepository;
 
     // 포인트 선물 보내기
     @Override
-    public void createPointGift(String UUID, PointGiftCreateDto pointGiftCreateDto, PointCreateDto pointCreateDto) {
+    public void createPointGift(String UUID, PointGiftCreateDto pointGiftCreateDto) {
         pointGiftRepository.save(PointGift.builder()
                 .point(pointGiftCreateDto.getPoint())
                 .message(pointGiftCreateDto.getMessage())
@@ -38,12 +34,12 @@ public class PointGiftServiceImpl implements PointGiftService {
         List<PointGift> pointGiftList = pointGiftRepository.findByUUID(UUID);
 
         return pointGiftList.stream().map(pointGift ->
-            PointGiftGetDto.builder()
-                    .point(pointGift.getPoint())
-                    .message(pointGift.getMessage())
-                    .access(pointGift.getAccess())
-                    .UUID(pointGift.getUUID())
-                    .build()
+                PointGiftGetDto.builder()
+                        .point(pointGift.getPoint())
+                        .message(pointGift.getMessage())
+                        .access(pointGift.getAccess())
+                        .UUID(pointGift.getUUID())
+                        .build()
         ).toList();
     }
 
