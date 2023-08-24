@@ -5,15 +5,13 @@ import com.spharos.ssgpoint.auth.vo.AuthenticationRequest;
 import com.spharos.ssgpoint.auth.vo.AuthenticationResponse;
 import com.spharos.ssgpoint.config.security.JwtTokenProvider;
 import com.spharos.ssgpoint.term.domain.UserTermList;
-import com.spharos.ssgpoint.term.infrastructure.TermRepository;
-import com.spharos.ssgpoint.token.domain.RefreshToken;
+
+
 import com.spharos.ssgpoint.token.infrastructure.RefreshTokenRepository;
 import com.spharos.ssgpoint.user.domain.User;
 import com.spharos.ssgpoint.user.dto.UserSignUpDto;
 import com.spharos.ssgpoint.user.infrastructure.UserRepository;
-import jakarta.persistence.PostPersist;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
+
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,14 +35,14 @@ public class AuthenticationService {
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManager authenticationManager;
-    private final TermRepository termRepository;
-    private final RefreshTokenRepository tokenRepository;
+      private final RefreshTokenRepository tokenRepository;
 
     @Transactional
     public AuthenticationResponse signup(UserSignUpDto userSignUpDto) {
         UUID uuid = UUID.randomUUID();
         String uuidString = uuid.toString();
         log.info("userSignUpDto name={}", userSignUpDto.getName() );
+
         Map<String, Boolean> term = userSignUpDto.getTerm();
         UserTermList userTermList = new UserTermList();
         UserTermList termList = userTermList.builder().termJson(term).build();
@@ -85,14 +83,10 @@ public class AuthenticationService {
         // 그런데 회원1억명 넘는거 떄문에 중복검사하는건데 너무 많이 조회하는게 아닌가
         // 그러면 1억게 다 조회하는데...
 
-
         return AuthenticationResponse.builder()
                         .accessToken(jwtToken)
                 .refreshToken(refreshToken)
                 .build();
-
-
-
 
     }
 
@@ -106,7 +100,7 @@ public class AuthenticationService {
 
         if (user.getId() > 999999999) {
             long l = user.getId() - 99999999;
-            formattedId =String.valueOf(1000000000-l);  // 아니면 id - 1억해서 ?
+            formattedId =String.valueOf(1000000000-l);  // 아니면 id - 1억해서 ? 최대 20억
         } else {
             formattedId = String.format("%09d", user.getId());
         }
@@ -116,17 +110,16 @@ public class AuthenticationService {
     }
     /**
      * 바코드 앞에 7자리 일단 랜덤숫자는 222 테스트할려고 고정
-     *
      */
     private String generateBarcode() {
         String fixNumber = "9350";
         Random random = new Random();
         String randomDigits = String.format("%03d", random.nextInt(1000));
-        return fixNumber + 222;
+        return fixNumber + randomDigits;
     }
 
     /**
-     * 바코드만들고 만든거 중복 검사
+     * 바코드만들고 만든거 중복 검사 , todo:추가 수정 필요함
      */
     private String validateBarcode(String checkBarcode) {
         Optional<User> byBarCode = userRepository.findByBarCode(checkBarcode);
@@ -135,8 +128,9 @@ public class AuthenticationService {
             String substring = checkBarcode.substring(4, 7);
             int plus = Integer.parseInt(substring) + 1;
             log.info("plus={}",plus );
-            String s = checkBarcode.substring(0, 4) + String.format("%03d", plus) + checkBarcode.substring(7);
-            return validateBarcode(s); // 중복된 경우 재귀 호출하여 검사
+            String barcode = checkBarcode.substring(0, 4) + String.format("%03d", plus) + checkBarcode.substring(7);
+            return validateBarcode(barcode); // 중복된 경우 재귀 호출하여 검사
+            //return barcode;
         }
         else{
             return checkBarcode;

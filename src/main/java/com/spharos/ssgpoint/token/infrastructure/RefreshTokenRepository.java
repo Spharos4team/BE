@@ -7,6 +7,5 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 public interface RefreshTokenRepository extends CrudRepository<RefreshToken, Long>{
-    @Query("")
-    List<RefreshToken> findAllValidateTokenByUuidr(String UUID);
+
 }

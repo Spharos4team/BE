@@ -15,8 +15,7 @@ public class ExceptionController {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResult> userExHandle(IllegalArgumentException e) {
-
-        ErrorResult errorResult = new ErrorResult(e.getMessage());
+        ErrorResult errorResult = new ErrorResult("error",e.getMessage());
         return new ResponseEntity<>(errorResult, HttpStatus.BAD_REQUEST);
     }
 
