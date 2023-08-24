@@ -18,7 +18,7 @@ public class Receipt {
     private Long id;
 
     @Column(nullable = false, length = 100)
-    private String associate;
+    private String alliance;
 
     @Column(nullable = false, length = 100)
     private String brand;
