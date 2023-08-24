@@ -1,10 +1,10 @@
-package com.spharos.ssgpoint.associatepointcard.domain;
+package com.spharos.ssgpoint.alliancepointcard.domain;
 
 import com.spharos.ssgpoint.global.CodeValue;
 import lombok.Getter;
 
 @Getter
-public enum AssociatePointCardType implements CodeValue {
+public enum AlliancePointCardType implements CodeValue {
 
     삼성전자포인트("S", "삼성전자 포인트"),
     대한항공마일리지("K", "대한항공 마일리지"),
@@ -13,7 +13,7 @@ public enum AssociatePointCardType implements CodeValue {
     private final String code;
     private final String value;
 
-    AssociatePointCardType(String code, String value) {
+    AlliancePointCardType(String code, String value) {
         this.code = code;
         this.value = value;
     }
