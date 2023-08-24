@@ -15,11 +15,8 @@ public class Notices {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "notices_id")
     private Long id;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 10)
-    private NoticeType type;
 
     @Column(nullable = false)
     private String title;
@@ -27,7 +24,5 @@ public class Notices {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
-    public enum NoticeType {
-        IMAGE, TEXT
-    }
 }
+

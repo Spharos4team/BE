@@ -27,6 +27,13 @@ public class UserCoupon {
     @Column(nullable = false)
     private boolean used;
 
-    public void setUser(User user) {
+    // UserCoupon.java
+public void useCoupon() {
+    if (used) {
+        throw new RuntimeException("쿠폰이 이미 사용되었습니다.");
     }
+    this.used = true;
+}
+
+
 }
