@@ -1,17 +1,37 @@
 package com.spharos.ssgpoint.coupon.presentation;
 
 import com.spharos.ssgpoint.coupon.application.CouponService;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/coupon")
-public class CouponController { // 쿠폰 컨트롤러
+public class CouponController {
 
-    private final CouponService couponService; // 쿠폰 서비스
+    private final CouponService couponService;
+    private final StoreManager storeManager = new StoreManager();
 
     public CouponController(CouponService couponService) {
         this.couponService = couponService;
     }
 
-    // TODO: 여기에 핸들러 메소드 추가 (쿠폰 생성, 조회, 다운로드 등)
+    @GetMapping("/generate")
+    public CouponResponse generateCoupon(@RequestParam String storeName) {
+        String couponNumber = storeManager.generateCouponNumber(storeName);
+        return new CouponResponse(couponNumber);
+    }
+
+    static class CouponResponse {
+        private final String couponNumber;
+
+        public CouponResponse(String couponNumber) {
+            this.couponNumber = couponNumber;
+        }
+
+        public String getCouponNumber() {
+            return couponNumber;
+        }
+    }
 }
