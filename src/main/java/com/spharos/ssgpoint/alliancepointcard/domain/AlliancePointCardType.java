@@ -6,9 +6,9 @@ import lombok.Getter;
 @Getter
 public enum AlliancePointCardType implements CodeValue {
 
-    삼성전자포인트("S", "삼성전자 포인트"),
-    대한항공마일리지("K", "대한항공 마일리지"),
-    아시아나항공마일리지("A", "아시아나항공 마일리지");
+    SAMSUNG("S", "삼성전자 포인트"),
+    KOREANAIR("K", "대한항공마일리지"),
+    ASIANAAIR("A", "아시아나항공마일리지");
 
     private final String code;
     private final String value;

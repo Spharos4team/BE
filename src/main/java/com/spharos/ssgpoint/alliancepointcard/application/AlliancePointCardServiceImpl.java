@@ -40,7 +40,7 @@ public class AlliancePointCardServiceImpl implements AlliancePointCardService {
         return alliancePointCardList.stream().map(alliance ->
                 AlliancePointCardGetDto.builder()
                         .number(alliance.getNumber())
-                        .type(String.valueOf(alliance.getType()))
+                        .type(String.valueOf(alliance.getType().getValue()))
                         .build()
         ).toList();
     }
