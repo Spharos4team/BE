@@ -50,6 +50,8 @@ public class User implements UserDetails {
 
     @Column(length = 100)
     private String pointPassword;
+    @Column(length = 500 )
+    private String barCode;
 
     public void updateUserInfo(String address, String email){
         this.address =address;
@@ -62,6 +64,9 @@ public class User implements UserDetails {
     }
 
 
+    public void generateBarcode(String barCode){
+        this.barCode = barCode;
+    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;

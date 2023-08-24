@@ -8,6 +8,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PasswordUpdateDto {
-    private String currentPassword;
-    private String updatePassword;
+
+    private String password;
 }
