@@ -8,6 +8,7 @@ public class SsgpointApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(SsgpointApplication.class, args);
+
 	}
 
 }

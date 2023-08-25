@@ -26,8 +26,6 @@ public class UserTermList {
     @Column(columnDefinition = "longtext")
     private Map<String,Boolean> termJson;
 
-    @OneToOne(mappedBy = "term",fetch = FetchType.LAZY)
-    private User user;
 
     public void updateTermJson(Map<String, Boolean> termJson) {
         this.termJson = termJson;

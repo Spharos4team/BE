@@ -81,8 +81,6 @@ public class UserServiceImp implements UserService{
         return userGetDto;
     }
 
-
-
     /**
      * 회원정보 수정
      */
@@ -90,24 +88,13 @@ public class UserServiceImp implements UserService{
     @Override
     public void updateUserInfo(String UUID, UserUpdateDto userUpdateRequestDto) {
         User user = userRepository.findByUuid(UUID).orElseThrow(() -> new IllegalArgumentException("UUID정보 없음  "));
-
         user.updateUserInfo(userUpdateRequestDto.getAddress(), userUpdateRequestDto.getEmail());
-
     }
 
     /**
      * 회원가입시 아이디 중복 확인
      */
-    /*@Override
-    public Boolean validateDuplicateLoginId(UserSignUpDto userSignUpDto) {
-        log.info("userSignUpDto={}",userSignUpDto.getLoginId());
-        Optional<User> byLoginId = userRepository.findByLoginId(userSignUpDto.getLoginId());
-        log.info("byLoginId={}",byLoginId);
-        if (byLoginId.isPresent()) {
-            throw new IllegalStateException("이미 존재하는 아이디");
-        }
 
-    }*/
     public void validateDuplicateLoginId(UserSignUpDto userSignUpDto) {
         log.info("userSignUpDto={}", userSignUpDto.getLoginId());
         Optional<User> byLoginId = userRepository.findByLoginId(userSignUpDto.getLoginId());
@@ -115,7 +102,6 @@ public class UserServiceImp implements UserService{
             throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
         }
     }
-
 
 
     /**

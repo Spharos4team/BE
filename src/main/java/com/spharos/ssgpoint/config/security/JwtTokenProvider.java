@@ -139,6 +139,8 @@ public class JwtTokenProvider {
         final String UUID = getUUID(token);
         return (UUID.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
+
+
     /** 6
      *  주어진 JWT 토큰에서 UUID(사용자 ID) 클레임을 추출하여 반환합니다.
      */

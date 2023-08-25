@@ -14,10 +14,8 @@ public interface UserRepository extends JpaRepository<User, Long>{
     Optional<User> findByUuid(String UUID);
     Optional<User> findByBarCode(String barCode);
 
-/*    @Query("SELECT l.termJson FROM User u join UserTermList l where l.id = : id")
-    UserTermList findTermJsonByUuid(@Param("id") Long id);*/
 
-   @Query("SELECT u.term FROM User u WHERE u.uuid = :uuid")
+    @Query("SELECT u.term FROM User u  WHERE u.uuid = :uuid")
     Optional<UserTermList> findTermJsonByUuid(@Param("uuid") String uuid);
 
 }

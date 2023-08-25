@@ -1,5 +1,6 @@
-package com.spharos.ssgpoint.user.exception;
+package com.spharos.ssgpoint.exception;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,19 @@ public class ExceptionController {
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ErrorResult> loginExHandle(BadCredentialsException e) {
         ErrorResult errorResult = new ErrorResult("아이디 또는 비밀번호를 확인해 주세요 ", e.getMessage());
+        return new ResponseEntity<>(errorResult, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(CustomException.class)
+    public ResponseEntity<ErrorResult> customExHandle(CustomException e) {
+        ErrorResult errorResult = new ErrorResult("커스텀 에러", e.getMessage());
+        return new ResponseEntity<>(errorResult, HttpStatus.FORBIDDEN);
+    }
+
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<ErrorResult> jwtExHandle(ExpiredJwtException e) {
+        ErrorResult errorResult = new ErrorResult("refresh 토큰 만료", e.getMessage());
         return new ResponseEntity<>(errorResult, HttpStatus.FORBIDDEN);
     }
 

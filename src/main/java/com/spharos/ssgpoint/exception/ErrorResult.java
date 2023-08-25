@@ -1,4 +1,4 @@
-package com.spharos.ssgpoint.user.exception;
+package com.spharos.ssgpoint.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

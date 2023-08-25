@@ -3,14 +3,11 @@ package com.spharos.ssgpoint.user.presentation;
 import com.spharos.ssgpoint.config.security.JwtTokenProvider;
 import com.spharos.ssgpoint.user.application.UserService;
 import com.spharos.ssgpoint.user.dto.*;
-import com.spharos.ssgpoint.user.exception.ErrorResult;
-import com.spharos.ssgpoint.user.exception.ExceptionController;
 import com.spharos.ssgpoint.user.vo.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.core.env.Environment;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -56,15 +53,14 @@ public class UserController {
     /**
      * 회원 수정
      */
-    @PutMapping("/user")
+    @PutMapping("/user/{UUID}")
     public ResponseEntity<String> updateUser(@PathVariable String UUID,@RequestBody UserUpdateIn userUpdateIn){
-
         ModelMapper modelMapper = new ModelMapper();
         UserUpdateDto userUpdateDto = modelMapper.map(userUpdateIn,UserUpdateDto.class);
-
         userService.updateUserInfo(UUID,userUpdateDto);
         return ResponseEntity.ok("회원정보 변경 성공");
     }
+
     /**
      * 회원가입 시 아이디 중복 확인
      */

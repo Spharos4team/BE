@@ -1,6 +1,7 @@
 package com.spharos.ssgpoint.user.domain;
 
 
+
 import com.spharos.ssgpoint.term.domain.UserTermList;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -17,7 +18,6 @@ import java.util.List;
 
 @Entity
 @Getter
-
 @NoArgsConstructor
 @AllArgsConstructor
 public class User implements UserDetails {
@@ -58,11 +58,13 @@ public class User implements UserDetails {
     private String barCode;
 
     @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_term_list_id")
+    @JoinColumn(name = "user_term_id")
     private UserTermList term;
 
+
     @Builder
-    public User(String uuid, String loginId, String name, String password, String phone, String address, String email, Integer status, String pointPassword, String barCode, UserTermList term) {
+    public User(String uuid, String loginId, String name, String password, String phone, String address, String email,
+                Integer status, String pointPassword, String barCode, UserTermList term) {
         this.uuid = uuid;
         this.loginId = loginId;
         this.name = name;
@@ -73,10 +75,9 @@ public class User implements UserDetails {
         this.status = status;
         this.pointPassword = pointPassword;
         this.barCode = barCode;
-        this.term = term;
+        this.term= term;
 
     }
-
 
     public void updateUserInfo(String address, String email){
         this.address =address;
