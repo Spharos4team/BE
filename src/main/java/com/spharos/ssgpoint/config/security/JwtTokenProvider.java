@@ -6,7 +6,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import jakarta.servlet.http.HttpServletResponse;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -120,6 +120,9 @@ public class JwtTokenProvider {
                 refreshExpirationTime,
                 TimeUnit.MILLISECONDS
         );
+        log.info("refreshExpirationTime={}",refreshExpirationTime);
+        log.info("TimeUnit.MILLISECONDS={}",TimeUnit.MILLISECONDS);
+
         return refreshToken;
     }
 
@@ -136,6 +139,8 @@ public class JwtTokenProvider {
         final String UUID = getUUID(token);
         return (UUID.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
+
+
     /** 6
      *  주어진 JWT 토큰에서 UUID(사용자 ID) 클레임을 추출하여 반환합니다.
      */

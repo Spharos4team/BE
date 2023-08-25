@@ -26,7 +26,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0'
+	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
 
 	compileOnly 'org.projectlombok:lombok'
@@ -43,6 +43,10 @@ dependencies {
 	//redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
+	//json
+	implementation 'io.hypersistence:hypersistence-utils-hibernate-60:3.5.0'
+	//json 파싱
+	implementation 'com.fasterxml.jackson.module:jackson-module-jakarta-xmlbind-annotations'
 
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
