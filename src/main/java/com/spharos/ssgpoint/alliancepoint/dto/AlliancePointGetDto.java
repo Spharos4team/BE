@@ -1,4 +1,4 @@
-package com.spharos.ssgpoint.associatepointcard.dto;
+package com.spharos.ssgpoint.alliancepoint.dto;
 
 import lombok.*;
 
@@ -8,9 +8,9 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AssociatePointCardGetDto {
+public class AlliancePointGetDto {
 
-    private String number;
+    private Integer point;
     private String type;
 
 }

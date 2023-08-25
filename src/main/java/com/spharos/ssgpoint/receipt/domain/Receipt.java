@@ -18,7 +18,7 @@ public class Receipt {
     private Long id;
 
     @Column(nullable = false, length = 100)
-    private String associate;
+    private String alliance;
 
     @Column(nullable = false, length = 100)
     private String brand;
@@ -34,5 +34,12 @@ public class Receipt {
 
     @Column(nullable = false, columnDefinition = "int default 0")
     private Integer point;
+
+    @Column(nullable = false, columnDefinition = "int default 0")
+    private Integer status;
+
+    public void update(Integer status) {
+        this.status = status;
+    }
 
 }

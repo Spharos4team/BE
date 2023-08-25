@@ -1,4 +1,4 @@
-package com.spharos.ssgpoint.associatepointcard.vo;
+package com.spharos.ssgpoint.alliancepoint.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,9 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AssociatePointCardGetVo {
+public class AlliancePointUpdateVo {
 
-    private String number;
-    private String type;
+    private Integer point;
 
 }

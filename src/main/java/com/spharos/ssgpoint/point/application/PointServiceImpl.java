@@ -51,7 +51,7 @@ public class PointServiceImpl implements PointService {
                         .point(point.getPoint())
                         .pointTitle(point.getPointTitle())
                         .pointContent(point.getPointContent())
-                        .type(String.valueOf(point.getType()))
+                        .type(String.valueOf(point.getType().getValue()))
                         .build()
         ).toList();
     }

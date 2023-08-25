@@ -1,4 +1,4 @@
-package com.spharos.ssgpoint.associatepointcard.domain;
+package com.spharos.ssgpoint.alliancepointcard.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AssociatePointCard {
+public class AlliancePointCard {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +24,7 @@ public class AssociatePointCard {
     private String UUID;
 
     @Column(nullable = false)
-    @Convert(converter = AssociatePointCardTypeConverter.class)
-    private AssociatePointCardType type;
+    @Convert(converter = AlliancePointCardTypeConverter.class)
+    private AlliancePointCardType type;
 
 }
