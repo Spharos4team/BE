@@ -1,9 +1,12 @@
 package com.spharos.ssgpoint.coupon.domain;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Getter
@@ -16,21 +19,36 @@ public class Coupon {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 45, nullable = true)
+    @Column(nullable = false, unique = true, length = 20)
+    private Integer number;
+
+    @Column(length = 45, nullable = false)
     private String title;
 
-    @Column(nullable = false)
-    private int number;
+    @Column(length = 45, nullable = false)
+    private String description;
 
-    @Column(length = 255, nullable = true)
-    private String barCode;
+    private String image;
 
-    @Column(nullable = false)
-    private LocalDateTime startDate;
+    private String content;
 
-    @Column(nullable = false)
-    private LocalDateTime endDate;
+    private Date startDate;
+
+    private Date endDate;
+
+    private Date regDate;
 
     @Column(length = 45)
     private String store;
+
+    private String barcode;
+
+    private boolean isActive;  // New field to check if the coupon is active or not
+
+    public boolean isValid() {
+        Date now = new Date();
+        return isActive && !now.before(startDate) && !now.after(endDate);
+    }
+    
+
 }

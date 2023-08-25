@@ -17,26 +17,26 @@ public class NoticesController {
 
     private final NoticesService noticesService;
 
-    @GetMapping("/notice")
+    @GetMapping("/notices")
     public List<NoticesDto> getAllNotices() {
         return noticesService.findAllNotices().stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/notice/{id}")
+    @GetMapping("/notices/{id}")
     public NoticesDto getNoticeById(@PathVariable Long id) {
         Notices notices = noticesService.findNoticeById(id);
         return convertToDto(notices);
     }
 
-    @PostMapping("/notice")
+    @PostMapping("/notices")
     public NoticesDto createNotice(@RequestBody NoticesCreateRequestDto requestDto) {
         Notices notices = noticesService.createNotice(requestDto.toEntity());
         return convertToDto(notices);
     }
 
-    @DeleteMapping("/notice/{id}")
+    @DeleteMapping("/notices/{id}")
     public void deleteNotice(@PathVariable Long id) {
         noticesService.deleteNotice(id);
     }
@@ -44,10 +44,8 @@ public class NoticesController {
     private NoticesDto convertToDto(Notices notices) {
         return new NoticesDto(
                 notices.getId(),
-                notices.getType(),
                 notices.getTitle(),
-                notices.getContent(),
-                notices.getRegDate()
+                notices.getContent()
         );
     }
 }

@@ -1,8 +1,9 @@
 package com.spharos.ssgpoint.coupon.dto;
 
-import lombok.*;
-
-import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -11,9 +12,7 @@ import java.time.LocalDateTime;
 public class UserCouponDto {
 
     private Long id;
-    private Long userId;
+    private Long UUID;
     private Long couponId;
     private boolean used;
-    private LocalDateTime downloadDate;  // 발급 날짜로 변경
-    private LocalDateTime usedDate;      // 사용 날짜
 }

@@ -1,5 +1,6 @@
 package com.spharos.ssgpoint.pointcard.domain;
 
+import com.spharos.ssgpoint.global.CodeValue;
 import lombok.Getter;
 
 @Getter
