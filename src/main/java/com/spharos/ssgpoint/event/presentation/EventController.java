@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/events")
+@RequestMapping("/api/v1")
 public class EventController {
 
     private final EventService eventService;
@@ -19,13 +19,13 @@ public class EventController {
         this.eventService = eventService;
     }
 
-    @GetMapping
+    @GetMapping("/events")
     public ResponseEntity<List<Event>> getEventsByType(@RequestParam String event_type) {
         List<Event> events = eventService.getEventsByType(event_type);
         return ResponseEntity.ok(events);
     }
 
-    @GetMapping("/detail")
+    @GetMapping("/events/detail?eventNo={id}")
     public ResponseEntity<Event> getEventDetail(@RequestParam Long eventNo) {
         Event event = eventService.getEventById(eventNo);
         if (event == null) {

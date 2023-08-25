@@ -2,9 +2,10 @@ package com.spharos.ssgpoint.coupon.domain;
 
 import com.spharos.ssgpoint.user.domain.User;
 import jakarta.persistence.*;
-import lombok.*;
-
-import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
@@ -18,25 +19,19 @@ public class UserCoupon {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    private User UUID;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "coupon_id")
     private Coupon coupon;
 
     @Column(nullable = false)
     private boolean used;
 
-    @Column(nullable = true)
-    private LocalDateTime usedDate;
-
-    @Column(nullable = false)
-    private LocalDateTime downloadDate;
-
-    public void setUser(User user) {
+    public void useCoupon() {
+        if (used) {
+            throw new RuntimeException("쿠폰이 이미 사용되었습니다.");
+        }
+        this.used = true;
     }
 
-    public void setCoupon(Coupon coupon) {
-    }
 }

@@ -6,34 +6,28 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "notices")
 public class Notices {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "notices_id")
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "type")
-    private NoticeType type;
-
-    @Column(name = "title", nullable = false)
+    @Column(nullable = false)
     private String title;
 
-    @Column(name = "content", nullable = false, columnDefinition = "TEXT")
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
-    @Column(name = "reg_date", nullable = false)
-    private LocalDateTime regDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "regDate", nullable = false, updatable = false)
+    private Date regDate = new Date();
 
-    public enum NoticeType {
-        NOTICE, EVENT
-    }
 }

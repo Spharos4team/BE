@@ -4,6 +4,8 @@ import com.spharos.ssgpoint.notices.domain.Notices;
 import com.spharos.ssgpoint.notices.infrastructure.NoticesRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -19,11 +21,12 @@ public class NoticesServiceImpl implements NoticesService {
 
     @Override
     public Notices findNoticeById(Long id) {
-        return noticesRepository.findById(id).orElse(null);
+        return noticesRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당하는 글 " + id + " 를 찾을수 없습니다.."));
     }
 
     @Override
     public Notices createNotice(Notices notices) {
+        notices.setRegDate(new Date());
         return noticesRepository.save(notices);
     }
 
