@@ -6,5 +6,4 @@ import java.util.List;
 public interface FAQService {
     List<FAQDto> getAllFAQs();
 
-    // ... other methods for CRUD operations
 }

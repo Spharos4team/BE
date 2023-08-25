@@ -40,10 +40,10 @@ public class EventServiceImpl implements EventService {
         String imageUrl = uploadImage(image);
         Event event = Event.builder()
                 .title(title)
-                .contentImageUrl(content)   // 이벤트 내용 이미지 URL을 저장
-                .startDate(startDate)   // 이벤트 기간을 저장
-                .endDate(endDate)   // 이벤트 기간을 저장
-                .contentImageUrl(relatedLink)   // 관련 링크 URL을 저장
+                .contentImageUrl(content)
+                .startDate(startDate)
+                .endDate(endDate)
+                .contentImageUrl(relatedLink)
                 .thumbnailUrl(imageUrl)     // 업로드된 이미지 URL을 저장
                 .build();   // 이벤트 객체 생성
 

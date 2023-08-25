@@ -1,21 +1,21 @@
 package com.spharos.ssgpoint.user.domain;
 
+
+
+import com.spharos.ssgpoint.term.domain.UserTermList;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Collection;
-import java.util.List;
 
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class User implements UserDetails {
@@ -52,6 +52,30 @@ public class User implements UserDetails {
 
     @Column(length = 100)
     private String pointPassword;
+    @Column(length = 500 )
+    private String barCode;
+
+    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_term_id")
+    private UserTermList term;
+
+
+    @Builder
+    public User(String uuid, String loginId, String name, String password, String phone, String address, String email,
+                Integer status, String pointPassword, String barCode, UserTermList term) {
+        this.uuid = uuid;
+        this.loginId = loginId;
+        this.name = name;
+        this.password = password;
+        this.phone = phone;
+        this.address = address;
+        this.email = email;
+        this.status = status;
+        this.pointPassword = pointPassword;
+        this.barCode = barCode;
+        this.term= term;
+
+    }
 
     public void updateUserInfo(String address, String email){
         this.address =address;
@@ -59,11 +83,13 @@ public class User implements UserDetails {
     }
 
     public void hashPassword(String password){
-
         this.password = new BCryptPasswordEncoder().encode(password);
     }
 
 
+    public void generateBarcode(String barCode){
+        this.barCode = barCode;
+    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;

@@ -1,7 +1,8 @@
 package com.spharos.ssgpoint.user.application;
 
-
-import com.spharos.ssgpoint.exception.AllException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.spharos.ssgpoint.term.domain.UserTermList;
 import com.spharos.ssgpoint.user.domain.User;
 import com.spharos.ssgpoint.user.dto.*;
 import com.spharos.ssgpoint.user.infrastructure.UserRepository;
@@ -11,7 +12,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -20,7 +23,7 @@ import java.util.UUID;
 @Slf4j
 public class UserServiceImp implements UserService{
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
+    private ObjectMapper objectMapper;
     @Override
     public void createUser(UserSignUpDto userSignUpDto) {
 
@@ -66,7 +69,7 @@ public class UserServiceImp implements UserService{
 
     @Override
     public UserGetDto getUserByUUID(String UUID) {
-        User user = userRepository.findByUuid(UUID).orElseThrow(() -> new IllegalArgumentException("UUID정보 없음 = " + UUID));
+        User user = userRepository.findByUuid(UUID).orElseThrow(() -> new IllegalArgumentException("UUID정보 없음 "));
         log.info("user is : {}" , user);
         UserGetDto userGetDto = UserGetDto.builder()
                 .loginId(user.getLoginId())
@@ -78,45 +81,28 @@ public class UserServiceImp implements UserService{
         return userGetDto;
     }
 
-    @Override
-    public List<UserGetDto> getAllUsers() {
-        return null;
-    }
-
     /**
      * 회원정보 수정
      */
     @Transactional
     @Override
     public void updateUserInfo(String UUID, UserUpdateDto userUpdateRequestDto) {
-        User user = userRepository.findByUuid(UUID).orElseThrow(() -> new IllegalArgumentException("UUID정보 없음 = " + UUID));
-
+        User user = userRepository.findByUuid(UUID).orElseThrow(() -> new IllegalArgumentException("UUID정보 없음  "));
         user.updateUserInfo(userUpdateRequestDto.getAddress(), userUpdateRequestDto.getEmail());
-
     }
 
     /**
      * 회원가입시 아이디 중복 확인
      */
-    @Override
-    public void validateDuplicateLoginId(UserSignUpDto userSignUpDto) {
-        log.info("userSignUpDto={}",userSignUpDto.getLoginId());
-        Optional<User> byLoginId = userRepository.findByLoginId(userSignUpDto.getLoginId());
-        log.info("byLoginId={}",byLoginId);
-        if (byLoginId.isPresent()) {
-            throw new IllegalStateException("이미 존재하는 아이디");
-        }
 
+    public void validateDuplicateLoginId(UserSignUpDto userSignUpDto) {
+        log.info("userSignUpDto={}", userSignUpDto.getLoginId());
+        Optional<User> byLoginId = userRepository.findByLoginId(userSignUpDto.getLoginId());
+        if(byLoginId.isPresent()){
+            throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
+        }
     }
-    /**
-     * 비밀번호 찾기 하면 리셋
-     */
-    @Transactional
-    @Override
-    public void resetPassword(String UUID, PasswordResetDto passwordResetDto) {
-        User user = userRepository.findByUuid(UUID).orElseThrow(() -> new IllegalArgumentException("UUID정보 없음 = " + UUID));
-        user.hashPassword(passwordResetDto.getPassword());
-    }
+
 
     /**
      * 비밀번호 수정
@@ -124,14 +110,33 @@ public class UserServiceImp implements UserService{
     @Transactional
     @Override
     public void updatePassword(String UUID, PasswordUpdateDto passwordUpdateDto) {
-        User user = userRepository.findByUuid(UUID).orElseThrow(() -> new IllegalArgumentException("UUID정보 없음 = " + UUID));
-        log.info("dto current password={}",passwordUpdateDto.getCurrentPassword());
-        log.info("dto new password={}",passwordUpdateDto.getUpdatePassword());
-        if (!passwordEncoder.matches(passwordUpdateDto.getCurrentPassword(), user.getPassword())) {
-            throw new AllException("현재비밀번호랑 다름");
-        }
+        User user = userRepository.findByUuid(UUID).orElseThrow(() -> new IllegalArgumentException("UUID정보 없음"));
+        user.hashPassword(passwordUpdateDto.getPassword());
+    }
 
-        user.hashPassword(passwordUpdateDto.getUpdatePassword());
+
+    /**
+     * 광고정보 수신관리 조회
+     */
+
+    @Override
+    public Map<String,Boolean> getTerm(String UUID) {
+        UserTermList termJsonByUuid = userRepository.findTermJsonByUuid(UUID).orElseThrow(() -> new IllegalArgumentException("UUID정보 없음"));
+        Map<String, Boolean> termJson = termJsonByUuid.getTermJson();
+        log.info("term={}",termJson);
+        return termJson;
+    }
+
+    /**
+     * 광고정보 수신관리 수정
+     */
+    @Transactional
+    @Override
+    public Map<String, Boolean> updateTerm(String UUID,TermUpdateDto termUpdateDto) {
+        log.info("termUpdateDto={}",termUpdateDto.getTermJson());
+        UserTermList termJsonByUuid = userRepository.findTermJsonByUuid(UUID).orElseThrow(() -> new IllegalArgumentException("UUID정보 없음"));
+        termJsonByUuid.updateTermJson(termUpdateDto.getTermJson());
+        return termJsonByUuid.getTermJson();
     }
 
 

@@ -1,5 +1,3 @@
-// com.spharos.ssgpoint.event.application.EventService.java
-
 package com.spharos.ssgpoint.event.application;
 
 import com.spharos.ssgpoint.event.domain.Event;

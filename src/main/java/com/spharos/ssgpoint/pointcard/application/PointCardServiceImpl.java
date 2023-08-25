@@ -5,7 +5,7 @@ import com.spharos.ssgpoint.pointcard.domain.PointCardType;
 import com.spharos.ssgpoint.pointcard.domain.PointCardTypeConverter;
 import com.spharos.ssgpoint.pointcard.dto.PointCardCreateDto;
 import com.spharos.ssgpoint.pointcard.dto.PointCardGetDto;
-import com.spharos.ssgpoint.pointcard.presentation.PointCardRepository;
+import com.spharos.ssgpoint.pointcard.infrastructure.PointCardRepository;
 import jakarta.persistence.Convert;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,6 @@ public class PointCardServiceImpl implements PointCardService {
     @Override
     @Convert(converter = PointCardTypeConverter.class)
     public void createPointCard(String UUID, PointCardCreateDto pointCardCreateDto) {
-
         PointCardType pointCardType
                 = new PointCardTypeConverter().convertToEntityAttribute(pointCardCreateDto.getPointCardType());
 
@@ -38,14 +37,13 @@ public class PointCardServiceImpl implements PointCardService {
     @Override
     public List<PointCardGetDto> getPointCardByUser(String UUID) {
         List<PointCard> pointCardList = pointCardRepository.findByUUID(UUID);
-        List<PointCardGetDto> pointCardGetDtoList = pointCardList.stream().map(pointCard -> {
-            return PointCardGetDto.builder()
-                    .name(pointCard.getName())
-                    .number(pointCard.getNumber())
-                    .agency(pointCard.getAgency())
-                    .build();
-        }).toList();
 
-        return pointCardGetDtoList;
+        return pointCardList.stream().map(pointCard ->
+                PointCardGetDto.builder()
+                        .name(pointCard.getName())
+                        .number(pointCard.getNumber())
+                        .agency(pointCard.getAgency())
+                        .build()
+        ).toList();
     }
 }

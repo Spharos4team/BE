@@ -1,4 +1,4 @@
-package com.spharos.ssgpoint.term.domain;
+package com.spharos.ssgpoint.club.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -8,17 +8,12 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Term {
+public class ClubList {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 45)
     private String title;
-
-    @Column(columnDefinition = "text")
-    private String content; //todo:text확인
-
-
+    private String content;
 }

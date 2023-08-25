@@ -15,7 +15,6 @@ public class FAQCategory {
     private String title;
 
     @ManyToOne
-    @JoinColumn(name = "parent_id")
     private FAQCategory parent;
 
     // ... Getter, Setter, Constructors

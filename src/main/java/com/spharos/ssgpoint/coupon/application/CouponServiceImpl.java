@@ -5,21 +5,18 @@ import com.spharos.ssgpoint.coupon.domain.UserCoupon;
 import com.spharos.ssgpoint.coupon.infrastructure.CouponRepository;
 import com.spharos.ssgpoint.coupon.infrastructure.UserCouponRepository;
 import com.spharos.ssgpoint.user.domain.User;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class CouponServiceImpl implements CouponService {
 
     private final CouponRepository couponRepository;
     private final UserCouponRepository userCouponRepository;
-
-    public CouponServiceImpl(CouponRepository couponRepository, UserCouponRepository userCouponRepository) {
-        this.couponRepository = couponRepository;
-        this.userCouponRepository = userCouponRepository;
-    }
 
     @Override
     public Coupon createCoupon(Coupon coupon) {
@@ -33,24 +30,36 @@ public class CouponServiceImpl implements CouponService {
 
     @Override
     public List<Coupon> getAllAvailableCoupons() {
-        // TODO: Define criteria for 'available' and modify this method accordingly
         return couponRepository.findAll();
     }
 
     @Override
     public UserCoupon assignCouponToUser(User user, Coupon coupon) {
-        // Check if the user already has this coupon
-        Optional<UserCoupon> existingUserCoupon = userCouponRepository.findByUserAndCoupon(user, coupon);
-        if (existingUserCoupon.isPresent()) {
-            throw new RuntimeException("User already has this coupon");
+        if (!coupon.isValid()) {
+            throw new RuntimeException("쿠폰이 유효하지 않습니다.");
         }
 
-        UserCoupon userCoupon = new UserCoupon();
-        userCoupon.setUser(user);
-        userCoupon.setCoupon(coupon);
+        Optional<UserCoupon> existingUserCoupon = userCouponRepository.findByUUIDAndCoupon(user, coupon);
+        if (existingUserCoupon.isPresent()) {
+            throw new RuntimeException("유저가 이미 해당 쿠폰을 가지고 있습니다.");
+        }
 
-        return userCouponRepository.save(userCoupon);
+        return userCouponRepository.save(UserCoupon.builder()
+                .UUID(user)
+                .coupon(coupon)
+                .build());
     }
 
-    // More methods based on requirements...
+    @Override
+    public void addExternalCoupon(String couponNumber) {
+        // 쿠폰 번호를 기반으로 존재하는 쿠폰을 조회합니다.
+        Optional<Coupon> existingCoupon = couponRepository.findByNumber(Integer.parseInt(couponNumber));
+
+        // 존재하지 않는다면 새로운 쿠폰을 생성하고 저장합니다.
+        if (!existingCoupon.isPresent()) {
+            Coupon newCoupon = Coupon.builder().number(Integer.parseInt(couponNumber)).build();
+            couponRepository.save(newCoupon);
+        }
+    }
+
 }

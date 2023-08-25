@@ -1,11 +1,15 @@
 package com.spharos.ssgpoint.term.domain;
 
 import com.spharos.ssgpoint.user.domain.User;
+import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
+
+import java.util.Map;
 
 @Entity
 @Getter
@@ -18,13 +22,12 @@ public class UserTermList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, columnDefinition = "int default 0")
-    private Integer agreed;
+    @Type(JsonType.class)
+    @Column(columnDefinition = "longtext")
+    private Map<String,Boolean> termJson;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Term term;
-
+    public void updateTermJson(Map<String, Boolean> termJson) {
+        this.termJson = termJson;
+    }
 }

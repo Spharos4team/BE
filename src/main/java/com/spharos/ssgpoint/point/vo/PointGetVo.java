@@ -13,6 +13,8 @@ public class PointGetVo {
 
     private Integer point;
     private Integer totalPoint;
-    private Integer status;
+    private String pointTitle;
+    private String pointContent;
+    private String type;
 
 }
