@@ -35,4 +35,11 @@ public class Receipt {
     @Column(nullable = false, columnDefinition = "int default 0")
     private Integer point;
 
+    @Column(nullable = false, columnDefinition = "int default 0")
+    private Integer status;
+
+    public void update(Integer status) {
+        this.status = status;
+    }
+
 }
