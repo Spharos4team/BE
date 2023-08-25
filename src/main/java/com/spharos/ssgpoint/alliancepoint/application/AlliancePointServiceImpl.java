@@ -47,6 +47,7 @@ public class AlliancePointServiceImpl implements AlliancePointService {
         ).toList();
     }
 
+    // 제휴사 포인트 사용
     @Transactional
     @Override
     public void updateAlliancePoint(String UUID, String type, AlliancePointUpdateDto alliancePointUpdateDto) {
