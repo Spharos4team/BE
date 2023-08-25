@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Entity
 @Getter
 @Setter
@@ -24,5 +26,8 @@ public class Notices {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
-}
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column( nullable = false, updatable = false)
+    private Date regDate = new Date();
 
+}
