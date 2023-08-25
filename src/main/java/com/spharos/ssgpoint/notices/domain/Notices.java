@@ -27,7 +27,7 @@ public class Notices {
     private String content;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column( nullable = false, updatable = false)
+    @Column(name = "regDate", nullable = false, updatable = false)
     private Date regDate = new Date();
 
 }

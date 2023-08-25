@@ -8,11 +8,11 @@ import lombok.Setter;
 @Setter
 public class NoticesCreateRequestDto {
 
-
     private String title;
     private String content;
 
     public Notices toEntity() {
-        return new Notices(null, title, content);
+        return new Notices(null, title, content, null);
     }
+
 }
