@@ -30,7 +30,6 @@ public class CouponServiceImpl implements CouponService {
 
     @Override
     public List<Coupon> getAllAvailableCoupons() {
-        // TODO: Define criteria for 'available' and modify this method accordingly
         return couponRepository.findAll();
     }
 
@@ -51,5 +50,16 @@ public class CouponServiceImpl implements CouponService {
                 .build());
     }
 
+    @Override
+    public void addExternalCoupon(String couponNumber) {
+        // 쿠폰 번호를 기반으로 존재하는 쿠폰을 조회합니다.
+        Optional<Coupon> existingCoupon = couponRepository.findByNumber(Integer.parseInt(couponNumber));
+
+        // 존재하지 않는다면 새로운 쿠폰을 생성하고 저장합니다.
+        if (!existingCoupon.isPresent()) {
+            Coupon newCoupon = Coupon.builder().number(Integer.parseInt(couponNumber)).build();
+            couponRepository.save(newCoupon);
+        }
+    }
 
 }

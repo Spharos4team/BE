@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
-import java.util.Random;
 
 @Entity
 @Getter
@@ -44,20 +43,12 @@ public class Coupon {
 
     private String barcode;
 
+    private boolean isActive;  // New field to check if the coupon is active or not
+
     public boolean isValid() {
         Date now = new Date();
-        return !now.before(startDate) && !now.after(endDate);
-    } // 닫는 중괄호 추가
-
-    private String generateCouponNumber(String storePrefix) {
-        if (storePrefix.length() != 8) {
-            throw new IllegalArgumentException("가맹점 코드는 8자리여야 합니다.");
-        }
-
-        Random random = new Random();
-        String randomDigits = String.format("%012d", random.nextLong() % 1000000000000L);
-
-        return storePrefix + randomDigits;
+        return isActive && !now.before(startDate) && !now.after(endDate);
     }
+    
 
 }
