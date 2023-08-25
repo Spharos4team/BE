@@ -78,8 +78,8 @@ public class UserController {
     /**
      * 비밀번호 변경
      */
-    @PutMapping("/user/password/{UUID}")
-    public ResponseEntity<String> updatePassword(@PathVariable String UUID, @RequestBody PasswordUpdateInfo passwordUpdateInfo) {
+    @PutMapping("/user/password")
+    public ResponseEntity<String> updatePassword(@RequestParam String UUID, @RequestBody PasswordUpdateInfo passwordUpdateInfo) {
             ModelMapper modelMapper = new ModelMapper();
             PasswordUpdateDto passwordUpdateDto = modelMapper.map(passwordUpdateInfo,PasswordUpdateDto.class);
             userService.updatePassword(UUID,passwordUpdateDto);
