@@ -2,6 +2,7 @@ package com.spharos.ssgpoint.config.security;
 
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -138,6 +139,7 @@ public class JwtTokenProvider {
     public boolean validateToken(String token, UserDetails userDetails){
         final String UUID = getUUID(token);
         return (UUID.equals(userDetails.getUsername()) && !isTokenExpired(token));
+
     }
 
 

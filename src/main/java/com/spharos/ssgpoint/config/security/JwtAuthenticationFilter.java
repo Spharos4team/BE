@@ -1,5 +1,7 @@
 package com.spharos.ssgpoint.config.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Collections;
 
 @Component
 @RequiredArgsConstructor
@@ -58,8 +61,28 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         new WebAuthenticationDetailsSource().buildDetails(request)
                 );
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-
             }
+            /*else{
+                try {
+                    if (!jwtTokenProvider.validateToken(jwt, userDetails)) {
+                        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 Unauthorized
+                        response.setContentType("application/json");
+                        ObjectMapper objectMapper = new ObjectMapper();
+                        String errorMessage = "JWT token expired"; // 에러 메시지
+                        response.getWriter().write(objectMapper.writeValueAsString(Collections.singletonMap("error", errorMessage)));
+                        return;
+                    }
+                } catch (ExpiredJwtException ex) {
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 Unauthorized
+                    response.setContentType("application/json");
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    String errorMessage = "JWT token expired"; // 에러 메시지
+                    response.getWriter().write(objectMapper.writeValueAsString(Collections.singletonMap("error", errorMessage)));
+                    return;
+                }
+            }*/
+
+
         }
         filterChain.doFilter(request,response);
     }

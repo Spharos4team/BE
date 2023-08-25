@@ -9,4 +9,6 @@ public interface PointRepository extends JpaRepository<Point, Long> {
 
     List<Point> findByUUID(String UUID);
 
+
+
 }

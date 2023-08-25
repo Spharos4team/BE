@@ -33,10 +33,4 @@ public class ExceptionController {
     }
 
 
-    @ExceptionHandler(ExpiredJwtException.class)
-    public ResponseEntity<ErrorResult> jwtExHandle(ExpiredJwtException e) {
-        ErrorResult errorResult = new ErrorResult("refresh 토큰 만료", e.getMessage());
-        return new ResponseEntity<>(errorResult, HttpStatus.FORBIDDEN);
-    }
-
 }

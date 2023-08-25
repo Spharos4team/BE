@@ -140,7 +140,7 @@ public class AuthenticationService {
      * @return
      */
 
-    public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest, HttpServletResponse response) {
+    public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         authenticationRequest.getLoginId(),
@@ -154,8 +154,8 @@ public class AuthenticationService {
         String refreshToken = jwtTokenProvider.generateRefreshToken(user);
         String uuid = jwtTokenProvider.getUUID(accessToken);
 
-        response.setHeader("authorization", "bearer "+ accessToken);
-        response.setHeader("refreshToken", "bearer "+ refreshToken);
+       /* response.setHeader("authorization", "bearer "+ accessToken);
+        response.setHeader("refreshToken", "bearer "+ refreshToken);*/
 
         log.info("uuid is : {}" , uuid);
         log.info("accessToken is : {}" , accessToken);
