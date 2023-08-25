@@ -1,4 +1,4 @@
-package com.spharos.ssgpoint.pointcard.infrastructure;
+package com.spharos.ssgpoint.pointcard.presentation;
 
 import com.spharos.ssgpoint.pointcard.application.PointCardService;
 import com.spharos.ssgpoint.pointcard.dto.PointCardCreateDto;
@@ -26,6 +26,7 @@ public class PointCardController {
                 .UUID(UUID)
                 .pointCardType(pointCardCreateVo.getPointCardType())
                 .build();
+
         pointCardService.createPointCard(UUID, pointCardCreateDto);
     }
 
@@ -33,15 +34,14 @@ public class PointCardController {
     @GetMapping("/point-card")
     public List<PointCardGetVo> getPointCardByUser(@RequestParam("UUID") String UUID) {
         List<PointCardGetDto> pointCardGetDtoList = pointCardService.getPointCardByUser(UUID);
-        List<PointCardGetVo> pointCardGetVoList = pointCardGetDtoList.stream().map(pointCardGetDto -> {
-            return PointCardGetVo.builder()
-                    .name(pointCardGetDto.getName())
-                    .number(pointCardGetDto.getNumber())
-                    .agency(pointCardGetDto.getAgency())
-                    .build();
-        }).toList();
 
-        return pointCardGetVoList;
+        return pointCardGetDtoList.stream().map(pointCardGetDto ->
+                PointCardGetVo.builder()
+                        .name(pointCardGetDto.getName())
+                        .number(pointCardGetDto.getNumber())
+                        .agency(pointCardGetDto.getAgency())
+                        .build()
+        ).toList();
     }
 
 }

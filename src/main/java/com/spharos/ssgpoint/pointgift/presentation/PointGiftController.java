@@ -1,4 +1,4 @@
-package com.spharos.ssgpoint.pointgift.infrastructure;
+package com.spharos.ssgpoint.pointgift.presentation;
 
 import com.spharos.ssgpoint.pointgift.application.PointGiftService;
 import com.spharos.ssgpoint.pointgift.dto.PointGiftCreateDto;
@@ -23,10 +23,11 @@ public class PointGiftController {
         PointGiftCreateDto pointGiftCreateDto = PointGiftCreateDto.builder()
                 .point(pointGiftCreateVo.getPoint())
                 .message(pointGiftCreateVo.getMessage())
-                .access(Integer.valueOf(pointGiftCreateVo.getAccess()))
+                .access(0)
                 .UUID(UUID)
                 .loginId(pointGiftCreateVo.getLoginId())
                 .build();
+
         pointGiftService.createPointGift(UUID, pointGiftCreateDto);
     }
 
@@ -34,16 +35,15 @@ public class PointGiftController {
     @GetMapping("/point/gift")
     public List<PointGiftGetVo> getPointGiftByUser(@RequestParam("UUID") String UUID) {
         List<PointGiftGetDto> pointGiftGetDtoList = pointGiftService.getPointByUser(UUID);
-        List<PointGiftGetVo> pointGiftGetVoList = pointGiftGetDtoList.stream().map(pointGiftGetDto -> {
-            return PointGiftGetVo.builder()
-                    .point(pointGiftGetDto.getPoint())
-                    .message(pointGiftGetDto.getMessage())
-                    .access(String.valueOf(pointGiftGetDto.getAccess()))
-                    .UUID(UUID)
-                    .build();
-        }).toList();
 
-        return pointGiftGetVoList;
+        return pointGiftGetDtoList.stream().map(pointGiftGetDto ->
+                PointGiftGetVo.builder()
+                        .point(pointGiftGetDto.getPoint())
+                        .message(pointGiftGetDto.getMessage())
+                        .access(String.valueOf(pointGiftGetDto.getAccess()))
+                        .UUID(UUID)
+                        .build()
+        ).toList();
     }
 
 }

@@ -21,5 +21,4 @@ public class FAQServiceImpl implements FAQService {
         return faqs.stream().map(faq -> new FAQDto(faq.getClass(), faq.getClass(), faq.getClass(), faq.getClass())).collect(Collectors.toList());
     }
 
-    // ... implementation of other methods for CRUD operations
 }
