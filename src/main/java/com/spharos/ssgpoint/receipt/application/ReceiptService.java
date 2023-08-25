@@ -12,7 +12,7 @@ public interface ReceiptService {
     void createReceipt(ReceiptCreateDto receiptCreateDto);
     // 영수증 일련번호로 영수증 정보 조회
     List<ReceiptGetDto> getReceiptByNumber(String number);
-    // 영수증 포인트 적립 후 영수증 테이블에 UUID 추가
+    // 영수증 포인트 적립 후 영수증 테이블 상태 컬럼 변경
     void updateReceipt(String number, ReceiptUpdateDto receiptUpdateDto);
 
 }

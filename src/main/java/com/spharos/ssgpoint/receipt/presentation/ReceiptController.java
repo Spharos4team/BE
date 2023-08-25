@@ -41,7 +41,7 @@ public class ReceiptController {
         ).toList();
     }
 
-    // 영수증 포인트 적립 후 영수증 테이블에 UUID 추가
+    // 영수증 포인트 적립 후 영수증 테이블 상태 컬럼 변경
     @PutMapping("/point/receipt")
     public void updateReceipt(@RequestParam("number") String number) {
 

@@ -43,7 +43,7 @@ public class ReceiptServiceImpl implements ReceiptService {
         ).toList();
     }
 
-    // 영수증 포인트 적립 후 영수증 테이블에 UUID 추가
+    // 영수증 포인트 적립 후 영수증 테이블 상태 컬럼 변경
     @Transactional
     @Override
     public void updateReceipt(String number, ReceiptUpdateDto receiptUpdateDto) {
