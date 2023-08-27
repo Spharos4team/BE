@@ -1,6 +1,8 @@
 package com.spharos.ssgpoint.config.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.spharos.ssgpoint.exception.CustomException;
+import com.spharos.ssgpoint.user.infrastructure.UserRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -25,7 +27,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final UserDetailsService userDetailsService;
-
+    private final UserRepository userRepository;
 
     @Override
     protected void doFilterInternal(
@@ -48,11 +50,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
         jwt = authHeader.substring(7);
-        UUID = jwtTokenProvider.getUUID(jwt);
+        //UUID = jwtTokenProvider.getUUID(jwt);
+        UUID = jwtTokenProvider.getLoginId(jwt);
+
         if(UUID != null & SecurityContextHolder.getContext().getAuthentication() == null ){
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(UUID);
             if(jwtTokenProvider.validateToken(jwt,userDetails)){
-                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+               try{ UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
                         null,
                         userDetails.getAuthorities() //유저 리스트
@@ -60,28 +64,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 authenticationToken.setDetails(
                         new WebAuthenticationDetailsSource().buildDetails(request)
                 );
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);}
+               catch (CustomException e){
+                   request.setAttribute("exception",e);
+               }
             }
-            /*else{
-                try {
-                    if (!jwtTokenProvider.validateToken(jwt, userDetails)) {
-                        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 Unauthorized
-                        response.setContentType("application/json");
-                        ObjectMapper objectMapper = new ObjectMapper();
-                        String errorMessage = "JWT token expired"; // 에러 메시지
-                        response.getWriter().write(objectMapper.writeValueAsString(Collections.singletonMap("error", errorMessage)));
-                        return;
-                    }
-                } catch (ExpiredJwtException ex) {
-                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 Unauthorized
-                    response.setContentType("application/json");
-                    ObjectMapper objectMapper = new ObjectMapper();
-                    String errorMessage = "JWT token expired"; // 에러 메시지
-                    response.getWriter().write(objectMapper.writeValueAsString(Collections.singletonMap("error", errorMessage)));
-                    return;
-                }
-            }*/
-
 
         }
         filterChain.doFilter(request,response);
