@@ -66,11 +66,22 @@ public class JwtTokenProvider {
      * 토큰의 서명을 확인하기 위해 사용할 서명 키(getSigningKey())를 설정하고 토큰을 파싱하여 클레임들을 추출합니다.
      */
     public Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder()
+        /*return Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())
                 .build()
                 .parseClaimsJws(token)
-                .getBody();
+                .getBody();*/
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(getSigningKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        }
+        catch (ExpiredJwtException e){
+            throw new CustomException("토큰이 만료되었습니다.");
+        }
+
     }
     /** 4
      *  JWT 토큰의 서명을 확인하기 위해 사용할 서명 키를 생성하여 반환합니다

@@ -86,6 +86,10 @@ public class User implements UserDetails {
         this.password = new BCryptPasswordEncoder().encode(password);
     }
 
+    public void changeStatus(Integer status){
+        this.status = status;
+    }
+
 
     public void generateBarcode(String barCode){
         this.barCode = barCode;

@@ -19,4 +19,9 @@ public interface UserService {
     Map<String,Boolean> getTerm(String UUID);
     Map<String,Boolean> updateTerm(String UUID, TermUpdateDto termUpdateDto);
 
+    void softDeleteUser(String UUID);
+
+
+
+
 }

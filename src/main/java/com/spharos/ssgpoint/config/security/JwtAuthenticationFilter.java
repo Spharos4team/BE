@@ -52,11 +52,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         jwt = authHeader.substring(7);
         //UUID = jwtTokenProvider.getUUID(jwt);
         UUID = jwtTokenProvider.getLoginId(jwt);
-
         if(UUID != null & SecurityContextHolder.getContext().getAuthentication() == null ){
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(UUID);
             if(jwtTokenProvider.validateToken(jwt,userDetails)){
-               try{ UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
                         null,
                         userDetails.getAuthorities() //유저 리스트
@@ -64,10 +63,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 authenticationToken.setDetails(
                         new WebAuthenticationDetailsSource().buildDetails(request)
                 );
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);}
-               catch (CustomException e){
-                   request.setAttribute("exception",e);
-               }
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+
             }
 
         }

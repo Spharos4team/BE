@@ -5,13 +5,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 
 @Slf4j
-@RestControllerAdvice(annotations = RestController.class)
+@ControllerAdvice
 public class ExceptionController {
 
     @ExceptionHandler(IllegalArgumentException.class)
@@ -32,5 +33,9 @@ public class ExceptionController {
         return new ResponseEntity<>(errorResult, HttpStatus.FORBIDDEN);
     }
 
-
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<ErrorResult> expireExHandle(ExpiredJwtException e) {
+        ErrorResult errorResult = new ErrorResult("jwt error", e.getMessage());
+        return new ResponseEntity<>(errorResult, HttpStatus.FORBIDDEN);
+    }
 }

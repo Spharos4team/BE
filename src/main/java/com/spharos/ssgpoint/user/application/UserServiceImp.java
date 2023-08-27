@@ -2,6 +2,7 @@ package com.spharos.ssgpoint.user.application;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.spharos.ssgpoint.exception.CustomException;
 import com.spharos.ssgpoint.term.domain.UserTermList;
 import com.spharos.ssgpoint.user.domain.User;
 import com.spharos.ssgpoint.user.dto.*;
@@ -45,14 +46,9 @@ public class UserServiceImp implements UserService{
 
     @Override
     public UserGetDto getUserByLoginId(String loginId) {
-
-        Optional<User> byLoginId = userRepository.findByLoginId(loginId);
-        if(byLoginId.isPresent()) {
-            User user = byLoginId.get();
-
-
-            log.info("user is : {}", user);
-            UserGetDto userGetDto = UserGetDto.builder()
+        User user = userRepository.findByLoginId(loginId).orElseThrow(() ->
+                new IllegalArgumentException("아이디가 존재하지 않습니다."));
+        UserGetDto userGetDto = UserGetDto.builder()
                     .loginId(user.getLoginId())
                     .name(user.getUsername())
                     .email(user.getEmail())
@@ -60,11 +56,6 @@ public class UserServiceImp implements UserService{
                     .address(user.getAddress())
                     .build();
             return userGetDto;
-        }
-        else{
-            return null;
-        }
-
     }
 
     @Override
@@ -137,6 +128,16 @@ public class UserServiceImp implements UserService{
         UserTermList termJsonByUuid = userRepository.findTermJsonByUuid(UUID).orElseThrow(() -> new IllegalArgumentException("UUID정보 없음"));
         termJsonByUuid.updateTermJson(termUpdateDto.getTermJson());
         return termJsonByUuid.getTermJson();
+    }
+
+    /**
+     * 회원탈퇴 status 1->0으로
+     */
+    @Transactional
+    @Override
+    public void softDeleteUser(String UUID) {
+        User user = userRepository.findByUuid(UUID).orElseThrow(() -> new IllegalArgumentException("UUID정보 없음"));
+        user.changeStatus(0);
     }
 
 
