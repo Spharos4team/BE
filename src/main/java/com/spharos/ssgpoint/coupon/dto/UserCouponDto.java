@@ -12,7 +12,7 @@ import lombok.Setter;
 public class UserCouponDto {
 
     private Long id;
-    private Long UUID;
+    private String UUID;
     private Long couponId;
     private boolean used;
 }
