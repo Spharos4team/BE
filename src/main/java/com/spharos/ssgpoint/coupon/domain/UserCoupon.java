@@ -19,7 +19,7 @@ public class UserCoupon {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private User UUID;
+    private String UUID;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Coupon coupon;
