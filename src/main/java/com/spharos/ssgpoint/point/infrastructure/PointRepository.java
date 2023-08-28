@@ -10,4 +10,6 @@ public interface PointRepository extends JpaRepository<Point, Long> {
 
     List<Point> findByUserId(Long user_id);
 
+
+
 }

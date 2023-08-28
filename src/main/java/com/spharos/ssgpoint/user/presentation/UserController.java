@@ -105,6 +105,16 @@ public class UserController {
         Map<String, Boolean> term = userService.updateTerm(UUID, termUpdateDto);
         return ResponseEntity.ok(term);
     }
+
+    /**
+     * 회원 soft delete
+     */
+    @PutMapping("/user/soft-delete/{UUID}")
+    public ResponseEntity<String> chageStatus(@PathVariable String UUID) {
+        userService.softDeleteUser(UUID);
+        return ResponseEntity.ok("회원탈퇴 성공");
+    }
+
 }
 
 

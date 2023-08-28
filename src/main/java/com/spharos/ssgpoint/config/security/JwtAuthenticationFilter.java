@@ -1,5 +1,9 @@
 package com.spharos.ssgpoint.config.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.spharos.ssgpoint.exception.CustomException;
+import com.spharos.ssgpoint.user.infrastructure.UserRepository;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,6 +19,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Collections;
 
 @Component
 @RequiredArgsConstructor
@@ -22,7 +27,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final UserDetailsService userDetailsService;
-
+    private final UserRepository userRepository;
 
     @Override
     protected void doFilterInternal(
@@ -45,7 +50,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
         jwt = authHeader.substring(7);
-        UUID = jwtTokenProvider.getUUID(jwt);
+        //UUID = jwtTokenProvider.getUUID(jwt);
+        UUID = jwtTokenProvider.getLoginId(jwt);
         if(UUID != null & SecurityContextHolder.getContext().getAuthentication() == null ){
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(UUID);
             if(jwtTokenProvider.validateToken(jwt,userDetails)){
@@ -60,6 +66,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
             }
+
         }
         filterChain.doFilter(request,response);
     }

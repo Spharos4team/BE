@@ -27,7 +27,6 @@ public class ApplicationConfig  {
 
         return loginId -> userRepository.findByLoginId(loginId)
                 .orElseThrow(()-> new UsernameNotFoundException("user not found = "+loginId));
-
     }
 
     @Bean
