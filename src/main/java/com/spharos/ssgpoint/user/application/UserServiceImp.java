@@ -3,6 +3,7 @@ package com.spharos.ssgpoint.user.application;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spharos.ssgpoint.exception.CustomException;
+import com.spharos.ssgpoint.point.domain.Point;
 import com.spharos.ssgpoint.term.domain.UserTermList;
 import com.spharos.ssgpoint.user.domain.User;
 import com.spharos.ssgpoint.user.dto.*;
@@ -138,6 +139,16 @@ public class UserServiceImp implements UserService{
     public void softDeleteUser(String UUID) {
         User user = userRepository.findByUuid(UUID).orElseThrow(() -> new IllegalArgumentException("UUID정보 없음"));
         user.changeStatus(0);
+    }
+
+    @Override
+    public PointGetDto getPoint(String UUID) {
+        Point topByUuid = userRepository.findTotalByUuid(UUID);
+        Integer totalPoint = topByUuid.getTotalPoint();
+        return PointGetDto.builder()
+                .totalPoint(totalPoint)
+                .build();
+
     }
 
 

@@ -136,7 +136,7 @@ public class AuthenticationService {
     /**
      * 로그인 인증
      * @param authenticationRequest json 요청
-     * @param response 응답헤더
+     * @param
      * @return
      */
 
@@ -164,6 +164,7 @@ public class AuthenticationService {
         return AuthenticationResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
+                .uuid(uuid)
                 .build();
     }
 

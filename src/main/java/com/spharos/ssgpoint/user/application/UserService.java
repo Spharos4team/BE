@@ -21,6 +21,7 @@ public interface UserService {
 
     void softDeleteUser(String UUID);
 
+    PointGetDto getPoint(String UUID);
 
 
 

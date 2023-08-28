@@ -1,5 +1,6 @@
 package com.spharos.ssgpoint.exception;
 
+import com.spharos.ssgpoint.config.security.JwtTokenProvider;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 
 @Slf4j
-@ControllerAdvice
+@RestControllerAdvice()
 public class ExceptionController {
 
     @ExceptionHandler(IllegalArgumentException.class)
@@ -33,9 +34,4 @@ public class ExceptionController {
         return new ResponseEntity<>(errorResult, HttpStatus.FORBIDDEN);
     }
 
-    @ExceptionHandler(ExpiredJwtException.class)
-    public ResponseEntity<ErrorResult> expireExHandle(ExpiredJwtException e) {
-        ErrorResult errorResult = new ErrorResult("jwt error", e.getMessage());
-        return new ResponseEntity<>(errorResult, HttpStatus.FORBIDDEN);
-    }
 }
