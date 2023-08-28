@@ -27,19 +27,22 @@ public class PointServiceImpl implements PointService {
         User user = userRepository.findByUuid(UUID).orElseThrow(() ->
                 new IllegalArgumentException("UUID 정보 없음 = " + UUID));
 
-        // TODO: 첫 번째 컬럼일 때
-        // TODO: - 값이 될 때
-        
         // totalPoint 계산
         List<Point> pointList = pointRepository.findByUserIdOrderById(user.getUuid());
-        
+        Long count = pointRepository.countByUserId(user.getId());
+
         int totalPoint = 0;
-        for (Point point : pointList) {
-            if (pointType.getCode().equals("1") || pointType.getCode().equals("2")) {
-                totalPoint = point.getTotalPoint() + pointCreateDto.getPoint();
-            }
-            if (pointType.getCode().equals("3") || pointType.getCode().equals("4")) {
-                totalPoint = point.getTotalPoint() - pointCreateDto.getPoint();
+
+        if (count.equals(0L)) {
+            totalPoint = pointCreateDto.getPoint();
+        } else {
+            for (Point point : pointList) {
+                if (pointType.getCode().equals("1") || pointType.getCode().equals("2")) {
+                    totalPoint = point.getTotalPoint() + pointCreateDto.getPoint();
+                }
+                if (pointType.getCode().equals("3") || pointType.getCode().equals("4")) {
+                    totalPoint = point.getTotalPoint() - pointCreateDto.getPoint();
+                }
             }
         }
 

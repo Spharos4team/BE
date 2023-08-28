@@ -21,4 +21,6 @@ public interface PointRepository extends JpaRepository<Point, Long> {
             + " ORDER BY p.id DESC LIMIT 1")
     List<Point> findByUserIdOrderById(@Param("uuid") String uuid);
 
+    Long countByUserId(Long user_id);
+
 }
