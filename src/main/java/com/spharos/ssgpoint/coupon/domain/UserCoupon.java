@@ -1,6 +1,5 @@
 package com.spharos.ssgpoint.coupon.domain;
 
-import com.spharos.ssgpoint.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,10 +17,10 @@ public class UserCoupon {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @Column(unique = true, length = 100, nullable = false)
     private String UUID;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Coupon coupon;
 
     @Column(nullable = false)

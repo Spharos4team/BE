@@ -18,4 +18,7 @@ public class FAQDto {
     private String title;
     private String content;
     private LocalDateTime regDate;
+
+    public FAQDto(Class<? extends FAQ> aClass, Class<? extends FAQ> aClass1, Class<? extends FAQ> aClass2, Class<? extends FAQ> aClass3) {
+    }
 }
