@@ -1,11 +1,14 @@
 package com.spharos.ssgpoint.faq.domain;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Entity
-
+@Getter
+@Setter
 public class FAQ {
 
     @Id
@@ -18,7 +21,7 @@ public class FAQ {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
-    @Column(name = "reg_date", nullable = false)
+    @Column(nullable = false)
     private LocalDateTime regDate;
 
     // ... Getter, Setter, Constructors
