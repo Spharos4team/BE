@@ -2,6 +2,8 @@ package com.spharos.ssgpoint.point.dto;
 
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @ToString
@@ -10,11 +12,11 @@ import lombok.*;
 @NoArgsConstructor
 public class PointGetDto {
 
-    private Long pointId;
     private Integer totalPoint;
     private Integer point;
-    private String pointTitle;
-    private String pointContent;
+    private String title;
+    private String content;
     private String type;
+    private LocalDate createdDate;
 
 }

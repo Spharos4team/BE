@@ -27,6 +27,9 @@ public class PointServiceImpl implements PointService {
         User user = userRepository.findByUuid(UUID).orElseThrow(() ->
                 new IllegalArgumentException("UUID 정보 없음 = " + UUID));
 
+        // TODO: 첫 번째 컬럼일 때
+        // TODO: - 값이 될 때
+        
         // totalPoint 계산
         List<Point> pointList = pointRepository.findByUserIdOrderById(user.getUuid());
         
@@ -43,8 +46,8 @@ public class PointServiceImpl implements PointService {
         pointRepository.save(Point.builder()
                 .totalPoint(totalPoint)
                 .point(pointCreateDto.getPoint())
-                .pointTitle(pointCreateDto.getPointTitle())
-                .pointContent(pointCreateDto.getPointContent())
+                .title(pointCreateDto.getTitle())
+                .content(pointCreateDto.getContent())
                 .type(pointType)
                 .user(user)
                 .build());
@@ -56,15 +59,16 @@ public class PointServiceImpl implements PointService {
         User user = userRepository.findByUuid(UUID).orElseThrow(() ->
                 new IllegalArgumentException("UUID 정보 없음 = " + UUID));
 
-        List<Point> pointList = pointRepository.findByUserId(user.getId());
+        List<Point> pointList = pointRepository.findByUserId(user.getUuid());
 
         return pointList.stream().map(point ->
                 PointGetDto.builder()
                         .totalPoint(point.getTotalPoint())
                         .point(point.getPoint())
-                        .pointTitle(point.getPointTitle())
-                        .pointContent(point.getPointContent())
+                        .title(point.getTitle())
+                        .content(point.getContent())
                         .type(String.valueOf(point.getType().getValue()))
+                        .createdDate(point.getCreatedDate())
                         .build()
         ).toList();
     }

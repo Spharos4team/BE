@@ -9,7 +9,11 @@ import java.util.List;
 
 public interface PointRepository extends JpaRepository<Point, Long> {
 
-    List<Point> findByUserId(Long user_id);
+    @Query("SELECT p FROM Point p"
+            + " JOIN p.user u on u.id = p.user.id"
+            + " WHERE u.uuid = :uuid"
+            + " ORDER BY p.createdDate DESC, p.type DESC")
+    List<Point> findByUserId(@Param("uuid") String uuid);
 
     @Query("SELECT p FROM Point p"
             + " JOIN p.user u on u.id = p.user.id"

@@ -1,5 +1,6 @@
 package com.spharos.ssgpoint.point.domain;
 
+import com.spharos.ssgpoint.global.Date;
 import com.spharos.ssgpoint.pointcard.domain.PointCard;
 import com.spharos.ssgpoint.user.domain.User;
 import jakarta.persistence.*;
@@ -13,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Point {
+public class Point extends Date {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,10 +27,10 @@ public class Point {
     private Integer point;
 
     @Column(nullable = false)
-    private String pointTitle;
+    private String title;
 
     @Column(nullable = false)
-    private String pointContent;
+    private String content;
 
     @Column(nullable = false)
     @Convert(converter = PointTypeConverter.class)
