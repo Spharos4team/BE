@@ -141,6 +141,9 @@ public class UserServiceImp implements UserService{
         user.changeStatus(0);
     }
 
+    /**
+     * 포인트 조회
+     */
     @Override
     public PointGetDto getPoint(String UUID) {
         Point topByUuid = userRepository.findTotalByUuid(UUID);
