@@ -3,6 +3,7 @@ package com.spharos.ssgpoint.auth;
 
 import com.spharos.ssgpoint.auth.vo.AuthenticationRequest;
 import com.spharos.ssgpoint.auth.vo.AuthenticationResponse;
+import com.spharos.ssgpoint.auth.vo.RefreshTokenVo;
 import com.spharos.ssgpoint.user.dto.UserSignUpDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -34,6 +35,14 @@ public class AuthenticationController {
             @RequestBody AuthenticationRequest authenticationRequest
     ) {
         return ResponseEntity.ok(authenticationService.authenticate(authenticationRequest));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(
+            @RequestBody RefreshTokenVo refreshTokenVo
+    ) {
+        authenticationService.logout(refreshTokenVo.getRefreshToken());
+        return ResponseEntity.ok("로그아웃 완료");
     }
 
 
