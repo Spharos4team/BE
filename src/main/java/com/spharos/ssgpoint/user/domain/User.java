@@ -2,6 +2,7 @@ package com.spharos.ssgpoint.user.domain;
 
 
 
+import com.spharos.ssgpoint.global.BaseEntity;
 import com.spharos.ssgpoint.term.domain.UserTermList;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -18,7 +19,7 @@ import java.util.Collection;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class User implements UserDetails {
+public class User extends BaseEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

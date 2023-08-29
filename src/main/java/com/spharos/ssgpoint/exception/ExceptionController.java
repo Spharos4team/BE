@@ -42,22 +42,5 @@ public class ExceptionController  {
         ErrorResult errorResult = new ErrorResult("커스텀 에러", e.getMessage());
         return new ResponseEntity<>(errorResult, HttpStatus.FORBIDDEN);
     }
-    @ExceptionHandler(SignatureException.class)
-    public ResponseEntity<ErrorResult> handleSignatureException(SignatureException e) {
-        ErrorResult errorResult = new ErrorResult("토큰이 유효하지 않습니다.", e.getMessage());
-        return new ResponseEntity<>(errorResult, HttpStatus.FORBIDDEN);
-    }
-
-    @ExceptionHandler(MalformedJwtException.class)
-    public ResponseEntity<ErrorResult> handleMalformedJwtException(MalformedJwtException e) {
-        ErrorResult errorResult = new ErrorResult("올바르지않은 토큰", e.getMessage());
-        return new ResponseEntity<>(errorResult, HttpStatus.FORBIDDEN);
-    }
-
-    @ExceptionHandler(ExpiredJwtException.class)
-    public ResponseEntity<ErrorResult> handleExpiredJwtException(ExpiredJwtException e) {
-        ErrorResult errorResult = new ErrorResult("토큰이 만료되었습니다2222.",e.getMessage());
-        return new ResponseEntity<>(errorResult, HttpStatus.FORBIDDEN);
-    }
 
 }

@@ -6,6 +6,7 @@ import com.spharos.ssgpoint.auth.vo.AuthenticationResponse;
 import com.spharos.ssgpoint.auth.vo.RefreshTokenVo;
 import com.spharos.ssgpoint.config.security.JwtTokenProvider;
 import com.spharos.ssgpoint.exception.CustomException;
+import com.spharos.ssgpoint.point.domain.Point;
 import com.spharos.ssgpoint.term.domain.UserTermList;
 
 
@@ -154,21 +155,26 @@ public class AuthenticationService {
         );
 
         User user = userRepository.findByLoginId(authenticationRequest.getLoginId()).orElseThrow(()-> new IllegalArgumentException("아이디가 존재하지 않습니다."));
-        log.info("user is : {}" , user);
+        log.info("user is : {}" , user.getUuid());
         String accessToken = jwtTokenProvider.generateToken(user);
         String refreshToken = jwtTokenProvider.generateRefreshToken(user);
         String uuid = jwtTokenProvider.getUUID(accessToken);
+        Point pointByUUID = userRepository.findTotalByUuid(uuid);
+        log.info("pointByUUID is : {}" , pointByUUID.getTotalPoint());
+        log.info("uuid isrewrew : {}" , uuid);
 
-       /* response.setHeader("authorization", "bearer "+ accessToken);
-        response.setHeader("refreshToken", "bearer "+ refreshToken);*/
-
-        log.info("uuid is : {}" , uuid);
         log.info("accessToken is : {}" , accessToken);
         log.info("refreshToken is : {}" , refreshToken);
 
         return AuthenticationResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
+                .user(AuthenticationResponse.User.builder()
+                        .barcode(user.getBarCode())
+                        .name(user.getName())
+                        .point(pointByUUID.getTotalPoint())
+                        .uuid(user.getUuid())
+                        .build())
                 .uuid(uuid)
                 .build();
     }
@@ -224,7 +230,6 @@ public class AuthenticationService {
     }*/
 
 
-
     public AuthenticationResponse refreshToken(String refreshToken) {
 
         final String UUID;
@@ -249,13 +254,12 @@ public class AuthenticationService {
                 refreshExpirationTime,
                 TimeUnit.MILLISECONDS
         );
-
-        AuthenticationResponse build = AuthenticationResponse.builder()
+        return AuthenticationResponse.builder()
                 .accessToken(newAccessToken)
                 .refreshToken(newRefreshToken)
                 .uuid(UUID)
                 .build();
-        return build;
+
 
 
     }
