@@ -20,7 +20,7 @@ public class Point extends Date {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "int default 0")
     private Integer totalPoint;
 
     @Column(nullable = false, columnDefinition = "int default 0")
