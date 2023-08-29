@@ -13,8 +13,8 @@ public class PointCreateVo {
 
     private Integer totalPoint;
     private Integer point;
-    private String pointTitle;
-    private String pointContent;
+    private String title;
+    private String content;
     private String type;
     private String UUID;
     private Long pointCardId;

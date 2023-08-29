@@ -23,8 +23,8 @@ public class PointController {
         PointCreateDto pointCreateDto = PointCreateDto.builder()
                 .totalPoint(pointCreateVo.getTotalPoint())
                 .point(pointCreateVo.getPoint())
-                .pointTitle(pointCreateVo.getPointTitle())
-                .pointContent(pointCreateVo.getPointContent())
+                .title(pointCreateVo.getTitle())
+                .content(pointCreateVo.getContent())
                 .type(pointCreateVo.getType())
                 .user(UUID)
                 .build();
@@ -41,9 +41,10 @@ public class PointController {
                 PointGetVo.builder()
                         .totalPoint(pointGetDto.getTotalPoint())
                         .point(pointGetDto.getPoint())
-                        .pointTitle(pointGetDto.getPointTitle())
-                        .pointContent(pointGetDto.getPointContent())
+                        .title(pointGetDto.getTitle())
+                        .content(pointGetDto.getContent())
                         .type(pointGetDto.getType())
+                        .createdDate(pointGetDto.getCreatedDate())
                         .build()
         ).toList();
     }

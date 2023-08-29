@@ -27,11 +27,30 @@ public class PointServiceImpl implements PointService {
         User user = userRepository.findByUuid(UUID).orElseThrow(() ->
                 new IllegalArgumentException("UUID 정보 없음 = " + UUID));
 
+        // totalPoint 계산
+        List<Point> pointList = pointRepository.findByUserIdOrderById(user.getUuid());
+        Long count = pointRepository.countByUserId(user.getId());
+
+        int totalPoint = 0;
+
+        if (count.equals(0L)) {
+            totalPoint = pointCreateDto.getPoint();
+        } else {
+            for (Point point : pointList) {
+                if (pointType.getCode().equals("1") || pointType.getCode().equals("2")) {
+                    totalPoint = point.getTotalPoint() + pointCreateDto.getPoint();
+                }
+                if (pointType.getCode().equals("3") || pointType.getCode().equals("4")) {
+                    totalPoint = point.getTotalPoint() - pointCreateDto.getPoint();
+                }
+            }
+        }
+
         pointRepository.save(Point.builder()
-                .totalPoint(pointCreateDto.getTotalPoint())
+                .totalPoint(totalPoint)
                 .point(pointCreateDto.getPoint())
-                .pointTitle(pointCreateDto.getPointTitle())
-                .pointContent(pointCreateDto.getPointContent())
+                .title(pointCreateDto.getTitle())
+                .content(pointCreateDto.getContent())
                 .type(pointType)
                 .user(user)
                 .build());
@@ -43,15 +62,16 @@ public class PointServiceImpl implements PointService {
         User user = userRepository.findByUuid(UUID).orElseThrow(() ->
                 new IllegalArgumentException("UUID 정보 없음 = " + UUID));
 
-        List<Point> pointList = pointRepository.findByUserId(user.getId());
+        List<Point> pointList = pointRepository.findByUserId(user.getUuid());
 
         return pointList.stream().map(point ->
                 PointGetDto.builder()
                         .totalPoint(point.getTotalPoint())
                         .point(point.getPoint())
-                        .pointTitle(point.getPointTitle())
-                        .pointContent(point.getPointContent())
+                        .title(point.getTitle())
+                        .content(point.getContent())
                         .type(String.valueOf(point.getType().getValue()))
+                        .createdDate(point.getCreatedDate())
                         .build()
         ).toList();
     }
