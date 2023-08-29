@@ -14,7 +14,8 @@ import java.time.LocalDate;
 public class PointGetVo {
 
     private Integer point;
-    private Integer totalPoint;
+    private Integer expectedPoint;
+    private Integer availablePoint;
     private String title;
     private String content;
     private String type;

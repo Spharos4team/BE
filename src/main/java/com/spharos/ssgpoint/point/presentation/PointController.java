@@ -21,7 +21,7 @@ public class PointController {
     @PostMapping("/point")
     public void createPoint(@RequestParam("UUID") String UUID, @RequestBody PointCreateVo pointCreateVo) {
         PointCreateDto pointCreateDto = PointCreateDto.builder()
-                .totalPoint(pointCreateVo.getTotalPoint())
+                .expectedPoint(pointCreateVo.getExpectedPoint())
                 .point(pointCreateVo.getPoint())
                 .title(pointCreateVo.getTitle())
                 .content(pointCreateVo.getContent())
@@ -39,7 +39,8 @@ public class PointController {
 
         return pointGetDtoList.stream().map(pointGetDto ->
                 PointGetVo.builder()
-                        .totalPoint(pointGetDto.getTotalPoint())
+                        .availablePoint(pointGetDto.getAvailablePoint())
+                        .expectedPoint(pointGetDto.getExpectedPoint())
                         .point(pointGetDto.getPoint())
                         .title(pointGetDto.getTitle())
                         .content(pointGetDto.getContent())

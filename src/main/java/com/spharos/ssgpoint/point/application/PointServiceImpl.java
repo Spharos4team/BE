@@ -31,23 +31,23 @@ public class PointServiceImpl implements PointService {
         List<Point> pointList = pointRepository.findByUserIdOrderById(user.getUuid());
         Long count = pointRepository.countByUserId(user.getId());
 
-        int totalPoint = 0;
+        int expectedPoint = 0;
 
         if (count.equals(0L)) {
-            totalPoint = pointCreateDto.getPoint();
+            expectedPoint = pointCreateDto.getPoint();
         } else {
             for (Point point : pointList) {
                 if (pointType.getCode().equals("1") || pointType.getCode().equals("2")) {
-                    totalPoint = point.getTotalPoint() + pointCreateDto.getPoint();
+                    expectedPoint = point.getExpectedPoint() + pointCreateDto.getPoint();
                 }
                 if (pointType.getCode().equals("3") || pointType.getCode().equals("4")) {
-                    totalPoint = point.getTotalPoint() - pointCreateDto.getPoint();
+                    expectedPoint = point.getExpectedPoint() - pointCreateDto.getPoint();
                 }
             }
         }
 
         pointRepository.save(Point.builder()
-                .totalPoint(totalPoint)
+                .expectedPoint(expectedPoint)
                 .point(pointCreateDto.getPoint())
                 .title(pointCreateDto.getTitle())
                 .content(pointCreateDto.getContent())
@@ -66,7 +66,8 @@ public class PointServiceImpl implements PointService {
 
         return pointList.stream().map(point ->
                 PointGetDto.builder()
-                        .totalPoint(point.getTotalPoint())
+                        .availablePoint(point.getAvailablePoint())
+                        .expectedPoint(point.getExpectedPoint())
                         .point(point.getPoint())
                         .title(point.getTitle())
                         .content(point.getContent())

@@ -12,7 +12,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class PointGetDto {
 
-    private Integer totalPoint;
+    private Integer availablePoint;
+    private Integer expectedPoint;
     private Integer point;
     private String title;
     private String content;
