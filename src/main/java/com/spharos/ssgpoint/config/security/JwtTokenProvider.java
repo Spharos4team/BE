@@ -65,21 +65,20 @@ public class JwtTokenProvider {
      * 주어진 JWT 토큰에서 모든 클레임을 추출하여 반환합니다.
      * 토큰의 서명을 확인하기 위해 사용할 서명 키(getSigningKey())를 설정하고 토큰을 파싱하여 클레임들을 추출합니다.
      */
-    public Claims extractAllClaims(String token) {
-        /*return Jwts.parserBuilder()
-                .setSigningKey(getSigningKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();*/
-        try {
-            return Jwts.parserBuilder()
+    public Claims extractAllClaims(String token)  {
+
+            /*return Jwts.parserBuilder()
                     .setSigningKey(getSigningKey())
                     .build()
                     .parseClaimsJws(token)
-                    .getBody();
-        }
+                    .getBody();*/
+        try{return Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();}
         catch (ExpiredJwtException e){
-            throw new CustomException("토큰이 만료되었습니다.");
+            throw new ExpiredJwtException(null,null,"토큰이 만료되었습니다.3333");
         }
 
     }
@@ -151,12 +150,8 @@ public class JwtTokenProvider {
      * 토큰이 만료되지 않은경우 토큰 유효
      */
     public boolean validateToken(String token, UserDetails userDetails){
-        try {
             final String UUID = getUUID(token);
             return (UUID.equals(userDetails.getUsername()) && !isTokenExpired(token));
-        }catch (ExpiredJwtException e){
-            throw new CustomException("토큰이 만료되었습니다.");
-        }
     }
 
 
