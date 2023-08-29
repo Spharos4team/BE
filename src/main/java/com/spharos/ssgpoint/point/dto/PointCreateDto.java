@@ -10,7 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 public class PointCreateDto {
 
-    private Integer expectedPoint;
+    private Integer totalPoint;
     private Integer point;
     private String title;
     private String content;

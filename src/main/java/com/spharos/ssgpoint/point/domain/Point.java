@@ -20,11 +20,8 @@ public class Point extends Date {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(columnDefinition = "int default 0")
-    private Integer availablePoint;
-
-    @Column(columnDefinition = "int default 0")
-    private Integer expectedPoint;
+    @Column(nullable = false, columnDefinition = "int default 0")
+    private Integer totalPoint;
 
     @Column(nullable = false, columnDefinition = "int default 0")
     private Integer point;

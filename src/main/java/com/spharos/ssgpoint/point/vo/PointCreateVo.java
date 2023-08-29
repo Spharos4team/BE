@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PointCreateVo {
 
-    private Integer expectedPoint;
+    private Integer totalPoint;
     private Integer point;
     private String title;
     private String content;
