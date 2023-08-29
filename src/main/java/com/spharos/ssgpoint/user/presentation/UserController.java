@@ -1,6 +1,7 @@
 package com.spharos.ssgpoint.user.presentation;
 
 import com.spharos.ssgpoint.config.security.JwtTokenProvider;
+import com.spharos.ssgpoint.point.domain.Point;
 import com.spharos.ssgpoint.user.application.UserService;
 import com.spharos.ssgpoint.user.dto.*;
 import com.spharos.ssgpoint.user.vo.*;
@@ -113,6 +114,14 @@ public class UserController {
     public ResponseEntity<String> chageStatus(@PathVariable String UUID) {
         userService.softDeleteUser(UUID);
         return ResponseEntity.ok("회원탈퇴 성공");
+    }
+    /**
+     * 사용가능 포인트 조회
+     */
+    @GetMapping("/user/point/{UUID}")
+    public ResponseEntity<PointGetDto> getPoint(@PathVariable String UUID) {
+        PointGetDto pointGetDto = userService.getPoint(UUID);
+        return ResponseEntity.ok(pointGetDto);
     }
 
 }

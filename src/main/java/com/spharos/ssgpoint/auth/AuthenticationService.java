@@ -3,6 +3,7 @@ package com.spharos.ssgpoint.auth;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spharos.ssgpoint.auth.vo.AuthenticationRequest;
 import com.spharos.ssgpoint.auth.vo.AuthenticationResponse;
+import com.spharos.ssgpoint.auth.vo.RefreshTokenVo;
 import com.spharos.ssgpoint.config.security.JwtTokenProvider;
 import com.spharos.ssgpoint.exception.CustomException;
 import com.spharos.ssgpoint.term.domain.UserTermList;
@@ -24,6 +25,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,6 +46,8 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final RefreshTokenRepository tokenRepository;
     private final RedisTemplate redisTemplate;
+
+    private final PasswordEncoder passwordEncoder;
 
     @Value("${JWT.token.refresh-expiration-time}")
     private long refreshExpirationTime;
@@ -136,7 +141,7 @@ public class AuthenticationService {
     /**
      * 로그인 인증
      * @param authenticationRequest json 요청
-     * @param response 응답헤더
+     * @param
      * @return
      */
 
@@ -164,8 +169,14 @@ public class AuthenticationService {
         return AuthenticationResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
+                .uuid(uuid)
                 .build();
     }
+
+    /**
+     * refresh 토큰 재발급
+     */
+
 
     public void refreshToken(
             HttpServletRequest request,
@@ -183,7 +194,7 @@ public class AuthenticationService {
                     .orElseThrow();
             if (jwtTokenProvider.validateToken(refreshToken, user)) { // refresh 토큰 검증해서 만료 안되었으면
 
-                String redisInRefreshToken = (String) redisTemplate.opsForValue().get(UUID); //레디스에서 key uuid로 value refreshToken 가져온다
+                String redisInRefreshToken = (String) redisTemplate.opsForValue().get(UUID); //레디스에서 key uuid로 value refreshToken 가져온다 todo: 레디스에 로그아웃해서 저장된거 없을떄 예외처리 해야함
                 if(!redisInRefreshToken.equals(refreshToken)){    //내가 가진 refreshtoken이랑 레디스 refreshtoken 다르면 예외
                     throw new CustomException("Refresh Token doesn't match.");
                 }
@@ -213,6 +224,25 @@ public class AuthenticationService {
             }
         }
     }
+    /**
+     * 로그아웃
+     */
+    @Transactional
+    public void logout(String refreshToken) {
+        //Token에서 로그인한 사용자 정보 get해 로그아웃 처리
+        String uuid = jwtTokenProvider.getUUID(refreshToken);
+        log.info("u is : {}" , uuid);
+        redisTemplate.delete(uuid); //Token 삭제
+        /*if (redisTemplate.opsForValue().get("JWT_TOKEN:" + admin.getLoginId()) != null) {
+            redisTemplate.delete("JWT_TOKEN:" + admin.getLoginId()); //Token 삭제
+        }*/
+    }
+
+
+
+
+
+
 
 
 
