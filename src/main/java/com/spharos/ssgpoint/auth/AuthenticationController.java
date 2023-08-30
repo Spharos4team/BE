@@ -9,25 +9,23 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/v1/auth")
+@CrossOrigin(origins = "*",allowedHeaders = "*")
 @RequiredArgsConstructor
 public class AuthenticationController {
-
     private final AuthenticationService authenticationService;
 
     @PostMapping("/signup")
-    public ResponseEntity<AuthenticationResponse> signup(
+    public ResponseEntity<String> signup(
             @RequestBody UserSignUpDto userSignUpDto
     ) {
-        return ResponseEntity.ok(authenticationService.signup(userSignUpDto));
+        authenticationService.signup(userSignUpDto);
+        return ResponseEntity.ok("회원가입 완료");
     }
 
     @PostMapping("/login")
@@ -47,7 +45,7 @@ public class AuthenticationController {
 
 
     @PostMapping("/refresh-token")
-    public ResponseEntity refreshToken(@RequestBody RefreshTokenVo refreshTokenVo
+    public ResponseEntity<AuthenticationResponse> refreshToken(@RequestBody RefreshTokenVo refreshTokenVo
     )  {
         return ResponseEntity.ok( authenticationService.refreshToken(refreshTokenVo.getRefreshToken()));
     }

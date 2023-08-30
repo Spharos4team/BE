@@ -151,7 +151,6 @@ public class UserServiceImp implements UserService{
         return PointGetDto.builder()
                 .totalPoint(totalPoint)
                 .build();
-
     }
 
 
