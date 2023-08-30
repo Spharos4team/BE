@@ -1,8 +1,8 @@
 package com.spharos.ssgpoint.user.infrastructure;
 
-import com.spharos.ssgpoint.point.domain.Point;
+import java.util.List;
 
 public interface UserRepositoryCustom {
-    Point findPointByUUID(String uuid);
+    List<Integer> findPointByUUID(String uuid);
 
 }

@@ -1,5 +1,6 @@
-package com.spharos.ssgpoint.point.vo;
+package com.spharos.ssgpoint.term.dto;
 
+import com.spharos.ssgpoint.global.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -7,18 +8,12 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PointGetVo {
-
-    private Integer point;
-    private Integer totalPoint;
+public class ServiceTermResponseDto  {
+    private LocalDate updateDate;
     private String title;
-    private String content;
-    private String type;
-    private LocalDateTime createdDate;
-
+    private boolean agreed;
 }

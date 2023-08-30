@@ -23,6 +23,6 @@ public interface UserService {
 
     PointGetDto getPoint(String UUID);
 
-
+    
 
 }

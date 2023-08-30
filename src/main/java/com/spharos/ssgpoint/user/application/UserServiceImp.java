@@ -1,8 +1,7 @@
 package com.spharos.ssgpoint.user.application;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.spharos.ssgpoint.exception.CustomException;
+
 import com.spharos.ssgpoint.point.domain.Point;
 import com.spharos.ssgpoint.term.domain.UserTermList;
 import com.spharos.ssgpoint.user.domain.User;
@@ -23,6 +22,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional(readOnly = true)
 public class UserServiceImp implements UserService{
     private final UserRepository userRepository;
     private ObjectMapper objectMapper;
