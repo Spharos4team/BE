@@ -11,6 +11,7 @@ import com.spharos.ssgpoint.user.infrastructure.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -71,7 +72,7 @@ public class PointServiceImpl implements PointService {
                         .title(point.getTitle())
                         .content(point.getContent())
                         .type(String.valueOf(point.getType().getValue()))
-                        .createdDate(point.getCreatedDate())
+                        .createdDate(LocalDate.from(point.getCreatedDate()))
                         .build()
         ).toList();
     }
