@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -72,7 +73,7 @@ public class PointServiceImpl implements PointService {
                         .title(point.getTitle())
                         .content(point.getContent())
                         .type(String.valueOf(point.getType().getValue()))
-                        .createdDate(LocalDate.from(point.getCreatedDate()))
+                        .createdDate(LocalDateTime.from(point.getCreatedDate()))
                         .build()
         ).toList();
     }
