@@ -1,17 +1,14 @@
-package com.spharos.ssgpoint.event.dto;
+package com.spharos.ssgpoint.event.vo;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.ToString;
 
+import java.util.Date;
 import java.util.List;
 
 @Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class EventDto {
+@ToString
+public class EventAdd {
 
     private String title;
     private String content;
@@ -19,4 +16,8 @@ public class EventDto {
 
     private String thumbnailUrl;
     private List<String> eventImages;
+
+    private Date startDate;
+    private Date endDate;
+
 }

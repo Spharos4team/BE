@@ -2,6 +2,8 @@ package com.spharos.ssgpoint.event.presentation;
 
 import com.spharos.ssgpoint.event.application.EventService;
 import com.spharos.ssgpoint.event.domain.Event;
+import com.spharos.ssgpoint.event.vo.EventAdd;
+import com.spharos.ssgpoint.event.vo.EventOut;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,8 +38,8 @@ public class EventController {
     }
 
     @PostMapping
-    public ResponseEntity<Event> uploadEvent(@RequestParam("image") MultipartFile image, @RequestParam String title, @RequestParam String content, @RequestParam LocalDateTime startDate, @RequestParam LocalDateTime endDate, @RequestParam String relatedLink) {
-        Event event = eventService.uploadEvent(title, content, startDate, endDate, relatedLink, image);
-        return ResponseEntity.ok(event); // 200 OK
+    public ResponseEntity<EventOut> uploadEvent(@RequestBody EventAdd eventAdd) {
+        EventOut eventOut = new EventOut();
+        return ResponseEntity.ok(eventOut);
     }
 }
