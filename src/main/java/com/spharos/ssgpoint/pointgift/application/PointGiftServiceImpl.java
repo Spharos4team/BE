@@ -25,7 +25,7 @@ public class PointGiftServiceImpl implements PointGiftService {
         Optional<User> user = userRepository.findByPhoneAndName(phone, name);
 
         if (user.isEmpty()) {
-            return "입력하신 정보로 가입된 신세계포인트 회원이 없습니다." + "포인트 선물하기는 신세계포인트 회원에게만 가능합니다.";
+            return "입력하신 정보로 가입된 신세계포인트 회원이 없습니다." + System.lineSeparator() + "포인트 선물하기는 신세계포인트 회원에게만 가능합니다.";
         }
 
         return "선물하려는 분이 맞는지 확인해 주세요.";
