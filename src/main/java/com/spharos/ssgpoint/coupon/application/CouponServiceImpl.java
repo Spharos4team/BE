@@ -1,5 +1,6 @@
 package com.spharos.ssgpoint.coupon.application;
 
+import com.spharos.ssgpoint.coupon.domain.Coupon;
 import com.spharos.ssgpoint.coupon.dto.CouponDto;
 import com.spharos.ssgpoint.coupon.dto.UserCouponDto;
 import com.spharos.ssgpoint.coupon.infrastructure.CouponRepository;
@@ -16,6 +17,7 @@ import java.util.List;
 public class CouponServiceImpl implements CouponService {
 
     private final CouponRepository couponRepository;
+    private final StoreManager storeManager;
 
     /**
      * @param couponDto 쿠폰 DTO
@@ -41,7 +43,6 @@ public class CouponServiceImpl implements CouponService {
         return null;
     }
 
-
     /**
      * @param couponId 쿠폰 ID
      */
@@ -49,12 +50,39 @@ public class CouponServiceImpl implements CouponService {
         // Mark the coupon as used
     }
 
-
     /**
      * @return 만료된 쿠폰 목록
      */
     public List<CouponDto> getExpiredCoupons() {
         // Fetch expired coupons and convert to DTO
+        return null;
+    }
+
+    /**
+     * @param couponId 쿠폰 ID
+     */
+    @Override
+    public void deleteCoupon(Long couponId) {
+
+    }
+
+
+    /**
+     * @param storeName 가맹점 이름
+     * @return
+     */
+    @Override
+    public CouponDto createCouponForStore(String storeName) {
+        String couponNumber = storeManager.generateCouponNumber(storeName);
+
+        Coupon coupon = Coupon.builder()
+                .number(Integer.parseInt(couponNumber))
+                .title("Generated Coupon for " + storeName)
+                .description("Description for " + storeName)
+                // ... 다른 필드들 ...
+                .build();
+
+        couponRepository.save(coupon);
         return null;
     }
 }

@@ -1,6 +1,5 @@
 package com.spharos.ssgpoint.event.domain;
 
-import com.spharos.ssgpoint.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,7 +23,7 @@ public class UserEvent {
     @ManyToOne(fetch = FetchType.LAZY)
     private Event event;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+    @ManyToOne
+    private String UUID;
 }
 

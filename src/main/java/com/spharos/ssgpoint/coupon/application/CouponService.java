@@ -15,4 +15,9 @@ public interface CouponService {
     void useCoupon(Long couponId);
 
     List<CouponDto> getExpiredCoupons();
+
+    void deleteCoupon(Long couponId);
+
+
+    CouponDto createCouponForStore(String storeName);
 }

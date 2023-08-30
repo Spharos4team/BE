@@ -1,5 +1,9 @@
 package com.spharos.ssgpoint.coupon.dto;
 
+import lombok.*;
+
+@Getter
+@Setter
 public class CouponResponse {
     private final String couponNumber;
 
@@ -7,7 +11,4 @@ public class CouponResponse {
         this.couponNumber = couponNumber;
     }
 
-    public String getCouponNumber() {
-        return couponNumber;
-    }
 }

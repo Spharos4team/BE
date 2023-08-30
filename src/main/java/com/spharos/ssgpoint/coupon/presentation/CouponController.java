@@ -19,7 +19,7 @@ public class CouponController {
     }
 
     // 쿠폰 등록
-    @PostMapping("/register")
+    @PostMapping("/coupon")
     public ResponseEntity<Void> registerCoupon(@RequestBody CouponDto couponDto) {
         couponService.registerCoupon(couponDto);
         return ResponseEntity.ok().build();
@@ -33,7 +33,7 @@ public class CouponController {
     }
 
     // 내가 보유한 쿠폰 목록 조회
-    @GetMapping("/coupon?user_id={user_id}&status={available}{userId}")
+    @GetMapping("/coupon?user_id={userId}&status=available")
     public ResponseEntity<List<UserCouponDto>> getMyCoupons(@PathVariable String uuid) {
         List<UserCouponDto> myCoupons = couponService.getMyCoupons(uuid);
         return ResponseEntity.ok(myCoupons);
@@ -47,9 +47,22 @@ public class CouponController {
     }
 
     // 만료된 쿠폰 조회
-    @GetMapping("/coupon?user_id={user_id}&status={exp}")
-    public ResponseEntity<List<CouponDto>> getExpiredCoupons() {
+    @GetMapping("/coupon?uuid={uuId}&status=exp")
+    public ResponseEntity<List<CouponDto>> getExpiredCoupons(@PathVariable String uuid) {
         List<CouponDto> expiredCoupons = couponService.getExpiredCoupons();
         return ResponseEntity.ok(expiredCoupons);
     }
+
+    @DeleteMapping("/coupon/id={couponId}")
+    public ResponseEntity<Void> deleteCoupon(@PathVariable Long couponId) {
+        couponService.deleteCoupon(couponId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/generate-for-store")
+    public ResponseEntity<CouponDto> generateCouponForStore(@RequestParam String storeName) {
+        CouponDto couponDto = couponService.createCouponForStore(storeName);
+        return ResponseEntity.ok(couponDto);
+    }
+
 }

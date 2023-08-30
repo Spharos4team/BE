@@ -1,4 +1,4 @@
-package com.spharos.ssgpoint.coupon.presentation;
+package com.spharos.ssgpoint.coupon.application;
 
 import org.springframework.stereotype.Component;
 
