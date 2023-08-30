@@ -15,5 +15,6 @@ public class PointGiftCreateDto {
     private Integer access;
     private String UUID;
     private String loginId;
+    private String name;
 
 }

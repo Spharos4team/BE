@@ -9,13 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PointGiftCreateVo {
+public class PointGiftUserGetVo {
 
-    private Integer point;
-    private String message;
-    private String access;
-    private String UUID;
-    private String loginId;
+    private String phone;
     private String name;
 
 }

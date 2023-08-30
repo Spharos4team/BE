@@ -17,6 +17,13 @@ public class PointGiftController {
 
     private final PointGiftService pointGiftService;
 
+    // 포인트 선물 수신인 확인
+    @GetMapping("/point/gift/user")
+    public String getPointGiftUser(@RequestParam("phone") String phone, @RequestParam("name") String name) {
+
+        return pointGiftService.getPointGiftUser(phone, name);
+    }
+
     // 포인트 선물 보내기
     @PostMapping("/point/gift")
     public void createPointGift(@RequestParam("UUID") String UUID, @RequestBody PointGiftCreateVo pointGiftCreateVo) {
@@ -26,6 +33,7 @@ public class PointGiftController {
                 .access(0)
                 .UUID(UUID)
                 .loginId(pointGiftCreateVo.getLoginId())
+                .name(pointGiftCreateVo.getName())
                 .build();
 
         pointGiftService.createPointGift(UUID, pointGiftCreateDto);
@@ -34,15 +42,14 @@ public class PointGiftController {
     // 포인트 선물 목록
     @GetMapping("/point/gift")
     public List<PointGiftGetVo> getPointGiftByUser(@RequestParam("UUID") String UUID) {
-        List<PointGiftGetDto> pointGiftGetDtoList = pointGiftService.getPointByUser(UUID);
+        List<PointGiftGetDto> pointGiftGetDtoList = pointGiftService.getPointGiftByUser(UUID);
 
-        return pointGiftGetDtoList.stream().map(pointGiftGetDto ->
-                PointGiftGetVo.builder()
-                        .point(pointGiftGetDto.getPoint())
-                        .message(pointGiftGetDto.getMessage())
-                        .access(String.valueOf(pointGiftGetDto.getAccess()))
-                        .UUID(UUID)
-                        .build()
+        return pointGiftGetDtoList.stream().map(pointGiftGetDto -> PointGiftGetVo.builder()
+                .point(pointGiftGetDto.getPoint())
+                .message(pointGiftGetDto.getMessage())
+                .access(String.valueOf(pointGiftGetDto.getAccess()))
+                .UUID(UUID)
+                .build()
         ).toList();
     }
 

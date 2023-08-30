@@ -32,4 +32,7 @@ public class PointGift {
     @Column(nullable = false, length = 45)
     private String loginId;
 
+    @Column(nullable = false, length = 100)
+    private String name;
+
 }
