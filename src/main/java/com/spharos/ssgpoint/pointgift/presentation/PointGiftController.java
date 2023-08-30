@@ -30,7 +30,8 @@ public class PointGiftController {
         PointGiftCreateDto pointGiftCreateDto = PointGiftCreateDto.builder()
                 .point(pointGiftCreateVo.getPoint())
                 .message(pointGiftCreateVo.getMessage())
-                .access(0)
+                .type("선물사용")
+                .access("대기")
                 .UUID(UUID)
                 .loginId(pointGiftCreateVo.getLoginId())
                 .name(pointGiftCreateVo.getName())
@@ -47,8 +48,12 @@ public class PointGiftController {
         return pointGiftGetDtoList.stream().map(pointGiftGetDto -> PointGiftGetVo.builder()
                 .point(pointGiftGetDto.getPoint())
                 .message(pointGiftGetDto.getMessage())
-                .access(String.valueOf(pointGiftGetDto.getAccess()))
+                .type(pointGiftGetDto.getType())
+                .access(pointGiftGetDto.getAccess())
                 .UUID(UUID)
+                .loginId(pointGiftGetDto.getLoginId())
+                .name(pointGiftGetDto.getName())
+                .createdDate(pointGiftGetDto.getCreatedDate())
                 .build()
         ).toList();
     }

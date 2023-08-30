@@ -1,6 +1,8 @@
 package com.spharos.ssgpoint.pointgift.application;
 
 import com.spharos.ssgpoint.pointgift.domain.PointGift;
+import com.spharos.ssgpoint.pointgift.domain.PointGiftAccessType;
+import com.spharos.ssgpoint.pointgift.domain.PointGiftType;
 import com.spharos.ssgpoint.pointgift.dto.PointGiftCreateDto;
 import com.spharos.ssgpoint.pointgift.dto.PointGiftGetDto;
 import com.spharos.ssgpoint.pointgift.infrastructure.PointGiftRepository;
@@ -9,6 +11,7 @@ import com.spharos.ssgpoint.user.infrastructure.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,7 +41,8 @@ public class PointGiftServiceImpl implements PointGiftService {
         pointGiftRepository.save(PointGift.builder()
                 .point(pointGiftCreateDto.getPoint())
                 .message(pointGiftCreateDto.getMessage())
-                .access(pointGiftCreateDto.getAccess())
+                .type(PointGiftType.valueOf(pointGiftCreateDto.getType()))
+                .access(PointGiftAccessType.valueOf(pointGiftCreateDto.getAccess()))
                 .UUID(pointGiftCreateDto.getUUID())
                 .loginId(pointGiftCreateDto.getLoginId())
                 .name(pointGiftCreateDto.getName())
@@ -53,8 +57,12 @@ public class PointGiftServiceImpl implements PointGiftService {
         return pointGiftList.stream().map(pointGift -> PointGiftGetDto.builder()
                 .point(pointGift.getPoint())
                 .message(pointGift.getMessage())
-                .access(pointGift.getAccess())
+                .type(pointGift.getType().getValue())
+                .access(pointGift.getAccess().getValue())
                 .UUID(pointGift.getUUID())
+                .loginId(pointGift.getLoginId())
+                .name(pointGift.getName())
+                .createdDate(LocalDate.from(pointGift.getCreatedDate()))
                 .build()
         ).toList();
     }
