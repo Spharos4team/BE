@@ -8,6 +8,7 @@ import com.spharos.ssgpoint.pointgift.vo.PointGiftCreateVo;
 import com.spharos.ssgpoint.pointgift.vo.PointGiftGetVo;
 import com.spharos.ssgpoint.pointgift.vo.PointGiftUpdateVo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,24 +43,11 @@ public class PointGiftController {
         pointGiftService.createPointGift(UUID, pointGiftCreateDto);
     }
 
-    // 포인트 선물 수락
-    @PutMapping("/point/gift/accept")
-    public void updatePointGiftAccept(@RequestParam("id") Long id) {
-        PointGiftUpdateDto pointGiftUpdateDto = PointGiftUpdateDto.builder()
-                .access("수락")
-                .build();
+    @PutMapping("/point/gift")
+    public ResponseEntity<String> updatePoint(@RequestParam("id") Long id, @RequestParam("access") String access) {
+        pointGiftService.updatePoint(id, access);
 
-        pointGiftService.updatePointGiftAccept(id, pointGiftUpdateDto);
-    }
-    
-    // 포인트 선물 거절
-    @PutMapping("/point/gift/refuse")
-    public void updatePointGiftRefuse(@RequestParam("id") Long id) {
-        PointGiftUpdateDto pointGiftUpdateDto = PointGiftUpdateDto.builder()
-                .access("거절")
-                .build();
-
-        pointGiftService.updatePointGiftRefuse(id, pointGiftUpdateDto);
+        return ResponseEntity.ok("포인트 선물 상태 변경 완료");
     }
 
     // 포인트 선물 목록
@@ -79,5 +67,4 @@ public class PointGiftController {
                 .build()
         ).toList();
     }
-
 }

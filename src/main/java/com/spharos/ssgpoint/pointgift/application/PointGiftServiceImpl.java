@@ -7,12 +7,12 @@ import com.spharos.ssgpoint.pointgift.domain.PointGiftAccessType;
 import com.spharos.ssgpoint.pointgift.domain.PointGiftType;
 import com.spharos.ssgpoint.pointgift.dto.PointGiftCreateDto;
 import com.spharos.ssgpoint.pointgift.dto.PointGiftGetDto;
-import com.spharos.ssgpoint.pointgift.dto.PointGiftUpdateDto;
 import com.spharos.ssgpoint.pointgift.infrastructure.PointGiftRepository;
 import com.spharos.ssgpoint.user.domain.User;
 import com.spharos.ssgpoint.user.infrastructure.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -68,10 +68,10 @@ public class PointGiftServiceImpl implements PointGiftService {
                 .build());
     }
 
-    // 포인트 선물 수락
+    // 포인트 선물 수락/거절
     @Transactional
     @Override
-    public void updatePointGiftAccept(Long id, PointGiftUpdateDto pointGiftUpdateDto) {
+    public void updatePoint(Long id, String access) {
         // 포인트 선물 ID로 포인트 선물 정보 찾기
         Optional<PointGift> pointGiftList = pointGiftRepository.findById(id);
 
@@ -83,47 +83,38 @@ public class PointGiftServiceImpl implements PointGiftService {
         User receiver = userRepository.findByLoginId(pointGiftList.get().getLoginId()).orElseThrow(() ->
                 new IllegalArgumentException("받는 사람 정보 없음"));
 
-        // 포인트 선물 상태 수락으로 변경
-        pointGiftList.ifPresent(pointGift -> pointGift.accept(pointGiftUpdateDto.getAccess()));
+        // 포인트 선물 수락 시
+        if (access.equals("1")) {
+            // 포인트 선물 상태 변경
+            pointGiftList.get().update("수락");
 
-        // 받는 사람 포인트 테이블에 저장
-        PointCreateDto pointCreateDto = PointCreateDto.builder()
-                .point(pointGiftList.get().getPoint())
-                .title(sender.getName() + "(ID : " + sender.getLoginId() + ")")
-                .content("받은 선물 : " + pointGiftList.get().getAccess())
-                .type("7")
-                .user(receiver.getUuid())
-                .build();
-        pointService.createPoint(receiver.getUuid(), pointCreateDto);
-    }
+            // 받는 사람 포인트 테이블에 저장
+            PointCreateDto pointCreateDto = PointCreateDto.builder()
+                    .point(pointGiftList.get().getPoint())
+                    .title(sender.getName() + "(ID : " + sender.getLoginId() + ")")
+                    .content("받은 선물 : " + pointGiftList.get().getAccess())
+                    .type("7")
+                    .user(receiver.getUuid())
+                    .build();
+            pointService.createPoint(receiver.getUuid(), pointCreateDto);
+        }
 
-    // 포인트 선물 거절
-    @Transactional
-    @Override
-    public void updatePointGiftRefuse(Long id, PointGiftUpdateDto pointGiftUpdateDto) {
-        // 포인트 선물 ID로 포인트 선물 정보 찾기
-        Optional<PointGift> pointGiftList = pointGiftRepository.findById(id);
+        // 포인트 선물 거절 시
+        if (access.equals("2")) {
+            // 포인트 선물 상태 변경
+            pointGiftList.get().update("거절");
+            
+            // 보낸 사람 포인트 테이블에 저장
+            PointCreateDto pointCreateDto = PointCreateDto.builder()
+                    .point(pointGiftList.get().getPoint())
+                    .title(receiver.getName() + "(ID : " + receiver.getLoginId() + ")")
+                    .content("보낸 선물 : " + pointGiftList.get().getAccess())
+                    .type("6")
+                    .user(sender.getUuid())
+                    .build();
+            pointService.createPoint(sender.getUuid(), pointCreateDto);
+        }
 
-        // 보낸 사람 정보 찾기
-        User sender = userRepository.findByUuid(pointGiftList.get().getUUID()).orElseThrow(() ->
-                new IllegalArgumentException("보내는 사람 정보 없음"));
-
-        // 받는 사람 정보 찾기
-        User receiver = userRepository.findByLoginId(pointGiftList.get().getLoginId()).orElseThrow(() ->
-                new IllegalArgumentException("받는 사람 정보 없음"));
-
-        // 포인트 선물 상태 거절로 변경
-        pointGiftList.ifPresent(pointGift -> pointGift.accept(pointGiftUpdateDto.getAccess()));
-
-        // 보낸 사람 포인트 테이블에 저장
-        PointCreateDto pointCreateDto = PointCreateDto.builder()
-                .point(pointGiftList.get().getPoint())
-                .title(receiver.getName() + "(ID : " + receiver.getLoginId() + ")")
-                .content("보낸 선물 : " + pointGiftList.get().getAccess())
-                .type("6")
-                .user(sender.getUuid())
-                .build();
-        pointService.createPoint(sender.getUuid(), pointCreateDto);
     }
 
     // 포인트 선물 목록

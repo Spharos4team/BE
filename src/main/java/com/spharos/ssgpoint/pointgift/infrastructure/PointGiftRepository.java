@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface PointGiftRepository extends JpaRepository<PointGift, Long> {
-    
+
     List<PointGift> findByUUID(String UUID);
 
 }

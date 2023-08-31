@@ -14,11 +14,8 @@ public interface PointGiftService {
     // 포인트 선물 보내기
     void createPointGift(String UUID, PointGiftCreateDto pointGiftCreateDto);
 
-    // 포인트 선물 수락
-    void updatePointGiftAccept(Long id, PointGiftUpdateDto pointGiftUpdateDto);
-
-    // 포인트 선물 거절
-    void updatePointGiftRefuse(Long id, PointGiftUpdateDto pointGiftUpdateDto);
+    // 포인트 선물 수락/거절
+    void updatePoint(Long id, String access);
 
     // 포인트 선물 목록
     List<PointGiftGetDto> getPointGiftByUser(String UUID);
