@@ -153,5 +153,19 @@ public class UserServiceImp implements UserService{
                 .build();
     }
 
+    @Override
+    public UserSavePointDto getSavePoint(String UUID) {
+        Integer pointByUUID = userRepository.findSavePointByUUID(UUID);
+        return UserSavePointDto.builder().savePoint(pointByUUID).build();
+    }
+
+    @Override
+    public UserUsePointDto getUsePoint(String UUID) {
+        Integer pointByUUID = userRepository.findUsePointByUUID(UUID);
+        return UserUsePointDto.builder().usePoint(pointByUUID).build();
+    }
+    /**
+     * 신세계 포인트 이용 2023 적립 부분
+     */
 
 }

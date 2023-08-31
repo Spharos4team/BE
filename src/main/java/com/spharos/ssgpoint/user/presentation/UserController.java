@@ -111,7 +111,7 @@ public class UserController {
      * 회원 soft delete
      */
     @PutMapping("/user/soft-delete/{UUID}")
-    public ResponseEntity<String> chageStatus(@PathVariable String UUID) {
+    public ResponseEntity<String> changeStatus(@PathVariable String UUID) {
         userService.softDeleteUser(UUID);
         return ResponseEntity.ok("회원탈퇴 성공");
     }
@@ -123,9 +123,22 @@ public class UserController {
         PointGetDto pointGetDto = userService.getPoint(UUID);
         return ResponseEntity.ok(pointGetDto);
     }
-
-
-
+    /**
+     * 신세계포인트 이용 - 적립부분
+     */
+    @GetMapping("/user/save-point/{UUID}")
+    public ResponseEntity<UserSavePointDto> getSavePoint(@PathVariable String UUID) {
+        UserSavePointDto userSavePointDto = userService.getSavePoint(UUID);
+        return ResponseEntity.ok(userSavePointDto);
+    }
+    /**
+     * 신세계포인트 이용 - 사용부분
+     */
+    @GetMapping("/user/use-point/{UUID}")
+    public ResponseEntity<UserUsePointDto> getUsePoint(@PathVariable String UUID) {
+        UserUsePointDto userUsePointDto = userService.getUsePoint(UUID);
+        return ResponseEntity.ok(userUsePointDto);
+    }
 }
 
 

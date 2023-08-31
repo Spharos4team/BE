@@ -28,7 +28,13 @@ public class JpaConfiguration{
         // DataSource를 주입받은 dataSource로 설정한다.
         entityManagerFactory.setDataSource(dataSource);
         // JPA 엔티티 클래스가 포함된 패키지를 설정한다.
-        entityManagerFactory.setPackagesToScan("com.spharos.ssgpoint.user.domain");
+        entityManagerFactory.setPackagesToScan(
+                "com.spharos.ssgpoint.user.domain","com.spharos.ssgpoint.point.domain",
+                "com.spharos.ssgpoint.term.domain","com.spharos.ssgpoint.auth.domain","com.sphros.ssgpoint.pointcard.domain",
+                "com.spharos.ssgpoint.temporarycard","com.spharos.receipt.domain","com.spharos.ssgpoint.offlinepointcard.domain",
+                "com.spharos.ssgpoint.notices.domain","com.spharos.ssgpoint.global.domain","com.spharos.ssgpoint.faq.domain",
+                "com.spharos.ssgpoint.exception.domain","com.spharos.ssgpoint.event.domain","com.spharos.ssgpoint.coupon.domain",
+                "com.spharos.ssgpoint.club.domain","com.spharos.ssgpoint.alliancepoint.domain","com.spharos.alliancepointcard.admin.domain");
         // JPA 벤더 어뎁터를 설정한다.
         entityManagerFactory.setJpaVendorAdapter(jpaVendorAdapter());
         // 영속성 유닛의 이름을 entityManager로 설정한다.

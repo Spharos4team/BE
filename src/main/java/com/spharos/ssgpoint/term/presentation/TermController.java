@@ -6,6 +6,7 @@ import com.spharos.ssgpoint.term.domain.UserServiceTerm;
 import com.spharos.ssgpoint.term.dto.ServiceTermListDto;
 import com.spharos.ssgpoint.term.dto.ServiceTermRequestDto;
 import com.spharos.ssgpoint.term.dto.ServiceTermResponseDto;
+import com.spharos.ssgpoint.term.dto.TermContentDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -25,8 +26,8 @@ public class TermController {
      * 서비스 내용보기
      */
     @GetMapping("/term/{id}")
-    public ResponseEntity<ServiceTerm> getContent(@PathVariable Long id) {
-        ServiceTerm content = termService.getContent(id);
+    public ResponseEntity<TermContentDto> getContent(@PathVariable Long id) {
+        TermContentDto content = termService.getContent(id);
         return ResponseEntity.ok(content);
     }
 

@@ -5,6 +5,7 @@ import com.spharos.ssgpoint.term.domain.UserServiceTerm;
 import com.spharos.ssgpoint.term.dto.ServiceTermListDto;
 import com.spharos.ssgpoint.term.dto.ServiceTermRequestDto;
 import com.spharos.ssgpoint.term.dto.ServiceTermResponseDto;
+import com.spharos.ssgpoint.term.dto.TermContentDto;
 import com.spharos.ssgpoint.term.infrastructure.TermRepository;
 
 import com.spharos.ssgpoint.term.infrastructure.UserServiceRepository;
@@ -29,8 +30,8 @@ public class TermServiceImp implements TermService{
     private final UserRepository userRepository;
     private final UserServiceRepository userServiceRepository;
     @Override
-    public ServiceTerm getContent(Long id) {
-        return termRepository.findById(id).get();
+    public TermContentDto getContent(Long id) {
+        return termRepository.findTermContentByTitle(id);
     }
 
 
@@ -60,7 +61,6 @@ public class TermServiceImp implements TermService{
                     .updateDate(LocalDate.now())
                 .build();
         }
-
     }
 
     @Override

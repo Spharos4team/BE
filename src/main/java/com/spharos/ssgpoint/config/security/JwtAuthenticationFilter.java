@@ -62,10 +62,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             final String jwt;
             final String UUID;
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-                /*filterChain.doFilter(request, response);
-                return;*/
-                request.setAttribute("exception", JwtExceptionCode.NOT_FOUND_TOKEN.getCode());
-                throw new BadCredentialsException("throw new not found token exception");
+                filterChain.doFilter(request, response);
+                return;
+                /*request.setAttribute("exception", JwtExceptionCode.NOT_FOUND_TOKEN.getCode());
+                throw new BadCredentialsException("throw new not found token exception");*/
             }
             jwt = authHeader.substring(7);
             //UUID = jwtTokenProvider.getUUID(jwt);

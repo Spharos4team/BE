@@ -1,9 +1,7 @@
 package com.spharos.ssgpoint.user.application;
 
-import com.spharos.ssgpoint.term.domain.UserTermList;
 import com.spharos.ssgpoint.user.dto.*;
 
-import java.util.List;
 import java.util.Map;
 
 public interface UserService {
@@ -23,6 +21,7 @@ public interface UserService {
 
     PointGetDto getPoint(String UUID);
 
-    
+    UserSavePointDto getSavePoint(String UUID);
+    UserUsePointDto getUsePoint(String UUID);
 
 }
