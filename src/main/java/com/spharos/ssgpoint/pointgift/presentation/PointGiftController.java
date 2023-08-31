@@ -3,8 +3,10 @@ package com.spharos.ssgpoint.pointgift.presentation;
 import com.spharos.ssgpoint.pointgift.application.PointGiftService;
 import com.spharos.ssgpoint.pointgift.dto.PointGiftCreateDto;
 import com.spharos.ssgpoint.pointgift.dto.PointGiftGetDto;
+import com.spharos.ssgpoint.pointgift.dto.PointGiftUpdateDto;
 import com.spharos.ssgpoint.pointgift.vo.PointGiftCreateVo;
 import com.spharos.ssgpoint.pointgift.vo.PointGiftGetVo;
+import com.spharos.ssgpoint.pointgift.vo.PointGiftUpdateVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,6 +40,26 @@ public class PointGiftController {
                 .build();
 
         pointGiftService.createPointGift(UUID, pointGiftCreateDto);
+    }
+
+    // 포인트 선물 수락
+    @PutMapping("/point/gift/accept")
+    public void updatePointGiftAccept(@RequestParam("id") Long id) {
+        PointGiftUpdateDto pointGiftUpdateDto = PointGiftUpdateDto.builder()
+                .access("수락")
+                .build();
+
+        pointGiftService.updatePointGiftAccept(id, pointGiftUpdateDto);
+    }
+    
+    // 포인트 선물 거절
+    @PutMapping("/point/gift/refuse")
+    public void updatePointGiftRefuse(@RequestParam("id") Long id) {
+        PointGiftUpdateDto pointGiftUpdateDto = PointGiftUpdateDto.builder()
+                .access("거절")
+                .build();
+
+        pointGiftService.updatePointGiftRefuse(id, pointGiftUpdateDto);
     }
 
     // 포인트 선물 목록

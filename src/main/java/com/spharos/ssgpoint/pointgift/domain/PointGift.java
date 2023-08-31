@@ -41,4 +41,7 @@ public class PointGift extends BaseEntity {
     @Column(nullable = false, length = 100)
     private String name;
 
+    public void accept(String access) {
+        this.access = PointGiftAccessType.valueOf(access);
+    }
 }
