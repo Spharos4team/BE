@@ -12,7 +12,6 @@ import com.spharos.ssgpoint.user.domain.User;
 import com.spharos.ssgpoint.user.infrastructure.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -44,7 +43,6 @@ public class PointGiftServiceImpl implements PointGiftService {
     // 포인트 선물 보내기
     @Override
     public void createPointGift(String UUID, PointGiftCreateDto pointGiftCreateDto) {
-
         // 보낸 사람 포인트 테이블에 저장
         PointCreateDto pointCreateDto = PointCreateDto.builder()
                 .point(pointGiftCreateDto.getPoint())
