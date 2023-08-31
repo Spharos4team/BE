@@ -51,5 +51,6 @@ public class UserRepositoryImpl implements UserRepositoryCustom{
     @Override
     public Integer findVisitDateByReceipt(String uuid) {
         return null;
+
     }
 }

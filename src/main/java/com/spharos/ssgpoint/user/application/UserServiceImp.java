@@ -4,12 +4,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.spharos.ssgpoint.point.domain.Point;
 import com.spharos.ssgpoint.term.domain.UserTermList;
+import com.spharos.ssgpoint.user.domain.PointHistory;
 import com.spharos.ssgpoint.user.domain.User;
 import com.spharos.ssgpoint.user.dto.*;
+import com.spharos.ssgpoint.user.infrastructure.PasswordHistoryRepository;
 import com.spharos.ssgpoint.user.infrastructure.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +30,11 @@ import java.util.UUID;
 public class UserServiceImp implements UserService{
     private final UserRepository userRepository;
     private ObjectMapper objectMapper;
+    private final PasswordHistoryRepository passwordHistoryRepository;
+
+    private final PasswordEncoder passwordEncoder;
+
+
     @Override
     public void createUser(UserSignUpDto userSignUpDto) {
 
@@ -79,6 +88,7 @@ public class UserServiceImp implements UserService{
     @Transactional
     @Override
     public void updateUserInfo(String UUID, UserUpdateDto userUpdateRequestDto) {
+
         User user = userRepository.findByUuid(UUID).orElseThrow(() -> new IllegalArgumentException("UUID정보 없음  "));
         user.updateUserInfo(userUpdateRequestDto.getAddress(), userUpdateRequestDto.getEmail());
     }
@@ -102,9 +112,26 @@ public class UserServiceImp implements UserService{
     @Transactional
     @Override
     public void updatePassword(String UUID, PasswordUpdateDto passwordUpdateDto) {
-        User user = userRepository.findByUuid(UUID).orElseThrow(() -> new IllegalArgumentException("UUID정보 없음"));
-        user.hashPassword(passwordUpdateDto.getPassword());
-    }
+        PointHistory historyByUuid = passwordHistoryRepository.findHistoryByUuid(UUID);
+        if(historyByUuid==null){
+            User user = userRepository.findByUuid(UUID).orElseThrow(() -> new IllegalArgumentException("UUID정보 없음"));
+            PointHistory build = PointHistory.builder().password(passwordUpdateDto.getPassword()).user(user).user(user).build();
+            build.updatePasswordHistory(passwordUpdateDto.getPassword());
+            passwordHistoryRepository.save(build);
+        }
+        else{
+
+
+        boolean matches = passwordEncoder.matches(passwordUpdateDto.getPassword(), historyByUuid.getPassword());
+        if(matches){
+            throw new IllegalArgumentException("이전 비밀번호와 동일합니다.");
+        }
+        else{
+            User user = userRepository.findByUuid(UUID).orElseThrow(() -> new IllegalArgumentException("UUID정보 없음"));
+            user.hashPassword(passwordUpdateDto.getPassword());
+            historyByUuid.updatePasswordHistory(passwordUpdateDto.getPassword());
+        }
+    }}
 
 
     /**
@@ -164,8 +191,5 @@ public class UserServiceImp implements UserService{
         Integer pointByUUID = userRepository.findUsePointByUUID(UUID);
         return UserUsePointDto.builder().usePoint(pointByUUID).build();
     }
-    /**
-     * 신세계 포인트 이용 2023 적립 부분
-     */
 
 }
