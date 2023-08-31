@@ -27,6 +27,9 @@ public class ReceiptServiceImpl implements ReceiptService {
                 .number(receiptCreateDto.getNumber())
                 .amount(receiptCreateDto.getAmount())
                 .point(receiptCreateDto.getPoint())
+                .cardName(receiptCreateDto.getCardName())
+                .cardNumber(receiptCreateDto.getCardNumber())
+                .status(0)
                 .build());
     }
 

@@ -39,10 +39,11 @@ public class PointServiceImpl implements PointService {
             totalPoint = pointCreateDto.getPoint();
         } else {
             for (Point point : pointList) {
-                if (pointType.getCode().equals("1") || pointType.getCode().equals("2")) {
+                if (pointType.getCode().equals("1") || pointType.getCode().equals("2")
+                        || pointType.getCode().equals("6") || pointType.getCode().equals("7")) {
                     totalPoint = point.getTotalPoint() + pointCreateDto.getPoint();
                 }
-                if (pointType.getCode().equals("3") || pointType.getCode().equals("4")) {
+                if (pointType.getCode().equals("3") || pointType.getCode().equals("4") || pointType.getCode().equals("5")) {
                     totalPoint = point.getTotalPoint() - pointCreateDto.getPoint();
                 }
             }
