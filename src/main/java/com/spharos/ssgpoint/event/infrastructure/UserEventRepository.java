@@ -10,4 +10,6 @@ public interface UserEventRepository extends JpaRepository<EventEntries, Long> {
     List<EventEntries> findByUuid(String uuid);
 
     List<EventEntries> findByUuidAndIsWinning(String uuid, boolean isWinning);
+
+
 }

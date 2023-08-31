@@ -8,8 +8,6 @@ import com.spharos.ssgpoint.event.dto.EventImageListDto;
 import com.spharos.ssgpoint.event.infrastructure.EventImageListRepository;
 import com.spharos.ssgpoint.event.infrastructure.EventImageRepository;
 import com.spharos.ssgpoint.event.infrastructure.EventRepository;
-import com.spharos.ssgpoint.user.domain.User;
-import com.spharos.ssgpoint.user.infrastructure.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,24 +21,21 @@ public class EventImageListServiceImple implements EventImageListService {
     private final EventImageRepository eventImageRepository;
     private final EventImageListRepository eventImageListRepository;
 
-    @Override
     public void addEventImageList(EventImageListDao eventImageListDao) {
-        Event event = eventRepository.findById(eventImageListDao.getEvent().getId()).orElse(null);
-        EventImage eventImage = eventImageRepository.findById(eventImageListDao.getEventImage().getId()).orElse(null);
+        Event event = eventRepository.findById(eventImageListDao.getEvent().getId()).orElseThrow(() -> new IllegalArgumentException("다음 이미지를 찾을 수 없습니다: " + eventImageListDao.getEvent().getId()));
 
-        eventImageListRepository.save(EventImageList.builder()
-                .event(event)
-                .eventImage(eventImage)
-                .build());
+        EventImage eventImage = eventImageRepository.findById(eventImageListDao.getEventImage().getId()).orElseThrow(() -> new IllegalArgumentException("다음 이벤트 이미지를 찾을 수 없습니다: " + eventImageListDao.getEventImage().getId()));
+
+        eventImageListRepository.save(EventImageList.builder().event(event).eventImage(eventImage).build());
     }
 
     @Override
     public EventImageListDto getEventImageListById(Long id) {
-        return EventImageListDto.builder()
-                .id(id)
-                .event(eventRepository.findById(id).orElse(null))
-                .eventImage(eventImageRepository.findById(id).orElse(null))
-                .build();
+        Event event = eventRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Event not found with id: " + id));
+
+        EventImage eventImage = eventImageRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("EventImage not found with id: " + id));
+
+        return EventImageListDto.builder().id(id).event(event).eventImage(eventImage).build();
     }
 
     @Override

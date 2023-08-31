@@ -9,6 +9,7 @@ import com.spharos.ssgpoint.event.dto.EventDto;
 import com.spharos.ssgpoint.event.infrastructure.EventRepository;
 import com.spharos.ssgpoint.event.infrastructure.UserEventRepository;
 import com.spharos.ssgpoint.event.vo.EventAdd;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -30,20 +31,21 @@ public class EventServiceImpl implements EventService {
         return eventRepository.findByEventType(eventType);
     }
 
-
     @Override
     public Event getEventById(Long id) {
-        return eventRepository.findById(id).orElse(null);
+        return eventRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("다음 이벤트를 찾을수 없습니다: " + id));
     }
+
 
     @Override
-    public EventDto addEvent(EventAdd eventAdd) {
+    public EventDto addEvent(@NotNull EventAdd eventAdd) {
+        Event event = Event.builder().title(eventAdd.getTitle()).content(eventAdd.getContent()).eventType(EventType.valueOf(eventAdd.getEventType())).thumbnailUrl(eventAdd.getThumbnailUrl()).startDate(eventAdd.getStartDate()).endDate(eventAdd.getEndDate()).build();
 
-        eventRepository.save(Event.builder().title(eventAdd.getTitle()).content(eventAdd.getContent()).startDate(eventAdd.getStartDate()).endDate(eventAdd.getEndDate()).eventType(EventType.valueOf(eventAdd.getEventType())).thumbnailUrl(eventAdd.getThumbnailUrl()).build());
+        Event savedEvent = eventRepository.save(event);
 
-
-        return null;
+        return new EventDto(savedEvent.getTitle(), savedEvent.getContent(), savedEvent.getEventType().name(), savedEvent.getThumbnailUrl(), eventAdd.getEventImages());
     }
+
 
     @Override
     public List<Event> getAllEvents() {
@@ -61,42 +63,4 @@ public class EventServiceImpl implements EventService {
     }
 
 
-
-
-//
-//    @Override
-//    public List<Event> getEventsByType(String eventType) {
-//        return switch (eventType) {
-//            case "진행중" -> eventRepository.findByType(0);
-//            case "마감" -> eventRepository.findByType(1);
-//            case "당첨" -> eventRepository.findByType(2);
-//            default -> throw new IllegalArgumentException("잘못된 이벤트입니다.");
-//        };
-//    }
-//
-//    @Override
-//    public Event getEventById(Long id) {
-//        return eventRepository.findById(id).orElse(null);
-//    }
-//
-//    @Override
-//    public Event uploadEvent(String title, String content, LocalDateTime startDate,
-//                             LocalDateTime endDate, String relatedLink, MultipartFile image) {
-//        String imageUrl = uploadImage(image);
-//        Event event = Event.builder()
-//                .title(title)
-//                .contentImageUrl(content)
-//                .startDate(startDate)
-//                .endDate(endDate)
-//                .contentImageUrl(relatedLink)
-//                .thumbnailUrl(imageUrl)     // 업로드된 이미지 URL을 저장
-//                .build();   // 이벤트 객체 생성
-//
-//        return eventRepository.save(event); // 이벤트 저장
-//    }
-//
-//    private String uploadImage(MultipartFile image) {
-//        // TODO: 이미지 업로드 로직 구현  (이미지 업로드 후 이미지 URL을 리턴)
-//        return "uploaded_image_url";    // 임시로 업로드된 이미지 URL을 리턴
-//    }
 }
