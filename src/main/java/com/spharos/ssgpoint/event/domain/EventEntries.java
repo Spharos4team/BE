@@ -1,6 +1,5 @@
 package com.spharos.ssgpoint.event.domain;
 
-import com.spharos.ssgpoint.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,6 +22,8 @@ public class EventEntries {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Event event;
+
+    private boolean isWinning;
 
 
 }

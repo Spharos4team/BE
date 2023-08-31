@@ -21,7 +21,7 @@ public class FAQServiceImpl implements FAQService {
     public List<FAQDto> getAllFAQs() {
         List<FAQ> faqs = faqRepository.findAll();
         return faqs.stream().map(faq ->
-                new FAQDto(faq.getId(), faq.getTitle(), faq.getContent(), faq.getRegDate())
+                new FAQDto(faq.getId(), faq.getTitle(), faq.getContent())
         ).collect(Collectors.toList());
     }
 

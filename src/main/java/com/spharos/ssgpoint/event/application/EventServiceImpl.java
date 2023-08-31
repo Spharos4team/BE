@@ -3,17 +3,16 @@
 package com.spharos.ssgpoint.event.application;
 
 import com.spharos.ssgpoint.event.domain.Event;
-import com.spharos.ssgpoint.event.domain.EventImage;
+import com.spharos.ssgpoint.event.domain.EventEntries;
 import com.spharos.ssgpoint.event.domain.EventType;
 import com.spharos.ssgpoint.event.dto.EventDto;
 import com.spharos.ssgpoint.event.infrastructure.EventRepository;
+import com.spharos.ssgpoint.event.infrastructure.UserEventRepository;
 import com.spharos.ssgpoint.event.vo.EventAdd;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -24,32 +23,46 @@ public class EventServiceImpl implements EventService {
     private final EventRepository eventRepository;
     private final EventImageListService eventImageListService;
     private final EventImageService eventImageService;
+    private final UserEventRepository userEventRepository;
 
     @Override
     public List<Event> getEventsByType(String eventType) {
-        return null;
+        return eventRepository.findByEventType(eventType);
     }
+
 
     @Override
     public Event getEventById(Long id) {
-        return null;
+        return eventRepository.findById(id).orElse(null);
     }
 
     @Override
     public EventDto addEvent(EventAdd eventAdd) {
 
-        eventRepository.save(Event.builder()
-                .title(eventAdd.getTitle())
-                .content(eventAdd.getContent())
-                .startDate(eventAdd.getStartDate())
-                .endDate(eventAdd.getEndDate())
-                .eventType(EventType.valueOf(eventAdd.getEventType()))
-                .thumbnailUrl(eventAdd.getThumbnailUrl())
-                .build());
+        eventRepository.save(Event.builder().title(eventAdd.getTitle()).content(eventAdd.getContent()).startDate(eventAdd.getStartDate()).endDate(eventAdd.getEndDate()).eventType(EventType.valueOf(eventAdd.getEventType())).thumbnailUrl(eventAdd.getThumbnailUrl()).build());
 
 
         return null;
     }
+
+    @Override
+    public List<Event> getAllEvents() {
+        return eventRepository.findAll();
+    }
+
+    @Override
+    public List<EventEntries> getEventsParticipatedByUser(String uuid) {
+        return userEventRepository.findByUuid(uuid);
+    }
+
+    @Override
+    public List<EventEntries> getWinningEventsByUuid(String uuid) {
+        return userEventRepository.findByUuidAndIsWinning(uuid, true);
+    }
+
+
+
+
 //
 //    @Override
 //    public List<Event> getEventsByType(String eventType) {
