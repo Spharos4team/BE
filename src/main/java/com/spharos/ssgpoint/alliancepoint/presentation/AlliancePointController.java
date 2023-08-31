@@ -45,15 +45,16 @@ public class AlliancePointController {
         ).toList();
     }
 
-    // 제휴사 포인트 사용
+    // 제휴사 포인트 전환
     @PutMapping("/alliance-point")
     public void updateAlliancePoint(@RequestParam("UUID") String UUID, @RequestParam("type") String type,
+                                    @RequestParam("access") String access,
                                     @RequestBody AlliancePointUpdateVo alliancePointUpdateVo) {
         AlliancePointUpdateDto alliancePointUpdateDto = AlliancePointUpdateDto.builder()
                 .point(alliancePointUpdateVo.getPoint())
                 .build();
 
-        alliancePointService.updateAlliancePoint(UUID, type, alliancePointUpdateDto);
+        alliancePointService.updateAlliancePoint(UUID, type, access, alliancePointUpdateDto);
     }
 
 }
