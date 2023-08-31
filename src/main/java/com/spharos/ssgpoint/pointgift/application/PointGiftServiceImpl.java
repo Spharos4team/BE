@@ -1,5 +1,7 @@
 package com.spharos.ssgpoint.pointgift.application;
 
+import com.spharos.ssgpoint.point.application.PointService;
+import com.spharos.ssgpoint.point.dto.PointCreateDto;
 import com.spharos.ssgpoint.pointgift.domain.PointGift;
 import com.spharos.ssgpoint.pointgift.domain.PointGiftAccessType;
 import com.spharos.ssgpoint.pointgift.domain.PointGiftType;
@@ -18,6 +20,8 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class PointGiftServiceImpl implements PointGiftService {
+
+    private final PointService pointService;
 
     private final UserRepository userRepository;
     private final PointGiftRepository pointGiftRepository;
@@ -38,6 +42,19 @@ public class PointGiftServiceImpl implements PointGiftService {
     // 포인트 선물 보내기
     @Override
     public void createPointGift(String UUID, PointGiftCreateDto pointGiftCreateDto) {
+
+        // 보낸 사람 포인트 테이블에 저장
+        PointCreateDto pointCreateDto = PointCreateDto.builder()
+                .point(pointGiftCreateDto.getPoint())
+                .title(pointGiftCreateDto.getName() + "(ID : " + pointGiftCreateDto.getLoginId() + ")")
+                .content("보낸 선물 : " + pointGiftCreateDto.getAccess())
+                .type("5")
+                .user(UUID)
+                .build();
+
+        pointService.createPoint(UUID, pointCreateDto);
+
+        // 포인트 선물 테이블에 저장
         pointGiftRepository.save(PointGift.builder()
                 .point(pointGiftCreateDto.getPoint())
                 .message(pointGiftCreateDto.getMessage())
