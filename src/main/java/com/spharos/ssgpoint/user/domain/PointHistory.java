@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Entity
 @Getter
@@ -21,4 +22,9 @@ public class PointHistory {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
+
+    public void updatePasswordHistory(String password) {
+        this.password = new BCryptPasswordEncoder().encode(password);
+    }
+
 }

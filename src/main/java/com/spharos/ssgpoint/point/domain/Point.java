@@ -2,6 +2,7 @@ package com.spharos.ssgpoint.point.domain;
 
 import com.spharos.ssgpoint.global.BaseEntity;
 import com.spharos.ssgpoint.pointcard.domain.PointCard;
+import com.spharos.ssgpoint.receipt.domain.Receipt;
 import com.spharos.ssgpoint.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -41,5 +42,8 @@ public class Point extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private PointCard pointCard;
+
+    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    private Receipt receipt;
 
 }

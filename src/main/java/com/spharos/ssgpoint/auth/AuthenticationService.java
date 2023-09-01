@@ -159,9 +159,12 @@ public class AuthenticationService {
         String accessToken = jwtTokenProvider.generateToken(user);
         String refreshToken = jwtTokenProvider.generateRefreshToken(user);
         String uuid = jwtTokenProvider.getUUID(accessToken);
+
+
         Point pointByUUID = userRepository.findTotalByUuid(uuid);
-        log.info("pointByUUID is : {}" , pointByUUID.getTotalPoint());
-        log.info("uuid isrewrew : {}" , uuid);
+        int totalPoint = (pointByUUID != null) ? pointByUUID.getTotalPoint() : 0;
+
+        log.info("uuid is: {}" , uuid);
 
         log.info("accessToken is : {}" , accessToken);
         log.info("refreshToken is : {}" , refreshToken);
@@ -172,7 +175,7 @@ public class AuthenticationService {
                 .user(AuthenticationResponse.User.builder()
                         .barcode(user.getBarCode())
                         .name(user.getName())
-                        .point(pointByUUID.getTotalPoint())
+                        .point(totalPoint)
                         .uuid(user.getUuid())
                         .build())
                 .uuid(uuid)

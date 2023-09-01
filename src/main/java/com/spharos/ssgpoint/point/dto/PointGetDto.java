@@ -3,6 +3,7 @@ package com.spharos.ssgpoint.point.dto;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -17,6 +18,6 @@ public class PointGetDto {
     private String title;
     private String content;
     private String type;
-    private LocalDate createdDate;
+    private LocalDateTime createdDate;
 
 }

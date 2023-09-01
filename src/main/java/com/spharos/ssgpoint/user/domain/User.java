@@ -2,6 +2,7 @@ package com.spharos.ssgpoint.user.domain;
 
 
 
+
 import com.spharos.ssgpoint.global.BaseEntity;
 import com.spharos.ssgpoint.term.domain.UserTermList;
 import jakarta.persistence.*;

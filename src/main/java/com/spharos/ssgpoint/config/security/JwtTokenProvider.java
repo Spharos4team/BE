@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -167,7 +168,7 @@ public class JwtTokenProvider {
         Claims claims = extractAllClaims(token);
         String uuid = claims.get("sub", String.class);
         return userRepository.findByUuid(uuid).get().getLoginId();
-
+       // return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
 

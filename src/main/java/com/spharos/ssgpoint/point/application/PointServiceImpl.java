@@ -6,12 +6,14 @@ import com.spharos.ssgpoint.point.domain.PointTypeConverter;
 import com.spharos.ssgpoint.point.dto.PointCreateDto;
 import com.spharos.ssgpoint.point.dto.PointGetDto;
 import com.spharos.ssgpoint.point.infrastructure.PointRepository;
+import com.spharos.ssgpoint.receipt.domain.Receipt;
 import com.spharos.ssgpoint.user.domain.User;
 import com.spharos.ssgpoint.user.infrastructure.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -48,14 +50,29 @@ public class PointServiceImpl implements PointService {
             }
         }
 
-        pointRepository.save(Point.builder()
+        Receipt receipt = Receipt.builder()
+                .alliance(pointCreateDto.getReceipt().getAlliance())
+                .brand(pointCreateDto.getReceipt().getBrand())
+                .cardName(pointCreateDto.getReceipt().getCardName())
+                .number(pointCreateDto.getReceipt().getNumber())
+                .storeName(pointCreateDto.getReceipt().getStoreName())
+                .amount(pointCreateDto.getReceipt().getAmount())
+                .cardNumber(pointCreateDto.getReceipt().getCardNumber())
+                .point(pointCreateDto.getReceipt().getReceiptPoint())
+                .build();
+
+        Point build = Point.builder()
                 .totalPoint(totalPoint)
                 .point(pointCreateDto.getPoint())
                 .title(pointCreateDto.getTitle())
                 .content(pointCreateDto.getContent())
                 .type(pointType)
                 .user(user)
-                .build());
+                .receipt(receipt)
+                .build();
+        pointRepository.save(build);
+
+
     }
 
     // 포인트 목록
@@ -73,7 +90,7 @@ public class PointServiceImpl implements PointService {
                         .title(point.getTitle())
                         .content(point.getContent())
                         .type(String.valueOf(point.getType().getValue()))
-                        .createdDate(LocalDate.from(point.getCreatedDate()))
+                        .createdDate(LocalDateTime.from(point.getCreatedDate()))
                         .build()
         ).toList();
     }
