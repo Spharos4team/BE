@@ -14,5 +14,6 @@ public class OfflinePointCardCreateDto {
     private Integer CVC;
     private String alliance;
     private String store;
+    private Integer status;
 
 }

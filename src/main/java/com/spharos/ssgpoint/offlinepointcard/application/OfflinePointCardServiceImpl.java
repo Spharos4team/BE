@@ -2,16 +2,19 @@ package com.spharos.ssgpoint.offlinepointcard.application;
 
 import com.spharos.ssgpoint.offlinepointcard.domain.OfflinePointCard;
 import com.spharos.ssgpoint.offlinepointcard.dto.OfflinePointCardCreateDto;
-import com.spharos.ssgpoint.offlinepointcard.dto.OfflinePointCardGetDto;
 import com.spharos.ssgpoint.offlinepointcard.infrastructure.OfflinePointCardRepository;
+import com.spharos.ssgpoint.pointcard.application.PointCardService;
+import com.spharos.ssgpoint.pointcard.dto.PointCardCreateDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.time.LocalDate;
 
 @Service
 @RequiredArgsConstructor
 public class OfflinePointCardServiceImpl implements OfflinePointCardService {
+
+    private final PointCardService pointCardService;
 
     private final OfflinePointCardRepository offlinePointCardRepository;
 
@@ -23,22 +26,34 @@ public class OfflinePointCardServiceImpl implements OfflinePointCardService {
                 .CVC(offlinePointCardCreateDto.getCVC())
                 .alliance(offlinePointCardCreateDto.getAlliance())
                 .store(offlinePointCardCreateDto.getStore())
+                .status(0)
                 .build());
     }
 
-    // 오프라인 포인트 카드 가져오기
-    @Override
-    public List<OfflinePointCardGetDto> getOfflinePointCard(String number) {
-        List<OfflinePointCard> offlinePointCardList = offlinePointCardRepository.findByNumber(number);
+    // 오프라인 포인트 카드 등록
+    public void createOfflinePointCard(String UUID, String number, Integer CVC, String alliance, String store) {
+        // 카드 정보 확인
+        OfflinePointCard offlinePointCard
+                = offlinePointCardRepository.findByNumberAndCVCAndAllianceAndStore(number, CVC, alliance, store).orElseThrow(() ->
+                new IllegalArgumentException("카드 번호를 확인해주세요."));
 
-        return offlinePointCardList.stream().map(offlinePointCard ->
-                OfflinePointCardGetDto.builder()
-                        .number(offlinePointCard.getNumber())
-                        .CVC(offlinePointCard.getCVC())
-                        .alliance(offlinePointCard.getAlliance())
-                        .store(offlinePointCard.getStore())
-                        .build()
-        ).toList();
+        // TODO: 등록 상태인지 확인
+
+        if (offlinePointCard.getStatus().equals(0)) {
+            // 포인트 카드 테이블에 저장
+            PointCardCreateDto pointCardCreateDto = PointCardCreateDto.builder()
+                    .number(offlinePointCard.getNumber())
+                    .agency(offlinePointCard.getAlliance())
+                    .UUID(UUID)
+                    .pointCardType("OFF")
+                    .createdDate(LocalDate.from(offlinePointCard.getCreatedDate()))
+                    .build();
+            pointCardService.createPointCard(UUID, pointCardCreateDto);
+
+            // 오프라인 포인트 카드 상태 변경
+            offlinePointCard.update(1);
+        }
+
     }
 
 }
