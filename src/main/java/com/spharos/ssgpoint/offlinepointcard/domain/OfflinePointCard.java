@@ -1,5 +1,6 @@
 package com.spharos.ssgpoint.offlinepointcard.domain;
 
+import com.spharos.ssgpoint.global.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OfflinePointCard {
+public class OfflinePointCard extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,5 +26,12 @@ public class OfflinePointCard {
     private String alliance;
 
     private String store;
+
+    @Column(nullable = false, columnDefinition = "int default 0")
+    private Integer status;
+
+    public void update(Integer status) {
+        this.status = status;
+    }
 
 }

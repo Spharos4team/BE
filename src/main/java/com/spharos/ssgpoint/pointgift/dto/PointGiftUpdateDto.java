@@ -2,15 +2,13 @@ package com.spharos.ssgpoint.pointgift.dto;
 
 import lombok.*;
 
-import java.time.LocalDate;
-
 @Getter
 @Setter
 @ToString
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PointGiftGetDto {
+public class PointGiftUpdateDto {
 
     private Integer point;
     private String message;
@@ -19,6 +17,5 @@ public class PointGiftGetDto {
     private String UUID;
     private String loginId;
     private String name;
-    private LocalDate createdDate;
 
 }

@@ -6,6 +6,7 @@ import com.spharos.ssgpoint.pointgift.dto.PointGiftGetDto;
 import com.spharos.ssgpoint.pointgift.vo.PointGiftCreateVo;
 import com.spharos.ssgpoint.pointgift.vo.PointGiftGetVo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,7 +21,6 @@ public class PointGiftController {
     // 포인트 선물 수신인 확인
     @GetMapping("/point/gift/user")
     public String getPointGiftUser(@RequestParam("phone") String phone, @RequestParam("name") String name) {
-
         return pointGiftService.getPointGiftUser(phone, name);
     }
 
@@ -31,13 +31,21 @@ public class PointGiftController {
                 .point(pointGiftCreateVo.getPoint())
                 .message(pointGiftCreateVo.getMessage())
                 .type("선물사용")
-                .access("대기")
+                .status("대기")
                 .UUID(UUID)
                 .loginId(pointGiftCreateVo.getLoginId())
                 .name(pointGiftCreateVo.getName())
                 .build();
 
         pointGiftService.createPointGift(UUID, pointGiftCreateDto);
+    }
+
+    // 포인트 선물 수락/거절
+    @PutMapping("/point/gift")
+    public ResponseEntity<String> updatePoint(@RequestParam("id") Long id, @RequestParam("status") String status) {
+        pointGiftService.updatePoint(id, status);
+
+        return ResponseEntity.ok("포인트 선물 상태 변경 완료");
     }
 
     // 포인트 선물 목록
@@ -49,7 +57,7 @@ public class PointGiftController {
                 .point(pointGiftGetDto.getPoint())
                 .message(pointGiftGetDto.getMessage())
                 .type(pointGiftGetDto.getType())
-                .access(pointGiftGetDto.getAccess())
+                .status(pointGiftGetDto.getStatus())
                 .UUID(UUID)
                 .loginId(pointGiftGetDto.getLoginId())
                 .name(pointGiftGetDto.getName())
@@ -57,5 +65,4 @@ public class PointGiftController {
                 .build()
         ).toList();
     }
-
 }
