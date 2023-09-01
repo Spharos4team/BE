@@ -2,6 +2,7 @@ package com.spharos.ssgpoint.user.application;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import com.querydsl.core.Tuple;
 import com.spharos.ssgpoint.point.domain.Point;
 import com.spharos.ssgpoint.term.domain.UserTermList;
 import com.spharos.ssgpoint.user.domain.PointHistory;
@@ -11,17 +12,13 @@ import com.spharos.ssgpoint.user.infrastructure.PasswordHistoryRepository;
 import com.spharos.ssgpoint.user.infrastructure.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+
+import static com.spharos.ssgpoint.point.domain.QPoint.point1;
 
 @Service
 @RequiredArgsConstructor
@@ -115,15 +112,13 @@ public class UserServiceImp implements UserService{
         PointHistory historyByUuid = passwordHistoryRepository.findHistoryByUuid(UUID);
         if(historyByUuid==null){
             User user = userRepository.findByUuid(UUID).orElseThrow(() -> new IllegalArgumentException("UUID정보 없음"));
-            PointHistory build = PointHistory.builder().password(passwordUpdateDto.getPassword()).user(user).user(user).build();
+            PointHistory build = PointHistory.builder().password(passwordUpdateDto.getPassword()).user(user).build();
             build.updatePasswordHistory(passwordUpdateDto.getPassword());
             passwordHistoryRepository.save(build);
         }
         else{
 
-
-        boolean matches = passwordEncoder.matches(passwordUpdateDto.getPassword(), historyByUuid.getPassword());
-        if(matches){
+        if(passwordEncoder.matches(passwordUpdateDto.getPassword(), historyByUuid.getPassword())){
             throw new IllegalArgumentException("이전 비밀번호와 동일합니다.");
         }
         else{
@@ -131,7 +126,8 @@ public class UserServiceImp implements UserService{
             user.hashPassword(passwordUpdateDto.getPassword());
             historyByUuid.updatePasswordHistory(passwordUpdateDto.getPassword());
         }
-    }}
+    }
+    }
 
 
     /**
@@ -190,6 +186,29 @@ public class UserServiceImp implements UserService{
     public UserUsePointDto getUsePoint(String UUID) {
         Integer pointByUUID = userRepository.findUsePointByUUID(UUID);
         return UserUsePointDto.builder().usePoint(pointByUUID).build();
+    }
+
+    @Override
+    public VisitedCountDto getVisitedCount(String UUID) {
+        Long visitDateByReceipt = userRepository.findVisitDateByReceipt(UUID);
+        return VisitedCountDto.builder().visitedCount(visitDateByReceipt).build();
+    }
+
+    @Override
+    public TotalPointDtoByReceipt getTotalPoint(String UUID) {
+        Integer totalPointByReceipt = userRepository.findTotalPointByReceipt(UUID);
+        return TotalPointDtoByReceipt.builder().totalPoint(totalPointByReceipt).build();
+    }
+
+    @Override
+    public List<FrequentBrandTop3Dto>  getFrequentBrandTop3(String UUID) {
+        List<Tuple> listTop3ByUUID = userRepository.findListTop3ByUUID(UUID);
+        List<FrequentBrandTop3Dto> frequentBrandTop3DtoList = new ArrayList<>();
+        for (Tuple tuple : listTop3ByUUID) {
+
+        }
+        return null;
+
     }
 
 }

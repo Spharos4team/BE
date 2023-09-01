@@ -2,6 +2,7 @@ package com.spharos.ssgpoint.user.application;
 
 import com.spharos.ssgpoint.user.dto.*;
 
+import java.util.List;
 import java.util.Map;
 
 public interface UserService {
@@ -23,5 +24,11 @@ public interface UserService {
 
     UserSavePointDto getSavePoint(String UUID);
     UserUsePointDto getUsePoint(String UUID);
+
+    VisitedCountDto getVisitedCount(String UUID);
+
+    TotalPointDtoByReceipt getTotalPoint(String UUID);
+
+    List<FrequentBrandTop3Dto> getFrequentBrandTop3(String UUID);
 
 }

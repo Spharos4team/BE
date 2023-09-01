@@ -1,7 +1,6 @@
 package com.spharos.ssgpoint.user.presentation;
 
 import com.spharos.ssgpoint.config.security.JwtTokenProvider;
-import com.spharos.ssgpoint.point.domain.Point;
 import com.spharos.ssgpoint.user.application.UserService;
 import com.spharos.ssgpoint.user.dto.*;
 import com.spharos.ssgpoint.user.vo.*;
@@ -139,6 +138,41 @@ public class UserController {
         UserUsePointDto userUsePointDto = userService.getUsePoint(UUID);
         return ResponseEntity.ok(userUsePointDto);
     }
+
+    /**
+     * 방문 일수 - 바코드 테이블 count
+     */
+    @GetMapping("/user/visit/{UUID}")
+    public ResponseEntity<VisitedCountDto> countDate(@PathVariable String UUID){
+        VisitedCountDto visitedCount = userService.getVisitedCount(UUID);
+        return ResponseEntity.ok(visitedCount);
+    }
+    /**
+     * 구매 금액
+     */
+    @GetMapping("/user/total-point/{UUID}")
+    public ResponseEntity<TotalPointDtoByReceipt> totalPoint(@PathVariable String UUID){
+        TotalPointDtoByReceipt totalPoint = userService.getTotalPoint(UUID);
+        return ResponseEntity.ok(totalPoint);
+    }
+
+    @GetMapping("/shopping-history/{UUID}")
+    public ResponseEntity<UserCompositeDto> getUserData(@PathVariable String UUID) {
+        UserCompositeDto userCompositeDto = new UserCompositeDto();
+
+        userCompositeDto.setPointGetDto(userService.getPoint(UUID));
+        userCompositeDto.setUserSavePointDto(userService.getSavePoint(UUID));
+        userCompositeDto.setUserUsePointDto(userService.getUsePoint(UUID));
+        userCompositeDto.setVisitedCountDto(userService.getVisitedCount(UUID));
+        userCompositeDto.setTotalPointDtoByReceipt(userService.getTotalPoint(UUID));
+        userCompositeDto.setFrequentBrandTop3Dto(userService.getFrequentBrandTop3(UUID));
+        return ResponseEntity.ok(userCompositeDto);
+    }
+
+
+
+
+
 }
 
 

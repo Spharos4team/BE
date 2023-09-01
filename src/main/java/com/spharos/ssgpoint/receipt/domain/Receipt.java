@@ -17,31 +17,31 @@ public class Receipt {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 100)
+    //@Column(nullable = false, length = 100)
     private String alliance;
 
-    @Column(nullable = false, length = 100)
+    //@Column(nullable = false, length = 100)
     private String brand;
 
-    @Column(nullable = false, length = 100)
+    //@Column(nullable = false, length = 100)
     private String storeName;
 
-    @Column(nullable = false, length = 100)
+    //@Column(nullable = false, length = 100)
     private String number;
 
-    @Column(nullable = false, columnDefinition = "int default 0")
+    //@Column(nullable = false, columnDefinition = "int default 0")
     private Integer amount;
 
-    @Column(nullable = false, columnDefinition = "int default 0")
+    //@Column(nullable = false, columnDefinition = "int default 0")
     private Integer point;
 
-    @Column(nullable = false, length = 100)
+    //@Column(nullable = false, length = 100)
     private String cardName;
 
-    @Column(nullable = false, length = 100)
+    //@Column(nullable = false, length = 100)
     private String cardNumber;
 
-    @Column(nullable = false, columnDefinition = "int default 0")
+    //@Column(nullable = false, columnDefinition = "int default 0")
     private Integer status;
 
 
