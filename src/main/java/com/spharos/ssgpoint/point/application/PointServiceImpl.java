@@ -6,11 +6,14 @@ import com.spharos.ssgpoint.point.domain.PointTypeConverter;
 import com.spharos.ssgpoint.point.dto.PointCreateDto;
 import com.spharos.ssgpoint.point.dto.PointGetDto;
 import com.spharos.ssgpoint.point.infrastructure.PointRepository;
+import com.spharos.ssgpoint.receipt.domain.Receipt;
 import com.spharos.ssgpoint.user.domain.User;
 import com.spharos.ssgpoint.user.infrastructure.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -27,14 +30,51 @@ public class PointServiceImpl implements PointService {
         User user = userRepository.findByUuid(UUID).orElseThrow(() ->
                 new IllegalArgumentException("UUID 정보 없음 = " + UUID));
 
-        pointRepository.save(Point.builder()
-                .totalPoint(pointCreateDto.getTotalPoint())
+        // totalPoint 계산
+        List<Point> pointList = pointRepository.findByUserIdOrderById(user.getUuid());
+        Long count = pointRepository.countByUserId(user.getId());
+
+        int totalPoint = 0;
+
+        if (count.equals(0L)) {
+            totalPoint = pointCreateDto.getPoint();
+        } else {
+            for (Point point : pointList) {
+                if (pointType.getCode().equals("1") || pointType.getCode().equals("2")
+                        || pointType.getCode().equals("6") || pointType.getCode().equals("7")
+                        || pointType.getCode().equals("8")) {
+                    totalPoint = point.getTotalPoint() + pointCreateDto.getPoint();
+                }
+                if (pointType.getCode().equals("3") || pointType.getCode().equals("4")
+                        || pointType.getCode().equals("5") || pointType.getCode().equals("9")) {
+                    totalPoint = point.getTotalPoint() - pointCreateDto.getPoint();
+                }
+            }
+        }
+
+        Receipt receipt = Receipt.builder()
+                .alliance(pointCreateDto.getReceipt().getAlliance())
+                .brand(pointCreateDto.getReceipt().getBrand())
+                .cardName(pointCreateDto.getReceipt().getCardName())
+                .number(pointCreateDto.getReceipt().getNumber())
+                .storeName(pointCreateDto.getReceipt().getStoreName())
+                .amount(pointCreateDto.getReceipt().getAmount())
+                .cardNumber(pointCreateDto.getReceipt().getCardNumber())
+                .point(pointCreateDto.getReceipt().getReceiptPoint())
+                .build();
+
+        Point build = Point.builder()
+                .totalPoint(totalPoint)
                 .point(pointCreateDto.getPoint())
-                .pointTitle(pointCreateDto.getPointTitle())
-                .pointContent(pointCreateDto.getPointContent())
+                .title(pointCreateDto.getTitle())
+                .content(pointCreateDto.getContent())
                 .type(pointType)
                 .user(user)
-                .build());
+                .receipt(receipt)
+                .build();
+        pointRepository.save(build);
+
+
     }
 
     // 포인트 목록
@@ -43,15 +83,16 @@ public class PointServiceImpl implements PointService {
         User user = userRepository.findByUuid(UUID).orElseThrow(() ->
                 new IllegalArgumentException("UUID 정보 없음 = " + UUID));
 
-        List<Point> pointList = pointRepository.findByUserId(user.getId());
+        List<Point> pointList = pointRepository.findByUserId(user.getUuid());
 
         return pointList.stream().map(point ->
                 PointGetDto.builder()
                         .totalPoint(point.getTotalPoint())
                         .point(point.getPoint())
-                        .pointTitle(point.getPointTitle())
-                        .pointContent(point.getPointContent())
+                        .title(point.getTitle())
+                        .content(point.getContent())
                         .type(String.valueOf(point.getType().getValue()))
+                        .createdDate(LocalDateTime.from(point.getCreatedDate()))
                         .build()
         ).toList();
     }

@@ -1,6 +1,8 @@
 package com.spharos.ssgpoint.point.domain;
 
+import com.spharos.ssgpoint.global.BaseEntity;
 import com.spharos.ssgpoint.pointcard.domain.PointCard;
+import com.spharos.ssgpoint.receipt.domain.Receipt;
 import com.spharos.ssgpoint.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -13,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Point {
+public class Point extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,10 +28,10 @@ public class Point {
     private Integer point;
 
     @Column(nullable = false)
-    private String pointTitle;
+    private String title;
 
     @Column(nullable = false)
-    private String pointContent;
+    private String content;
 
     @Column(nullable = false)
     @Convert(converter = PointTypeConverter.class)
@@ -40,5 +42,8 @@ public class Point {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private PointCard pointCard;
+
+    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    private Receipt receipt;
 
 }

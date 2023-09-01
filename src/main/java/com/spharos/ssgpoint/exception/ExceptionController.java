@@ -1,19 +1,29 @@
 package com.spharos.ssgpoint.exception;
 
+
+import com.spharos.ssgpoint.user.presentation.UserController;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.security.authentication.BadCredentialsException;
+
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import java.lang.module.ResolutionException;
+
 
 
 @Slf4j
-@ControllerAdvice
-public class ExceptionController {
+@RestControllerAdvice
+public class ExceptionController  {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResult> userExHandle(IllegalArgumentException e) {
@@ -33,9 +43,4 @@ public class ExceptionController {
         return new ResponseEntity<>(errorResult, HttpStatus.FORBIDDEN);
     }
 
-    @ExceptionHandler(ExpiredJwtException.class)
-    public ResponseEntity<ErrorResult> expireExHandle(ExpiredJwtException e) {
-        ErrorResult errorResult = new ErrorResult("jwt error", e.getMessage());
-        return new ResponseEntity<>(errorResult, HttpStatus.FORBIDDEN);
-    }
 }

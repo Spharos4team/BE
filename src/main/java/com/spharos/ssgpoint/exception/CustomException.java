@@ -3,8 +3,6 @@ package com.spharos.ssgpoint.exception;
 
 public class CustomException extends RuntimeException {
 
-
-
     public CustomException() {
         super();
     }
@@ -20,8 +18,6 @@ public class CustomException extends RuntimeException {
     public CustomException(Throwable cause) {
         super(cause);
     }
-
-
 
 
 }

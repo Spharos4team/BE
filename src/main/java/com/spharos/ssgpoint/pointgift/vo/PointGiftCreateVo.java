@@ -13,8 +13,10 @@ public class PointGiftCreateVo {
 
     private Integer point;
     private String message;
-    private String access;
+    private String type;
+    private String status;
     private String UUID;
     private String loginId;
+    private String name;
 
 }

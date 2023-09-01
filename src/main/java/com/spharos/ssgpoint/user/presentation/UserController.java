@@ -110,10 +110,69 @@ public class UserController {
      * 회원 soft delete
      */
     @PutMapping("/user/soft-delete/{UUID}")
-    public ResponseEntity<String> chageStatus(@PathVariable String UUID) {
+    public ResponseEntity<String> changeStatus(@PathVariable String UUID) {
         userService.softDeleteUser(UUID);
         return ResponseEntity.ok("회원탈퇴 성공");
     }
+    /**
+     * 사용가능 포인트 조회
+     */
+    @GetMapping("/user/point/{UUID}")
+    public ResponseEntity<PointGetDto> getPoint(@PathVariable String UUID) {
+        PointGetDto pointGetDto = userService.getPoint(UUID);
+        return ResponseEntity.ok(pointGetDto);
+    }
+    /**
+     * 신세계포인트 이용 - 적립부분
+     */
+    @GetMapping("/user/save-point/{UUID}")
+    public ResponseEntity<UserSavePointDto> getSavePoint(@PathVariable String UUID) {
+        UserSavePointDto userSavePointDto = userService.getSavePoint(UUID);
+        return ResponseEntity.ok(userSavePointDto);
+    }
+    /**
+     * 신세계포인트 이용 - 사용부분
+     */
+    @GetMapping("/user/use-point/{UUID}")
+    public ResponseEntity<UserUsePointDto> getUsePoint(@PathVariable String UUID) {
+        UserUsePointDto userUsePointDto = userService.getUsePoint(UUID);
+        return ResponseEntity.ok(userUsePointDto);
+    }
+
+    /**
+     * 방문 일수 - 바코드 테이블 count
+     */
+    @GetMapping("/user/visit/{UUID}")
+    public ResponseEntity<VisitedCountDto> countDate(@PathVariable String UUID){
+        VisitedCountDto visitedCount = userService.getVisitedCount(UUID);
+        return ResponseEntity.ok(visitedCount);
+    }
+    /**
+     * 구매 금액
+     */
+    @GetMapping("/user/total-point/{UUID}")
+    public ResponseEntity<TotalPointDtoByReceipt> totalPoint(@PathVariable String UUID){
+        TotalPointDtoByReceipt totalPoint = userService.getTotalPoint(UUID);
+        return ResponseEntity.ok(totalPoint);
+    }
+
+    @GetMapping("/shopping-history/{UUID}")
+    public ResponseEntity<UserCompositeDto> getUserData(@PathVariable String UUID) {
+        UserCompositeDto userCompositeDto = new UserCompositeDto();
+
+        userCompositeDto.setPointGetDto(userService.getPoint(UUID));
+        userCompositeDto.setUserSavePointDto(userService.getSavePoint(UUID));
+        userCompositeDto.setUserUsePointDto(userService.getUsePoint(UUID));
+        userCompositeDto.setVisitedCountDto(userService.getVisitedCount(UUID));
+        userCompositeDto.setTotalPointDtoByReceipt(userService.getTotalPoint(UUID));
+        userCompositeDto.setFrequentBrandTop3Dto(userService.getFrequentBrandTop3Count(UUID));
+        userCompositeDto.setFrequentBrandTop3SumDto(userService.getFrequentBrandTop3Sum(UUID));
+        return ResponseEntity.ok(userCompositeDto);
+    }
+
+
+
+
 
 }
 
