@@ -17,5 +17,8 @@ public class ReceiptCreateVo {
     private String number;
     private Integer amount;
     private Integer point;
+    private String cardName;
+    private String cardNumber;
+    private Integer status;
 
 }

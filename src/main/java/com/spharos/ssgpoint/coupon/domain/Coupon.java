@@ -36,8 +36,6 @@ public class Coupon {
 
     private Date endDate;
 
-    private Date regDate;
-
     @Column(length = 45)
     private String store;
 
@@ -45,10 +43,6 @@ public class Coupon {
 
     private boolean isActive;  // New field to check if the coupon is active or not
 
-    public boolean isValid() {
-        Date now = new Date();
-        return isActive && !now.before(startDate) && !now.after(endDate);
-    }
-    
+    private boolean isUsed;   // New field to check if the coupon is used or not
 
 }

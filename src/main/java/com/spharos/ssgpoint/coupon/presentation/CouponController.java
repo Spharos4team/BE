@@ -1,53 +1,68 @@
 package com.spharos.ssgpoint.coupon.presentation;
 
 import com.spharos.ssgpoint.coupon.application.CouponService;
+import com.spharos.ssgpoint.coupon.dto.CouponDto;
+import com.spharos.ssgpoint.coupon.dto.UserCouponDto;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/api/v1/coupon")
+@RequestMapping("/api/v1")
 public class CouponController {
 
     private final CouponService couponService;
-    private final StoreManager storeManager;
 
-    public CouponController(CouponService couponService, StoreManager storeManager) {
+    public CouponController(CouponService couponService) {
         this.couponService = couponService;
-        this.storeManager = storeManager;
     }
 
-    @PostMapping("/add")
-    public void addExternalCoupon(@RequestBody CouponRequest request) {
-        couponService.addExternalCoupon(request.getCouponNumber());
+    // 쿠폰 등록
+    @PostMapping("/coupon")
+    public ResponseEntity<Void> registerCoupon(@RequestBody CouponDto couponDto) {
+        couponService.registerCoupon(couponDto);
+        return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/generate")
-    public CouponResponse generateCoupon(@RequestParam String storeName) {
-        String couponNumber = storeManager.generateCouponNumber(storeName);
-        return new CouponResponse(couponNumber);
+    // 다운 받을 수 있는 쿠폰 목록 조회
+    @GetMapping("/coupon/available")
+    public ResponseEntity<List<CouponDto>> getAvailableCoupons() {
+        List<CouponDto> availableCoupons = couponService.getAvailableCoupons();
+        return ResponseEntity.ok(availableCoupons);
     }
 
-    static class CouponRequest {
-        private String couponNumber;
-
-        public String getCouponNumber() {
-            return couponNumber;
-        }
-
-        public void setCouponNumber(String couponNumber) {
-            this.couponNumber = couponNumber;
-        }
+    // 내가 보유한 쿠폰 목록 조회
+    @GetMapping("/coupon?user_id={userId}&status=available")
+    public ResponseEntity<List<UserCouponDto>> getMyCoupons(@PathVariable String uuid) {
+        List<UserCouponDto> myCoupons = couponService.getMyCoupons(uuid);
+        return ResponseEntity.ok(myCoupons);
     }
 
-    static class CouponResponse {
-        private final String couponNumber;
+    // 쿠폰 사용하기
+    @PostMapping("/coupon/use/{couponId}")
+    public ResponseEntity<Void> useCoupon(@PathVariable Long couponId) {
+        couponService.useCoupon(couponId);
+        return ResponseEntity.ok().build();
+    }
 
-        public CouponResponse(String couponNumber) {
-            this.couponNumber = couponNumber;
-        }
+    // 만료된 쿠폰 조회
+    @GetMapping("/coupon?uuid={uuId}&status=exp")
+    public ResponseEntity<List<CouponDto>> getExpiredCoupons(@PathVariable String uuid) {
+        List<CouponDto> expiredCoupons = couponService.getExpiredCoupons();
+        return ResponseEntity.ok(expiredCoupons);
+    }
 
-        public String getCouponNumber() {
-            return couponNumber;
-        }
+    @DeleteMapping("/coupon/id={couponId}")
+    public ResponseEntity<Void> deleteCoupon(@PathVariable Long couponId) {
+        couponService.deleteCoupon(couponId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/generate-for-store")
+    public ResponseEntity<CouponDto> generateCouponForStore(@RequestParam String storeName) {
+        CouponDto couponDto = couponService.createCouponForStore(storeName);
+        return ResponseEntity.ok(couponDto);
     }
 
 }

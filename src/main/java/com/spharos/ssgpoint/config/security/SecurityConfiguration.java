@@ -1,14 +1,20 @@
 package com.spharos.ssgpoint.config.security;
 
+
+
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.CorsConfigurer;
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -20,10 +26,13 @@ public class SecurityConfiguration {
     private final AuthenticationProvider authenticationProvider;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
 
     /**
      * 필터는 유저 role 검증 , api 주소 막을지 안막을지
@@ -31,11 +40,11 @@ public class SecurityConfiguration {
      */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
-        httpSecurity
+        return httpSecurity
                 .csrf(CsrfConfigurer::disable)
                 .authorizeHttpRequests(
                         authorizeHttpRequests -> authorizeHttpRequests
-                                .requestMatchers("/api/v1/auth/**","/api/v1/**","/swagger-ui/**", "/swagger-resources/**", "/api-docs/**","/v3/**")
+                                .requestMatchers("/api/v1/auth/**","/swagger-ui/**", "/swagger-resources/**", "/api-docs/**","/v3/**")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()
@@ -44,9 +53,15 @@ public class SecurityConfiguration {
                         sessionManagement -> sessionManagement
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
+
                 .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-        return httpSecurity.build();
+                .exceptionHandling(handler -> handler
+                        .authenticationEntryPoint(customAuthenticationEntryPoint))
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+
+               .build();
+
+
     }
 
 }

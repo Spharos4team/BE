@@ -1,6 +1,7 @@
 package com.spharos.ssgpoint.notices.application;
 
 import com.spharos.ssgpoint.notices.domain.Notices;
+
 import java.util.List;
 
 public interface NoticesService {

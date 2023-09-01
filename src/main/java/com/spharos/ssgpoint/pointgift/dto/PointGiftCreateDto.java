@@ -12,8 +12,10 @@ public class PointGiftCreateDto {
 
     private Integer point;
     private String message;
-    private Integer access;
+    private String type;
+    private String status;
     private String UUID;
     private String loginId;
+    private String name;
 
 }

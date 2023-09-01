@@ -1,5 +1,6 @@
 package com.spharos.ssgpoint.pointcard.domain;
 
+import com.spharos.ssgpoint.global.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PointCard {
+public class PointCard extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

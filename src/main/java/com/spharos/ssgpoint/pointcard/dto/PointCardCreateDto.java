@@ -2,6 +2,8 @@ package com.spharos.ssgpoint.pointcard.dto;
 
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @ToString
@@ -14,5 +16,6 @@ public class PointCardCreateDto {
     private String agency;
     private String UUID;
     private String pointCardType;
+    private LocalDate createdDate;
 
 }

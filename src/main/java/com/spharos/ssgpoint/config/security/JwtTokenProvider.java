@@ -1,7 +1,11 @@
 package com.spharos.ssgpoint.config.security;
 
 
+import com.spharos.ssgpoint.exception.CustomException;
+import com.spharos.ssgpoint.user.domain.User;
+import com.spharos.ssgpoint.user.infrastructure.UserRepository;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -12,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +32,7 @@ import java.util.function.Function;
 public class JwtTokenProvider {
 
     private final RedisTemplate<String, String> redisTemplate;
+    private final UserRepository userRepository;
 
     @Value("${JWT.secret_key}")
     private String secretKey;
@@ -60,19 +66,28 @@ public class JwtTokenProvider {
      * 주어진 JWT 토큰에서 모든 클레임을 추출하여 반환합니다.
      * 토큰의 서명을 확인하기 위해 사용할 서명 키(getSigningKey())를 설정하고 토큰을 파싱하여 클레임들을 추출합니다.
      */
-    public Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder()
+    public Claims extractAllClaims(String token)  {
+
+            /*return Jwts.parserBuilder()
+                    .setSigningKey(getSigningKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();*/
+        try{return Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())
                 .build()
                 .parseClaimsJws(token)
-                .getBody();
+                .getBody();}
+        catch (ExpiredJwtException e){
+            throw new ExpiredJwtException(null,null,"토큰이 만료되었습니다.3333");
+        }
+
     }
     /** 4
      *  JWT 토큰의 서명을 확인하기 위해 사용할 서명 키를 생성하여 반환합니다
      */
     private Key getSigningKey() {
         byte[] keyByte = Decoders.BASE64.decode(secretKey);
-        log.info("secret key={}",secretKey);
         return Keys.hmacShaKeyFor(keyByte);
     }
 
@@ -136,8 +151,8 @@ public class JwtTokenProvider {
      * 토큰이 만료되지 않은경우 토큰 유효
      */
     public boolean validateToken(String token, UserDetails userDetails){
-        final String UUID = getUUID(token);
-        return (UUID.equals(userDetails.getUsername()) && !isTokenExpired(token));
+            final String UUID = getUUID(token);
+            return (UUID.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
 
@@ -146,7 +161,16 @@ public class JwtTokenProvider {
      */
     public String getUUID(String token) {
         return extractClaims(token,Claims::getSubject);
+
     }
+
+    public String getLoginId(String token){
+        Claims claims = extractAllClaims(token);
+        String uuid = claims.get("sub", String.class);
+        return userRepository.findByUuid(uuid).get().getLoginId();
+       // return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
+
 
     /** 7
      * 만료 비교

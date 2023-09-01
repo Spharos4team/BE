@@ -1,23 +1,23 @@
 package com.spharos.ssgpoint.coupon.application;
 
-import com.spharos.ssgpoint.coupon.domain.Coupon;
-import com.spharos.ssgpoint.coupon.domain.UserCoupon;
-import com.spharos.ssgpoint.user.domain.User;
+import com.spharos.ssgpoint.coupon.dto.CouponDto;
+import com.spharos.ssgpoint.coupon.dto.UserCouponDto;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface CouponService {
+    void registerCoupon(CouponDto couponDto);
 
-    Coupon createCoupon(Coupon coupon);
+    List<CouponDto> getAvailableCoupons();
 
-    Optional<Coupon> getCouponById(Long id);
+    List<UserCouponDto> getMyCoupons(String uuid);
 
-    List<Coupon> getAllAvailableCoupons();
+    void useCoupon(Long couponId);
 
-    UserCoupon assignCouponToUser(User user, Coupon coupon);
+    List<CouponDto> getExpiredCoupons();
 
-    void addExternalCoupon(String couponNumber); // 외부에서 제공된 쿠폰 번호를 추가하는 메서드
+    void deleteCoupon(Long couponId);
 
-    // More method signatures based on requirements...
+
+    CouponDto createCouponForStore(String storeName);
 }
