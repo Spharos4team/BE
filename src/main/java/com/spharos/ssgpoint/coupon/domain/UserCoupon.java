@@ -17,7 +17,6 @@ public class UserCoupon {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, length = 100, nullable = false)
     private String UUID;
 
     @ManyToOne(fetch = FetchType.EAGER)

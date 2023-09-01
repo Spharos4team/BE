@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/coupon")
+@RequestMapping("/api/v1")
 public class CouponController {
 
     private final CouponService couponService;
@@ -26,7 +26,7 @@ public class CouponController {
     }
 
     // 다운 받을 수 있는 쿠폰 목록 조회
-    @GetMapping("/available")
+    @GetMapping("/coupon/available")
     public ResponseEntity<List<CouponDto>> getAvailableCoupons() {
         List<CouponDto> availableCoupons = couponService.getAvailableCoupons();
         return ResponseEntity.ok(availableCoupons);
@@ -40,7 +40,7 @@ public class CouponController {
     }
 
     // 쿠폰 사용하기
-    @PostMapping("/use/{couponId}")
+    @PostMapping("/coupon/use/{couponId}")
     public ResponseEntity<Void> useCoupon(@PathVariable Long couponId) {
         couponService.useCoupon(couponId);
         return ResponseEntity.ok().build();

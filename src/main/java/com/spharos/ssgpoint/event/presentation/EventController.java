@@ -7,12 +7,12 @@ import com.spharos.ssgpoint.event.domain.EventEntries;
 import com.spharos.ssgpoint.event.dto.EventDto;
 import com.spharos.ssgpoint.event.vo.EventAdd;
 import com.spharos.ssgpoint.event.vo.EventOut;
-import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -36,7 +36,7 @@ public class EventController {
     @GetMapping("/events/{id}")
     public ResponseEntity<Event> getEventById(@PathVariable Long id) {
         Event event = eventService.getEventById(id);
-        // ... 나머지 코드 ...
+
         if (event == null) {
             return ResponseEntity.notFound().build(); // 404 Not Found
         }
@@ -44,13 +44,19 @@ public class EventController {
     }
 
     @PostMapping("/events")
-    public ResponseEntity<EventOut> addEvent(@Valid @RequestBody EventAdd eventAdd) {
-        EventDto savedEventDto = eventService.addEvent(eventAdd);
-
-        EventOut eventOut = EventOut.builder().title(savedEventDto.getTitle()).content(savedEventDto.getContent()).eventType(savedEventDto.getEventType()).thumbnailUrl(savedEventDto.getThumbnailUrl()).eventImages(savedEventDto.getEventImages()) // 이 부분은 실제 이미지 저장 로직에 따라 변경될 수 있습니다.
-                // startDate와 endDate는 EventDto에 추가되어야 합니다. 현재는 누락되어 있습니다.
-                .build();
-
+    public ResponseEntity<EventOut> addEvent(@RequestBody EventAdd eventAdd) {
+        EventDto createdEvent = eventService.addEvent(eventAdd);
+        EventOut eventOut = new EventOut(
+                null, // 이벤트 ID는 데이터베이스에서 생성된 ID를 사용해야 합니다.
+                createdEvent.getTitle(),
+                createdEvent.getContent(),
+                createdEvent.getEventType(),
+                createdEvent.getThumbnailUrl(),
+                createdEvent.getEventImages(),
+                new Date(), // 현재 시간을 등록 날짜로 설정
+                eventAdd.getStartDate(),
+                eventAdd.getEndDate()
+        );
         return ResponseEntity.ok(eventOut);
     }
 

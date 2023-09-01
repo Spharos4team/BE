@@ -36,8 +36,6 @@ public class Coupon {
 
     private Date endDate;
 
-    private Date regDate;
-
     @Column(length = 45)
     private String store;
 
