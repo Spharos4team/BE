@@ -19,9 +19,7 @@ public class NoticesController {
 
     @GetMapping("/notices")
     public List<NoticesDto> getAllNotices() {
-        return noticesService.findAllNotices().stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
+        return noticesService.findAllNotices().stream().map(this::convertToDto).collect(Collectors.toList());
     }
 
     @GetMapping("/notices/{id}")
@@ -36,16 +34,12 @@ public class NoticesController {
         return convertToDto(notices);
     }
 
-    @DeleteMapping("/notices/{id}")
+    @DeleteMapping("/notiecs/{id}")
     public void deleteNotice(@PathVariable Long id) {
         noticesService.deleteNotice(id);
     }
 
     private NoticesDto convertToDto(Notices notices) {
-        return new NoticesDto(
-                notices.getId(),
-                notices.getTitle(),
-                notices.getContent()
-        );
+        return new NoticesDto(notices.getId(), notices.getTitle(), notices.getContent());
     }
 }

@@ -1,65 +1,88 @@
 package com.spharos.ssgpoint.coupon.application;
 
 import com.spharos.ssgpoint.coupon.domain.Coupon;
-import com.spharos.ssgpoint.coupon.domain.UserCoupon;
+import com.spharos.ssgpoint.coupon.dto.CouponDto;
+import com.spharos.ssgpoint.coupon.dto.UserCouponDto;
 import com.spharos.ssgpoint.coupon.infrastructure.CouponRepository;
-import com.spharos.ssgpoint.coupon.infrastructure.UserCouponRepository;
-import com.spharos.ssgpoint.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
+/**
+ * 쿠폰 서비스 구현체
+ */
 @Service
 @RequiredArgsConstructor
 public class CouponServiceImpl implements CouponService {
 
     private final CouponRepository couponRepository;
-    private final UserCouponRepository userCouponRepository;
+    private final StoreManager storeManager;
 
-    @Override
-    public Coupon createCoupon(Coupon coupon) {
-        return couponRepository.save(coupon);
+    /**
+     * @param couponDto 쿠폰 DTO
+     */
+    public void registerCoupon(CouponDto couponDto) {
+        // DTO를 Entity로 변환 후 저장
     }
 
-    @Override
-    public Optional<Coupon> getCouponById(Long id) {
-        return couponRepository.findById(id);
+    /**
+     * @return 쿠폰 DTO 목록
+     */
+    public List<CouponDto> getAvailableCoupons() {
+        // DTO로 변환 후 반환
+        return null;
     }
 
-    @Override
-    public List<Coupon> getAllAvailableCoupons() {
-        return couponRepository.findAll();
+    /**
+     * @param uuid 유저 UUID
+     * @return
+     */
+    public List<UserCouponDto> getMyCoupons(String uuid) {
+        // Fetch user's coupons and convert to DTO
+        return null;
     }
 
-    @Override
-    public UserCoupon assignCouponToUser(User user, Coupon coupon) {
-        if (!coupon.isValid()) {
-            throw new RuntimeException("쿠폰이 유효하지 않습니다.");
-        }
-
-        Optional<UserCoupon> existingUserCoupon = userCouponRepository.findByUUIDAndCoupon(user, coupon);
-        if (existingUserCoupon.isPresent()) {
-            throw new RuntimeException("유저가 이미 해당 쿠폰을 가지고 있습니다.");
-        }
-
-        return userCouponRepository.save(UserCoupon.builder()
-                .UUID(user)
-                .coupon(coupon)
-                .build());
+    /**
+     * @param couponId 쿠폰 ID
+     */
+    public void useCoupon(Long couponId) {
+        // Mark the coupon as used
     }
 
-    @Override
-    public void addExternalCoupon(String couponNumber) {
-        // 쿠폰 번호를 기반으로 존재하는 쿠폰을 조회합니다.
-        Optional<Coupon> existingCoupon = couponRepository.findByNumber(Integer.parseInt(couponNumber));
-
-        // 존재하지 않는다면 새로운 쿠폰을 생성하고 저장합니다.
-        if (!existingCoupon.isPresent()) {
-            Coupon newCoupon = Coupon.builder().number(Integer.parseInt(couponNumber)).build();
-            couponRepository.save(newCoupon);
-        }
+    /**
+     * @return 만료된 쿠폰 목록
+     */
+    public List<CouponDto> getExpiredCoupons() {
+        // Fetch expired coupons and convert to DTO
+        return null;
     }
 
+    /**
+     * @param couponId 쿠폰 ID
+     */
+    @Override
+    public void deleteCoupon(Long couponId) {
+
+    }
+
+
+    /**
+     * @param storeName 가맹점 이름
+     * @return
+     */
+    @Override
+    public CouponDto createCouponForStore(String storeName) {
+        String couponNumber = storeManager.generateCouponNumber(storeName);
+
+        Coupon coupon = Coupon.builder()
+                .number(Integer.parseInt(couponNumber))
+                .title("Generated Coupon for " + storeName)
+                .description("Description for " + storeName)
+                // ... 다른 필드들 ...
+                .build();
+
+        couponRepository.save(coupon);
+        return null;
+    }
 }

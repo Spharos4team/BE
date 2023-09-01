@@ -3,22 +3,26 @@ package com.spharos.ssgpoint.faq.application;
 import com.spharos.ssgpoint.faq.domain.FAQ;
 import com.spharos.ssgpoint.faq.dto.FAQDto;
 import com.spharos.ssgpoint.faq.infrastructure.FAQRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class FAQServiceImpl implements FAQService {
 
-    @Autowired
-    private FAQRepository faqRepository;
+    private final FAQRepository faqRepository;  // final 키워드 추가
 
-    @Override
+    /**
+     * @return {@연결 클래스}
+     */
     public List<FAQDto> getAllFAQs() {
         List<FAQ> faqs = faqRepository.findAll();
-        return faqs.stream().map(faq -> new FAQDto(faq.getClass(), faq.getClass(), faq.getClass(), faq.getClass())).collect(Collectors.toList());
+        return faqs.stream().map(faq ->
+                new FAQDto(faq.getId(), faq.getTitle(), faq.getContent())
+        ).collect(Collectors.toList());
     }
 
 }
