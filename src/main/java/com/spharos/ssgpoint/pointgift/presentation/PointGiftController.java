@@ -21,7 +21,6 @@ public class PointGiftController {
     // 포인트 선물 수신인 확인
     @GetMapping("/point/gift/user")
     public String getPointGiftUser(@RequestParam("phone") String phone, @RequestParam("name") String name) {
-
         return pointGiftService.getPointGiftUser(phone, name);
     }
 
@@ -41,6 +40,7 @@ public class PointGiftController {
         pointGiftService.createPointGift(UUID, pointGiftCreateDto);
     }
 
+    // 포인트 선물 수락/거절
     @PutMapping("/point/gift")
     public ResponseEntity<String> updatePoint(@RequestParam("id") Long id, @RequestParam("access") String access) {
         pointGiftService.updatePoint(id, access);
