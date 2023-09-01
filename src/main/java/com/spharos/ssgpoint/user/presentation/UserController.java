@@ -165,7 +165,8 @@ public class UserController {
         userCompositeDto.setUserUsePointDto(userService.getUsePoint(UUID));
         userCompositeDto.setVisitedCountDto(userService.getVisitedCount(UUID));
         userCompositeDto.setTotalPointDtoByReceipt(userService.getTotalPoint(UUID));
-        userCompositeDto.setFrequentBrandTop3Dto(userService.getFrequentBrandTop3(UUID));
+        userCompositeDto.setFrequentBrandTop3Dto(userService.getFrequentBrandTop3Count(UUID));
+        userCompositeDto.setFrequentBrandTop3SumDto(userService.getFrequentBrandTop3Sum(UUID));
         return ResponseEntity.ok(userCompositeDto);
     }
 

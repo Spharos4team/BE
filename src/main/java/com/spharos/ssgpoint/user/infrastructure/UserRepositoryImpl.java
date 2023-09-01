@@ -1,9 +1,7 @@
 package com.spharos.ssgpoint.user.infrastructure;
 
 import com.querydsl.core.Tuple;
-import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.spharos.ssgpoint.user.dto.FrequentBrandTop3Dto;
 import jakarta.persistence.EntityManager;
 
 import java.time.Year;
@@ -62,7 +60,8 @@ public class UserRepositoryImpl implements UserRepositoryCustom{
                 .from(point1)
                 .join(point1.user, user)
                 .join(point1.receipt, receipt)
-                .where(user.uuid.eq(uuid))
+                .where(user.uuid.eq(uuid).and((point1.type.eq(일반적립)
+                                .or(point1.type.eq(이벤트적립)))))
                 .fetchOne();
         return result != null ? result : 0;
     }
@@ -81,7 +80,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom{
     }
 
     @Override
-    public List<Tuple> findListTop3ByUUID(String uuid) {
+    public List<Tuple> findCountListTop3ByUUID(String uuid) {
         return queryFactory
                 .select(point1.receipt.alliance,point1.receipt.alliance.count())
                 .from(point1)
@@ -94,5 +93,21 @@ public class UserRepositoryImpl implements UserRepositoryCustom{
                 .limit(3)
                 .fetch();
     }
+
+    @Override
+    public List<Tuple> findSumListTop3ByUUID(String uuid) {
+        return queryFactory
+                .select(point1.receipt.alliance,point1.receipt.amount.sum())
+                .from(point1)
+                .join(point1.user, user)
+                .on(user.uuid.eq(uuid))
+                .where(point1.type.eq(일반적립)
+                        .or(point1.type.eq(이벤트적립)))
+                .groupBy(point1.receipt.alliance)
+                .orderBy(receipt.alliance.count().desc())
+                .limit(3)
+                .fetch();
+    }
+
 
 }

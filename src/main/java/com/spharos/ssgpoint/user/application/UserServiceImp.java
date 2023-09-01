@@ -18,8 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
-import static com.spharos.ssgpoint.point.domain.QPoint.point1;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -201,13 +199,30 @@ public class UserServiceImp implements UserService{
     }
 
     @Override
-    public List<FrequentBrandTop3Dto>  getFrequentBrandTop3(String UUID) {
-        List<Tuple> listTop3ByUUID = userRepository.findListTop3ByUUID(UUID);
-        List<FrequentBrandTop3Dto> frequentBrandTop3DtoList = new ArrayList<>();
+    public List<FrequentBrandTop3CountDto>  getFrequentBrandTop3Count(String UUID) {
+        List<Tuple> listTop3ByUUID = userRepository.findCountListTop3ByUUID(UUID);
+        List<FrequentBrandTop3CountDto> frequentBrandTop3DtoList = new ArrayList<>();
         for (Tuple tuple : listTop3ByUUID) {
-
+            frequentBrandTop3DtoList.add(FrequentBrandTop3CountDto.builder()
+                    .alliance(tuple.get(0, String.class))
+                    .totalCount(tuple.get(1, Long.class))
+                    .build());
         }
-        return null;
+    return frequentBrandTop3DtoList;
+
+    }
+
+    @Override
+    public List<FrequentBrandTop3SumDto>  getFrequentBrandTop3Sum(String UUID) {
+        List<Tuple> listTop3ByUUID = userRepository.findSumListTop3ByUUID(UUID);
+        List<FrequentBrandTop3SumDto> frequentBrandTop3DtoList = new ArrayList<>();
+        for (Tuple tuple : listTop3ByUUID) {
+            frequentBrandTop3DtoList.add(FrequentBrandTop3SumDto.builder()
+                    .alliance(tuple.get(0, String.class))
+                            .totalSum(tuple.get(1, Integer.class))
+                    .build());
+        }
+        return frequentBrandTop3DtoList;
 
     }
 

@@ -29,6 +29,7 @@ public interface UserService {
 
     TotalPointDtoByReceipt getTotalPoint(String UUID);
 
-    List<FrequentBrandTop3Dto> getFrequentBrandTop3(String UUID);
 
+    List<FrequentBrandTop3CountDto> getFrequentBrandTop3Count(String UUID);
+    List<FrequentBrandTop3SumDto> getFrequentBrandTop3Sum(String UUID);
 }

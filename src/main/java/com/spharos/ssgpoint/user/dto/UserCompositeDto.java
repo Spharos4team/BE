@@ -12,5 +12,6 @@ public class UserCompositeDto {
     private VisitedCountDto visitedCountDto;
     private TotalPointDtoByReceipt totalPointDtoByReceipt;
 
-    private List<FrequentBrandTop3Dto> frequentBrandTop3Dto;
+    private List<FrequentBrandTop3CountDto> frequentBrandTop3Dto;
+    private List<FrequentBrandTop3SumDto> frequentBrandTop3SumDto;
 }
