@@ -13,7 +13,7 @@ public class PointGiftUpdateDto {
     private Integer point;
     private String message;
     private String type;
-    private String access;
+    private String status;
     private String UUID;
     private String loginId;
     private String name;

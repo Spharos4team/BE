@@ -3,7 +3,7 @@ package com.spharos.ssgpoint.pointgift.application;
 import com.spharos.ssgpoint.point.application.PointService;
 import com.spharos.ssgpoint.point.dto.PointCreateDto;
 import com.spharos.ssgpoint.pointgift.domain.PointGift;
-import com.spharos.ssgpoint.pointgift.domain.PointGiftAccessType;
+import com.spharos.ssgpoint.pointgift.domain.PointGiftStatusType;
 import com.spharos.ssgpoint.pointgift.domain.PointGiftType;
 import com.spharos.ssgpoint.pointgift.dto.PointGiftCreateDto;
 import com.spharos.ssgpoint.pointgift.dto.PointGiftGetDto;
@@ -47,7 +47,7 @@ public class PointGiftServiceImpl implements PointGiftService {
         PointCreateDto pointCreateDto = PointCreateDto.builder()
                 .point(pointGiftCreateDto.getPoint())
                 .title(pointGiftCreateDto.getName() + "(ID : " + pointGiftCreateDto.getLoginId() + ")")
-                .content("보낸 선물 : " + pointGiftCreateDto.getAccess())
+                .content("보낸 선물 : " + pointGiftCreateDto.getStatus())
                 .type("5")
                 .user(UUID)
                 .build();
@@ -59,7 +59,7 @@ public class PointGiftServiceImpl implements PointGiftService {
                 .point(pointGiftCreateDto.getPoint())
                 .message(pointGiftCreateDto.getMessage())
                 .type(PointGiftType.valueOf(pointGiftCreateDto.getType()))
-                .access(PointGiftAccessType.valueOf(pointGiftCreateDto.getAccess()))
+                .status(PointGiftStatusType.valueOf(pointGiftCreateDto.getStatus()))
                 .UUID(pointGiftCreateDto.getUUID())
                 .loginId(pointGiftCreateDto.getLoginId())
                 .name(pointGiftCreateDto.getName())
@@ -69,7 +69,7 @@ public class PointGiftServiceImpl implements PointGiftService {
     // 포인트 선물 수락/거절
     @Transactional
     @Override
-    public void updatePoint(Long id, String access) {
+    public void updatePoint(Long id, String status) {
         // 포인트 선물 ID로 포인트 선물 정보 찾기
         Optional<PointGift> pointGiftList = pointGiftRepository.findById(id);
 
@@ -82,7 +82,7 @@ public class PointGiftServiceImpl implements PointGiftService {
                 new IllegalArgumentException("받는 사람 정보 없음"));
 
         // 포인트 선물 수락 시
-        if (access.equals("1")) {
+        if (status.equals("1")) {
             // 포인트 선물 상태 변경
             pointGiftList.get().update("수락");
 
@@ -90,7 +90,7 @@ public class PointGiftServiceImpl implements PointGiftService {
             PointCreateDto pointCreateDto = PointCreateDto.builder()
                     .point(pointGiftList.get().getPoint())
                     .title(sender.getName() + "(ID : " + sender.getLoginId() + ")")
-                    .content("받은 선물 : " + pointGiftList.get().getAccess())
+                    .content("받은 선물 : " + pointGiftList.get().getStatus())
                     .type("7")
                     .user(receiver.getUuid())
                     .build();
@@ -98,15 +98,15 @@ public class PointGiftServiceImpl implements PointGiftService {
         }
 
         // 포인트 선물 거절 시
-        if (access.equals("2")) {
+        if (status.equals("2")) {
             // 포인트 선물 상태 변경
             pointGiftList.get().update("거절");
-            
+
             // 보낸 사람 포인트 테이블에 저장
             PointCreateDto pointCreateDto = PointCreateDto.builder()
                     .point(pointGiftList.get().getPoint())
                     .title(receiver.getName() + "(ID : " + receiver.getLoginId() + ")")
-                    .content("보낸 선물 : " + pointGiftList.get().getAccess())
+                    .content("보낸 선물 : " + pointGiftList.get().getStatus())
                     .type("6")
                     .user(sender.getUuid())
                     .build();
@@ -115,7 +115,7 @@ public class PointGiftServiceImpl implements PointGiftService {
 
     }
 
-    // 포인트 선물 목록
+    // 포인트 선물 목록 (테스트 용)
     @Override
     public List<PointGiftGetDto> getPointGiftByUser(String UUID) {
         List<PointGift> pointGiftList = pointGiftRepository.findByUUID(UUID);
@@ -124,7 +124,7 @@ public class PointGiftServiceImpl implements PointGiftService {
                 .point(pointGift.getPoint())
                 .message(pointGift.getMessage())
                 .type(pointGift.getType().getValue())
-                .access(pointGift.getAccess().getValue())
+                .status(pointGift.getStatus().getValue())
                 .UUID(pointGift.getUUID())
                 .loginId(pointGift.getLoginId())
                 .name(pointGift.getName())

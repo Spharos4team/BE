@@ -31,7 +31,7 @@ public class PointGiftController {
                 .point(pointGiftCreateVo.getPoint())
                 .message(pointGiftCreateVo.getMessage())
                 .type("선물사용")
-                .access("대기")
+                .status("대기")
                 .UUID(UUID)
                 .loginId(pointGiftCreateVo.getLoginId())
                 .name(pointGiftCreateVo.getName())
@@ -42,8 +42,8 @@ public class PointGiftController {
 
     // 포인트 선물 수락/거절
     @PutMapping("/point/gift")
-    public ResponseEntity<String> updatePoint(@RequestParam("id") Long id, @RequestParam("access") String access) {
-        pointGiftService.updatePoint(id, access);
+    public ResponseEntity<String> updatePoint(@RequestParam("id") Long id, @RequestParam("status") String status) {
+        pointGiftService.updatePoint(id, status);
 
         return ResponseEntity.ok("포인트 선물 상태 변경 완료");
     }
@@ -57,7 +57,7 @@ public class PointGiftController {
                 .point(pointGiftGetDto.getPoint())
                 .message(pointGiftGetDto.getMessage())
                 .type(pointGiftGetDto.getType())
-                .access(pointGiftGetDto.getAccess())
+                .status(pointGiftGetDto.getStatus())
                 .UUID(UUID)
                 .loginId(pointGiftGetDto.getLoginId())
                 .name(pointGiftGetDto.getName())

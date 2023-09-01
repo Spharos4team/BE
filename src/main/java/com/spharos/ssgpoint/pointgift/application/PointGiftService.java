@@ -2,7 +2,6 @@ package com.spharos.ssgpoint.pointgift.application;
 
 import com.spharos.ssgpoint.pointgift.dto.PointGiftCreateDto;
 import com.spharos.ssgpoint.pointgift.dto.PointGiftGetDto;
-import com.spharos.ssgpoint.pointgift.dto.PointGiftUpdateDto;
 
 import java.util.List;
 
@@ -15,9 +14,9 @@ public interface PointGiftService {
     void createPointGift(String UUID, PointGiftCreateDto pointGiftCreateDto);
 
     // 포인트 선물 수락/거절
-    void updatePoint(Long id, String access);
+    void updatePoint(Long id, String status);
 
-    // 포인트 선물 목록
+    // 포인트 선물 목록 (테스트 용)
     List<PointGiftGetDto> getPointGiftByUser(String UUID);
 
 }

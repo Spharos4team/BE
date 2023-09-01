@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PointGiftUpdateVo {
 
-    private String access;
+    private String status;
 
 }
