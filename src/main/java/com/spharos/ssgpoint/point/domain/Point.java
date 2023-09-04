@@ -32,6 +32,8 @@ public class Point extends BaseEntity {
 
     private String content;
 
+    private Integer used;
+
     @Column(nullable = false)
     @Convert(converter = PointTypeConverter.class)
     private PointType type;

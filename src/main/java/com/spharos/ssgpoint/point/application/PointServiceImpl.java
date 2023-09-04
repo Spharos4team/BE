@@ -40,13 +40,10 @@ public class PointServiceImpl implements PointService {
             totalPoint = pointCreateDto.getPoint();
         } else {
             for (Point point : pointList) {
-                if (pointType.getCode().equals("1") || pointType.getCode().equals("2")
-                        || pointType.getCode().equals("5") || pointType.getCode().equals("6")
-                        || pointType.getCode().equals("7")) {
+                if (point.getUsed().equals(1)) {
                     totalPoint = point.getTotalPoint() + pointCreateDto.getPoint();
                 }
-                if (pointType.getCode().equals("3") || pointType.getCode().equals("4")
-                        || pointType.getCode().equals("8")) {
+                if (point.getUsed().equals(0)) {
                     totalPoint = point.getTotalPoint() - pointCreateDto.getPoint();
                 }
             }
@@ -71,6 +68,7 @@ public class PointServiceImpl implements PointService {
                     .point(pointCreateDto.getPoint())
                     .title(pointCreateDto.getTitle())
                     .content(pointCreateDto.getContent())
+                    .used(pointCreateDto.getUsed())
                     .type(pointType)
                     .user(user)
                     .receipt(receipt)
@@ -83,6 +81,7 @@ public class PointServiceImpl implements PointService {
                     .point(pointCreateDto.getPoint())
                     .title(pointCreateDto.getTitle())
                     .content(pointCreateDto.getContent())
+                    .used(pointCreateDto.getUsed())
                     .type(pointType)
                     .user(user)
                     .build();
