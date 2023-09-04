@@ -25,7 +25,7 @@ public class ReceiptController {
     }
 
     // 영수증으로 적립
-    @PutMapping("/point/receipt")
+    @PostMapping("/point/receipt")
     public void createPointByReceipt(@RequestParam("UUID") String UUID, @RequestBody ReceiptGetVo receiptGetVo) {
         ReceiptGetDto receiptGetDto = ReceiptGetDto.builder()
                 .alliance(receiptGetVo.getAlliance())
