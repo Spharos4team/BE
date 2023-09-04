@@ -1,9 +1,7 @@
 package com.spharos.ssgpoint.auth;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spharos.ssgpoint.auth.vo.AuthenticationRequest;
 import com.spharos.ssgpoint.auth.vo.AuthenticationResponse;
-import com.spharos.ssgpoint.auth.vo.RefreshTokenVo;
 import com.spharos.ssgpoint.config.security.JwtTokenProvider;
 import com.spharos.ssgpoint.exception.CustomException;
 import com.spharos.ssgpoint.point.domain.Point;
@@ -11,27 +9,21 @@ import com.spharos.ssgpoint.term.domain.UserTermList;
 
 
 import com.spharos.ssgpoint.token.infrastructure.RefreshTokenRepository;
+import com.spharos.ssgpoint.user.domain.Role;
 import com.spharos.ssgpoint.user.domain.User;
-import com.spharos.ssgpoint.user.dto.UserSignUpDto;
+import com.spharos.ssgpoint.user.dto.user.UserSignUpDto;
 import com.spharos.ssgpoint.user.infrastructure.UserRepository;
 
-import io.jsonwebtoken.ExpiredJwtException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
@@ -73,6 +65,7 @@ public class AuthenticationService {
                 .address(userSignUpDto.getAddress())
                 .term(termList)
                 .status(1)
+                .role(Role.USER)
                 .build();
 
         String jwtToken = jwtTokenProvider.generateToken(user);

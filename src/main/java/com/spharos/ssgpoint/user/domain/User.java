@@ -11,10 +11,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Getter
@@ -47,7 +49,10 @@ public class User extends BaseEntity implements UserDetails {
     @Column(length = 45, nullable = false)
     private String email;
 
-    //private String role;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = true, length = 10, name = "role")
+    private Role role;
+
 
     @Column(length = 1, nullable = false, columnDefinition = "int default 1")
     private Integer status;
@@ -64,7 +69,7 @@ public class User extends BaseEntity implements UserDetails {
 
     @Builder
     public User(String uuid, String loginId, String name, String password, String phone, String address, String email,
-                Integer status, String pointPassword, String barCode, UserTermList term) {
+                Integer status, String pointPassword, String barCode, UserTermList term,Role role) {
         this.uuid = uuid;
         this.loginId = loginId;
         this.name = name;
@@ -76,7 +81,7 @@ public class User extends BaseEntity implements UserDetails {
         this.pointPassword = pointPassword;
         this.barCode = barCode;
         this.term= term;
-
+        this.role= role;
     }
 
     public void updateUserInfo(String address, String email){
@@ -98,7 +103,7 @@ public class User extends BaseEntity implements UserDetails {
     }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
     @Override

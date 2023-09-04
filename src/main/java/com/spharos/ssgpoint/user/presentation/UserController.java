@@ -2,7 +2,9 @@ package com.spharos.ssgpoint.user.presentation;
 
 import com.spharos.ssgpoint.config.security.JwtTokenProvider;
 import com.spharos.ssgpoint.user.application.UserService;
-import com.spharos.ssgpoint.user.dto.*;
+import com.spharos.ssgpoint.user.dto.password.PasswordUpdateDto;
+import com.spharos.ssgpoint.user.dto.shoppinghistory.*;
+import com.spharos.ssgpoint.user.dto.user.*;
 import com.spharos.ssgpoint.user.vo.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +13,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -24,15 +27,6 @@ public class UserController {
     private final Environment env;
     private final JwtTokenProvider jwtTokenProvider;
 
-
-    @PostMapping("/user")
-    public void createUser(@RequestBody UserSignUpIn userSignUpIn) {
-        log.info("INPUT Object Data is : {}" , userSignUpIn);
-        ModelMapper modelMapper = new ModelMapper();
-        UserSignUpDto userSignUpDto = modelMapper.map(userSignUpIn, UserSignUpDto.class);
-
-        userService.createUser(userSignUpDto);
-    }
 
     @GetMapping("/user/{UUID}")
     public ResponseEntity<UserGetOut> getUserByUUID(@PathVariable String UUID) {
@@ -155,6 +149,13 @@ public class UserController {
         TotalPointDtoByReceipt totalPoint = userService.getTotalPoint(UUID);
         return ResponseEntity.ok(totalPoint);
     }
+
+    @GetMapping("/user/top3/{UUID}")
+    public ResponseEntity<List<FrequentBrandTop3SumDto>> totaltp3Point(@PathVariable String UUID){
+        List<FrequentBrandTop3SumDto> frequentBrandTop3Sum = userService.getFrequentBrandTop3Sum(UUID);
+        return ResponseEntity.ok(frequentBrandTop3Sum);
+    }
+
 
     @GetMapping("/shopping-history/{UUID}")
     public ResponseEntity<UserCompositeDto> getUserData(@PathVariable String UUID) {

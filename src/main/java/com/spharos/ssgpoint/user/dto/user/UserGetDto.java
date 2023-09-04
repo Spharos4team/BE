@@ -1,19 +1,16 @@
-package com.spharos.ssgpoint.user.dto;
+package com.spharos.ssgpoint.user.dto.user;
 
 import lombok.*;
 
-import java.util.Map;
-
 @Builder
 @Getter @Setter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserSignUpDto {
+public class UserGetDto {
     private String loginId;
-    private String password;
     private String name;
     private String email;
     private String phone;
     private String address;
-    private Map<String, Boolean> term;
 }
