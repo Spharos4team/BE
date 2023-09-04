@@ -7,7 +7,8 @@ import com.spharos.ssgpoint.alliancepoint.dto.AlliancePointCreateDto;
 import com.spharos.ssgpoint.alliancepoint.dto.AlliancePointGetDto;
 import com.spharos.ssgpoint.alliancepoint.dto.AlliancePointUpdateDto;
 import com.spharos.ssgpoint.alliancepoint.infrastructure.AlliancePointRepository;
-import com.spharos.ssgpoint.user.infrastructure.UserRepository;
+import com.spharos.ssgpoint.point.application.PointService;
+import com.spharos.ssgpoint.point.dto.PointCreateDto;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AlliancePointServiceImpl implements AlliancePointService {
 
-    private final UserRepository userRepository;
+    private final PointService pointService;
+
     private final AlliancePointRepository alliancePointRepository;
 
     // 제휴사 포인트 생성 (테스트 위해 생성)
@@ -47,15 +49,54 @@ public class AlliancePointServiceImpl implements AlliancePointService {
         ).toList();
     }
 
-    // 제휴사 포인트 사용
+    // 제휴사 포인트 전환
     @Transactional
     @Override
-    public void updateAlliancePoint(String UUID, String type, AlliancePointUpdateDto alliancePointUpdateDto) {
+    public void updateAlliancePoint(String UUID, String type, String access, AlliancePointUpdateDto alliancePointUpdateDto) {
+        // 내 제휴사 포인트 찾기
         AlliancePointType alliancePointType = new AlliancePointTypeConverter().convertToEntityAttribute(type);
         List<AlliancePoint> alliancePointList = alliancePointRepository.findByUUIDAndType(UUID, alliancePointType);
 
+        String alliancePointName = "삼성P";
+        
         for (AlliancePoint alliancePoint : alliancePointList) {
-            alliancePoint.update(alliancePointUpdateDto.getPoint());
+            if (alliancePoint.getType().getCode().equals("OK")) {
+                alliancePointName = "OK캐쉬백(신)P";
+            }
+
+            // 제휴사 포인트 -> 신세계 포인트 전환 시
+            if (access.equals("1")) {
+                // 전환 포인트만큼 제휴사 포인트 (-)
+                alliancePoint.updateMinus(alliancePointUpdateDto.getPoint());
+
+                // 전환 포인트 포인트 테이블에 저장
+                PointCreateDto pointCreateDto = PointCreateDto.builder()
+                        .point(alliancePoint.getPoint())
+                        .title("신세계포인트 전환")
+                        .content(alliancePointName + "->신세계P")
+                        .type("8")
+                        .user(UUID)
+                        .build();
+
+                pointService.createPoint(UUID, pointCreateDto);
+            }
+
+            // 신세계 포인트 -> 제휴사 포인트 전환 시
+            if (access.equals("2")) {
+                // 전환 포인트만큼 제휴사 포인트 (+)
+                alliancePoint.updatePlus(alliancePointUpdateDto.getPoint());
+
+                // 전환 포인트 포인트 테이블에 저장
+                PointCreateDto pointCreateDto = PointCreateDto.builder()
+                        .point(alliancePoint.getPoint())
+                        .title("신세계포인트 전환")
+                        .content("신세계P->" + alliancePointName)
+                        .type("9")
+                        .user(UUID)
+                        .build();
+
+                pointService.createPoint(UUID, pointCreateDto);
+            }
         }
 
     }

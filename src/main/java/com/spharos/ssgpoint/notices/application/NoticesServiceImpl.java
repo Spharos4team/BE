@@ -34,4 +34,7 @@ public class NoticesServiceImpl implements NoticesService {
     public void deleteNotice(Long id) {
         noticesRepository.deleteById(id);
     }
+
+
+
 }

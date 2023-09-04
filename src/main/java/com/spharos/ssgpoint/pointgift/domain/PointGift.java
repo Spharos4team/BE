@@ -29,8 +29,8 @@ public class PointGift extends BaseEntity {
     private PointGiftType type;
 
     @Column(nullable = false)
-    @Convert(converter = PointGiftAccessTypeConverter.class)
-    private PointGiftAccessType access;
+    @Convert(converter = PointGiftStatusTypeConverter.class)
+    private PointGiftStatusType status;
 
     @Column(nullable = false, length = 100)
     private String UUID;
@@ -41,4 +41,7 @@ public class PointGift extends BaseEntity {
     @Column(nullable = false, length = 100)
     private String name;
 
+    public void update(String status) {
+        this.status = PointGiftStatusType.valueOf(status);
+    }
 }

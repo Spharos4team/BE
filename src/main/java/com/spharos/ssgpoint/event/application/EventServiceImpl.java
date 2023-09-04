@@ -3,55 +3,64 @@
 package com.spharos.ssgpoint.event.application;
 
 import com.spharos.ssgpoint.event.domain.Event;
+import com.spharos.ssgpoint.event.domain.EventEntries;
+import com.spharos.ssgpoint.event.domain.EventType;
+import com.spharos.ssgpoint.event.dto.EventDto;
 import com.spharos.ssgpoint.event.infrastructure.EventRepository;
+import com.spharos.ssgpoint.event.infrastructure.UserEventRepository;
+import com.spharos.ssgpoint.event.vo.EventAdd;
+import jakarta.validation.constraints.NotNull;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
 
     private final EventRepository eventRepository;
-
-    public EventServiceImpl(EventRepository eventRepository) {
-        this.eventRepository = eventRepository;
-    }
+    private final EventImageListService eventImageListService;
+    private final EventImageService eventImageService;
+    private final UserEventRepository userEventRepository;
 
     @Override
     public List<Event> getEventsByType(String eventType) {
-        return switch (eventType) {
-            case "진행중" -> eventRepository.findByType(0);
-            case "마감" -> eventRepository.findByType(1);
-            case "당첨" -> eventRepository.findByType(2);
-            default -> throw new IllegalArgumentException("잘못된 이벤트입니다.");
-        };
+        return eventRepository.findByEventType(eventType);
     }
 
     @Override
     public Event getEventById(Long id) {
-        return eventRepository.findById(id).orElse(null);
+        return eventRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("다음 이벤트를 찾을수 없습니다: " + id));
+    }
+
+
+    @Override
+    public EventDto addEvent(@NotNull EventAdd eventAdd) {
+        Event event = Event.builder().title(eventAdd.getTitle()).content(eventAdd.getContent()).eventType(EventType.valueOf(eventAdd.getEventType())).thumbnailUrl(eventAdd.getThumbnailUrl()).startDate(eventAdd.getStartDate()).endDate(eventAdd.getEndDate()).build();
+
+        Event savedEvent = eventRepository.save(event);
+
+        return new EventDto(savedEvent.getTitle(), savedEvent.getContent(), savedEvent.getEventType().name(), savedEvent.getThumbnailUrl(), eventAdd.getEventImages());
+    }
+
+
+    @Override
+    public List<Event> getAllEvents() {
+        return eventRepository.findAll();
     }
 
     @Override
-    public Event uploadEvent(String title, String content, LocalDateTime startDate,
-                             LocalDateTime endDate, String relatedLink, MultipartFile image) {
-        String imageUrl = uploadImage(image);
-        Event event = Event.builder()
-                .title(title)
-                .contentImageUrl(content)
-                .startDate(startDate)
-                .endDate(endDate)
-                .contentImageUrl(relatedLink)
-                .thumbnailUrl(imageUrl)     // 업로드된 이미지 URL을 저장
-                .build();   // 이벤트 객체 생성
-
-        return eventRepository.save(event); // 이벤트 저장
+    public List<EventEntries> getEventsParticipatedByUser(String uuid) {
+        return userEventRepository.findByUuid(uuid);
     }
 
-    private String uploadImage(MultipartFile image) {
-        // TODO: 이미지 업로드 로직 구현  (이미지 업로드 후 이미지 URL을 리턴)
-        return "uploaded_image_url";    // 임시로 업로드된 이미지 URL을 리턴
+    @Override
+    public List<EventEntries> getWinningEventsByUuid(String uuid) {
+        return userEventRepository.findByUuidAndIsWinning(uuid, true);
     }
+
+
 }

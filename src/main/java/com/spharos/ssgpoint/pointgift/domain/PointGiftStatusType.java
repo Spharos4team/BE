@@ -4,7 +4,7 @@ import com.spharos.ssgpoint.global.CodeValue;
 import lombok.Getter;
 
 @Getter
-public enum PointGiftAccessType implements CodeValue {
+public enum PointGiftStatusType implements CodeValue {
 
     대기("0", "대기"),
     수락("1", "수락"),
@@ -13,7 +13,7 @@ public enum PointGiftAccessType implements CodeValue {
     private final String code;
     private final String value;
 
-    PointGiftAccessType(String code, String value) {
+    PointGiftStatusType(String code, String value) {
         this.code = code;
         this.value = value;
     }
