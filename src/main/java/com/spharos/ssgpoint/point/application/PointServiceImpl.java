@@ -10,6 +10,7 @@ import com.spharos.ssgpoint.receipt.domain.Receipt;
 import com.spharos.ssgpoint.user.domain.User;
 import com.spharos.ssgpoint.user.infrastructure.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -79,13 +80,15 @@ public class PointServiceImpl implements PointService {
 
     // 포인트 목록
     @Override
-    public List<PointGetDto> getPointByUser(String UUID) {
+    public List<PointGetDto> getTotalPointByUser(String UUID,Pageable page) {
         User user = userRepository.findByUuid(UUID).orElseThrow(() ->
                 new IllegalArgumentException("UUID 정보 없음 = " + UUID));
 
-        List<Point> pointList = pointRepository.findByUserId(user.getUuid());
+        Slice<Point> pointList = pointRepository.findByUserId(user.getUuid(),page);
+        return pointList.map(m -> new PointGetDto(m.getPoint(),
+                m.getTitle(), m.getContent(), m.getType().getCode(), m.getCreatedDate())).stream().toList();
 
-        return pointList.stream().map(point ->
+        /*return pointList.stream().map(point ->
                 PointGetDto.builder()
                         .totalPoint(point.getTotalPoint())
                         .point(point.getPoint())
@@ -94,7 +97,17 @@ public class PointServiceImpl implements PointService {
                         .type(String.valueOf(point.getType().getValue()))
                         .createdDate(LocalDateTime.from(point.getCreatedDate()))
                         .build()
-        ).toList();
+        ).toList();*/
+    }
+
+    @Override
+    public List<PointGetDto> getSavePointByUser(String UUID, Pageable page) {
+        User user = userRepository.findByUuid(UUID).orElseThrow(() ->
+                new IllegalArgumentException("UUID 정보 없음 = " + UUID));
+
+        Slice<Point> pointList = pointRepository.findBySavePoint(user.getUuid(),page);
+        return pointList.map(m -> new PointGetDto(m.getPoint(),
+                m.getTitle(), m.getContent(), m.getType().getCode(), m.getCreatedDate())).stream().toList();
     }
 
 }

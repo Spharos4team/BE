@@ -6,6 +6,11 @@ import com.spharos.ssgpoint.point.dto.PointGetDto;
 import com.spharos.ssgpoint.point.vo.PointCreateVo;
 import com.spharos.ssgpoint.point.vo.PointGetVo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,14 +45,31 @@ public class PointController {
         pointService.createPoint(UUID, pointCreateDto);
     }
 
-    // 포인트 목록
+    // 포인트 목록 - 전체 적립 사용 구분 없이
     @GetMapping("/point")
-    public List<PointGetVo> getPointByUser(@RequestParam("UUID") String UUID) {
-        List<PointGetDto> pointGetDtoList = pointService.getPointByUser(UUID);
+    public List<PointGetVo> getTotalPointByUser(@RequestParam("UUID") String UUID,@PageableDefault(size=10, sort="createdDate") Pageable pageRequest) {
 
-        return pointGetDtoList.stream().map(pointGetDto ->
+        List<PointGetDto> pointByUser = pointService.getTotalPointByUser(UUID, pageRequest);
+
+        return pointByUser.stream().map(pointGetDto ->
                 PointGetVo.builder()
-                        .totalPoint(pointGetDto.getTotalPoint())
+                        .point(pointGetDto.getPoint())
+                        .title(pointGetDto.getTitle())
+                        .content(pointGetDto.getContent())
+                        .type(pointGetDto.getType())
+                        .createdDate(pointGetDto.getCreatedDate())
+                        .build()
+        ).toList();
+    }
+
+    // 포인트 목록 - 적립 구분
+    @GetMapping("/save-point")
+    public List<PointGetVo> getSavePointByUser(@RequestParam("UUID") String UUID,@PageableDefault(size=10, sort="createdDate") Pageable pageRequest) {
+
+        List<PointGetDto> pointByUser = pointService.getSavePointByUser(UUID, pageRequest);
+
+        return pointByUser.stream().map(pointGetDto ->
+                PointGetVo.builder()
                         .point(pointGetDto.getPoint())
                         .title(pointGetDto.getTitle())
                         .content(pointGetDto.getContent())

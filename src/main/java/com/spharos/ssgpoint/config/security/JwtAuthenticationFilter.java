@@ -88,10 +88,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
 
             filterChain.doFilter(request, response);
-        } catch (NullPointerException | IllegalStateException e) {
+        } /*catch (NullPointerException | IllegalStateException e) {
             request.setAttribute("exception", JwtExceptionCode.NOT_FOUND_TOKEN.getCode());
             throw new BadCredentialsException("throw new not found token exception");
-        } catch (SecurityException | MalformedJwtException e) {
+        }*/ catch (SecurityException | MalformedJwtException e) {
             request.setAttribute("exception", JwtExceptionCode.INVALID_TOKEN.getCode());
             throw new BadCredentialsException("throw new invalid token exception");
         } catch (ExpiredJwtException e) {

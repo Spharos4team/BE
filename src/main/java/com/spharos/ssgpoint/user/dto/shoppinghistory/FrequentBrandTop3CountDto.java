@@ -1,4 +1,4 @@
-package com.spharos.ssgpoint.user.dto;
+package com.spharos.ssgpoint.user.dto.shoppinghistory;
 
 import lombok.*;
 

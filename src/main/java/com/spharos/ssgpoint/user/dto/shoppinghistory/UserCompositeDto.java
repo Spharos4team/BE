@@ -1,5 +1,6 @@
-package com.spharos.ssgpoint.user.dto;
+package com.spharos.ssgpoint.user.dto.shoppinghistory;
 
+import com.spharos.ssgpoint.user.dto.user.UserUsePointDto;
 import lombok.Data;
 
 import java.util.List;

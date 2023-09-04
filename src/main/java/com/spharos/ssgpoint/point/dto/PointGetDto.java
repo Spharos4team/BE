@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class PointGetDto {
 
-    private Integer totalPoint;
     private Integer point;
     private String title;
     private String content;
