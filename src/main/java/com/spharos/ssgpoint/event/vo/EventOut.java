@@ -2,7 +2,6 @@ package com.spharos.ssgpoint.event.vo;
 
 import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -19,8 +18,8 @@ public class EventOut {
     private String eventType;
     private String thumbnailUrl;
     private List<String> eventImages;
-    private LocalDateTime regDate;
-    private LocalDateTime startDate;
+    private Date regDate;
+    private Date startDate;
     private Date endDate;
 
 }

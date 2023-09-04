@@ -16,13 +16,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
 
     private final EventRepository eventRepository;
-    private final EventImageListService eventImageListService;
+    private final S3Service s3Service;
     private final EventImageService eventImageService;
     private final UserEventRepository userEventRepository;
 
@@ -39,8 +40,9 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventDto addEvent(@NotNull EventAdd eventAdd) {
-        Event event = Event.builder().title(eventAdd.getTitle()).content(eventAdd.getContent()).eventType(EventType.valueOf(eventAdd.getEventType())).thumbnailUrl(eventAdd.getThumbnailUrl()).startDate(eventAdd.getStartDate()).endDate(eventAdd.getEndDate()).build();
-
+        Event event = Event.builder().title(eventAdd.getTitle()).content(eventAdd.getContent())
+                .eventType(EventType.valueOf(eventAdd.getEventType())).thumbnailUrl(eventAdd.getThumbnailUrl())
+                .startDate(eventAdd.getStartDate()).endDate(eventAdd.getEndDate()).build();
         Event savedEvent = eventRepository.save(event);
 
         return new EventDto(savedEvent.getTitle(), savedEvent.getContent(), savedEvent.getEventType().name(), savedEvent.getThumbnailUrl(), eventAdd.getEventImages());

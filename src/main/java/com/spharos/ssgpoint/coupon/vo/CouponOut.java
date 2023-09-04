@@ -9,15 +9,12 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @RequiredArgsConstructor
-public class CouponUse {
+public class CouponOut {
 
     private final Long couponId;
     private final String uuid;
-    private final boolean used;
 
     public boolean isValidUUID() {
         return uuid != null && !uuid.trim().isEmpty();
     }
-
-
 }

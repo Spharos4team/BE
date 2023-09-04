@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Getter
@@ -32,8 +32,8 @@ public class Event {
     @Column(nullable = false, length = 20)
     private EventType eventType;
 
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private Date startDate;
+    private Date endDate;
 
 //    todo: 이벤트 생성 주체 추가
 

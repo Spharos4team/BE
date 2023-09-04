@@ -7,6 +7,7 @@ import com.spharos.ssgpoint.event.domain.EventEntries;
 import com.spharos.ssgpoint.event.dto.EventDto;
 import com.spharos.ssgpoint.event.vo.EventAdd;
 import com.spharos.ssgpoint.event.vo.EventOut;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,16 +17,12 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1")
 public class EventController {
 
     private final EventService eventService;
     private final S3Service s3Service;
-
-    public EventController(EventService eventService, S3Service s3Service) {
-            this.eventService = eventService;
-            this.s3Service = s3Service;
-        }
 
     @GetMapping("/events")
     public ResponseEntity<List<Event>> getEventsByType(@RequestParam String type) {

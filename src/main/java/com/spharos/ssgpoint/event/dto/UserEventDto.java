@@ -15,7 +15,7 @@ public class UserEventDto {
 
     private Long eventId;
 
-    private String UUID;
+    private String uuidq;
 
     private boolean isWinner;
 }
