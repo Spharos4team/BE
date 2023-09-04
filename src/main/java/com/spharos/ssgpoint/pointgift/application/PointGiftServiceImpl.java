@@ -48,7 +48,8 @@ public class PointGiftServiceImpl implements PointGiftService {
                 .point(pointGiftCreateDto.getPoint())
                 .title(pointGiftCreateDto.getName() + "(ID : " + pointGiftCreateDto.getLoginId() + ")")
                 .content("보낸 선물 : " + pointGiftCreateDto.getStatus())
-                .type("5")
+                .statusType("1")
+                .type("3")
                 .user(UUID)
                 .build();
 
@@ -91,7 +92,8 @@ public class PointGiftServiceImpl implements PointGiftService {
                     .point(pointGiftList.get().getPoint())
                     .title(sender.getName() + "(ID : " + sender.getLoginId() + ")")
                     .content("받은 선물 : " + pointGiftList.get().getStatus())
-                    .type("7")
+                    .statusType("0")
+                    .type("3")
                     .user(receiver.getUuid())
                     .build();
             pointService.createPoint(receiver.getUuid(), pointCreateDto);
@@ -107,7 +109,8 @@ public class PointGiftServiceImpl implements PointGiftService {
                     .point(pointGiftList.get().getPoint())
                     .title(receiver.getName() + "(ID : " + receiver.getLoginId() + ")")
                     .content("보낸 선물 : " + pointGiftList.get().getStatus())
-                    .type("6")
+                    .statusType("2")
+                    .type("3")
                     .user(sender.getUuid())
                     .build();
             pointService.createPoint(sender.getUuid(), pointCreateDto);
