@@ -1,8 +1,6 @@
 package com.spharos.ssgpoint.point.application;
 
-import com.spharos.ssgpoint.point.domain.Point;
-import com.spharos.ssgpoint.point.domain.PointType;
-import com.spharos.ssgpoint.point.domain.PointTypeConverter;
+import com.spharos.ssgpoint.point.domain.*;
 import com.spharos.ssgpoint.point.dto.PointCreateDto;
 import com.spharos.ssgpoint.point.dto.PointGetDto;
 import com.spharos.ssgpoint.point.infrastructure.PointRepository;
@@ -26,7 +24,10 @@ public class PointServiceImpl implements PointService {
     // 포인트 생성
     @Override
     public void createPoint(String UUID, PointCreateDto pointCreateDto) {
-        PointType pointType = new PointTypeConverter().convertToEntityAttribute(pointCreateDto.getType());
+        PointType pointType
+                = new PointTypeConverter().convertToEntityAttribute(pointCreateDto.getType());
+        PointStatusType pointStatusType
+                = new PointStatusTypeConverter().convertToEntityAttribute(pointCreateDto.getStatusType());
         User user = userRepository.findByUuid(UUID).orElseThrow(() ->
                 new IllegalArgumentException("UUID 정보 없음 = " + UUID));
 
@@ -34,17 +35,16 @@ public class PointServiceImpl implements PointService {
         List<Point> pointList = pointRepository.findByUserIdOrderById(user.getUuid());
         Long count = pointRepository.countByUserId(user.getId());
 
-        int totalPoint = 0;
+        int calctotalPoint = 0;
 
         if (count.equals(0L)) {
-            totalPoint = pointCreateDto.getPoint();
+            calctotalPoint = pointCreateDto.getPoint();
         } else {
             for (Point point : pointList) {
-                if (point.getUsed().equals(1)) {
-                    totalPoint = point.getTotalPoint() + pointCreateDto.getPoint();
-                }
-                if (point.getUsed().equals(0)) {
-                    totalPoint = point.getTotalPoint() - pointCreateDto.getPoint();
+                if (pointStatusType.getCode().equals("0") || pointStatusType.getCode().equals("2")) {
+                    calctotalPoint = point.getTotalPoint() + pointCreateDto.getPoint();
+                } else if (pointStatusType.getCode().equals("1")) {
+                    calctotalPoint = point.getTotalPoint() - pointCreateDto.getPoint();
                 }
             }
         }
@@ -64,11 +64,11 @@ public class PointServiceImpl implements PointService {
                     .build();
 
             Point point = Point.builder()
-                    .totalPoint(totalPoint)
+                    .totalPoint(calctotalPoint)
                     .point(pointCreateDto.getPoint())
                     .title(pointCreateDto.getTitle())
                     .content(pointCreateDto.getContent())
-                    .used(pointCreateDto.getUsed())
+                    .statusType(pointStatusType)
                     .type(pointType)
                     .user(user)
                     .receipt(receipt)
@@ -77,11 +77,11 @@ public class PointServiceImpl implements PointService {
             pointRepository.save(point);
         } else {
             Point point = Point.builder()
-                    .totalPoint(totalPoint)
+                    .totalPoint(calctotalPoint)
                     .point(pointCreateDto.getPoint())
                     .title(pointCreateDto.getTitle())
                     .content(pointCreateDto.getContent())
-                    .used(pointCreateDto.getUsed())
+                    .statusType(pointStatusType)
                     .type(pointType)
                     .user(user)
                     .build();
