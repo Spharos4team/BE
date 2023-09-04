@@ -17,6 +17,7 @@ public class PointCreateVo {
     private String title;
     private String content;
     private Integer used;
+    private String statusType;
     private String type;
     private Long pointCardId;
 

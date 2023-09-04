@@ -32,7 +32,9 @@ public class Point extends BaseEntity {
 
     private String content;
 
-    private Integer used;
+    @Column(nullable = false)
+    @Convert(converter = PointStatusTypeConverter.class)
+    private PointStatusType statusType;
 
     @Column(nullable = false)
     @Convert(converter = PointTypeConverter.class)

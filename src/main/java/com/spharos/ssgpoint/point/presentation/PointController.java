@@ -30,7 +30,7 @@ public class PointController {
                     .point(pointCreateVo.getPoint())
                     .title(pointCreateVo.getTitle())
                     .content(pointCreateVo.getContent())
-                    .used(pointCreateVo.getUsed())
+                    .statusType(pointCreateVo.getStatusType())
                     .type(pointCreateVo.getType())
                     .receipt(PointCreateDto.ReceiptDto.builder()
                             .alliance(pointCreateVo.getReceipt().getAlliance())
@@ -50,7 +50,7 @@ public class PointController {
                     .point(pointCreateVo.getPoint())
                     .title(pointCreateVo.getTitle())
                     .content(pointCreateVo.getContent())
-                    .used(pointCreateVo.getUsed())
+                    .statusType(pointCreateVo.getStatusType())
                     .type(pointCreateVo.getType())
                     .build();
 

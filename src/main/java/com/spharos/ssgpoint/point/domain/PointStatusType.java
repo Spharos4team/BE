@@ -4,19 +4,16 @@ import com.spharos.ssgpoint.global.CodeValue;
 import lombok.Getter;
 
 @Getter
-public enum PointType implements CodeValue {
+public enum PointStatusType implements CodeValue {
 
-    결제("1", "결제"),
-    이벤트("2", "이벤트"),
-    선물("3", "선물"),
-    전환("4", "전환"),
-    추후("5", "추후"),
-    소멸("6", "소멸");
+    적립("0", "적립"),
+    사용("1", "사용"),
+    사용취소("2", "사용취소");
 
     private final String code;
     private final String value;
 
-    PointType(String code, String value) {
+    PointStatusType(String code, String value) {
         this.code = code;
         this.value = value;
     }
@@ -30,5 +27,4 @@ public enum PointType implements CodeValue {
     public String getValue() {
         return value;
     }
-
 }
