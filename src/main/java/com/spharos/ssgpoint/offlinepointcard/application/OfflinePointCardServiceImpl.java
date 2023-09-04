@@ -6,10 +6,9 @@ import com.spharos.ssgpoint.offlinepointcard.dto.OfflinePointCardCreateTestDto;
 import com.spharos.ssgpoint.offlinepointcard.infrastructure.OfflinePointCardRepository;
 import com.spharos.ssgpoint.pointcard.application.PointCardService;
 import com.spharos.ssgpoint.pointcard.dto.PointCardCreateDto;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +31,8 @@ public class OfflinePointCardServiceImpl implements OfflinePointCardService {
     }
 
     // 오프라인 포인트 카드 등록
+    @Transactional
+    @Override
     public void createOfflinePointCard(String UUID, OfflinePointCardCreateDto offlinePointCardCreateDto) {
         // 카드 정보 확인
         OfflinePointCard offlinePointCard
@@ -40,7 +41,6 @@ public class OfflinePointCardServiceImpl implements OfflinePointCardService {
                 offlinePointCardCreateDto.getStore()).orElseThrow(() ->
                 new IllegalArgumentException("카드 번호를 확인해주세요."));
 
-        // TODO: 등록 상태인지 확인
         if (offlinePointCard.getStatus().equals(0)) {
             // 포인트 카드 테이블에 저장
             PointCardCreateDto pointCardCreateDto = PointCardCreateDto.builder()
@@ -53,6 +53,8 @@ public class OfflinePointCardServiceImpl implements OfflinePointCardService {
 
             // 오프라인 포인트 카드 상태 변경
             offlinePointCard.update(1);
+        } else {
+            throw new IllegalArgumentException("이미 등록된 포인트 카드입니다.");
         }
 
     }
