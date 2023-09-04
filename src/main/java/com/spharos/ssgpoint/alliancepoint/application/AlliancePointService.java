@@ -15,6 +15,6 @@ public interface AlliancePointService {
     List<AlliancePointGetDto> getAlliancePointByUUID(String UUID);
 
     // 제휴사 포인트 전환
-    void updateAlliancePoint(String UUID, String type, String Access, AlliancePointUpdateDto alliancePointUpdateDto);
+    void updateAlliancePoint(String UUID, String type, String status, AlliancePointUpdateDto alliancePointUpdateDto);
 
 }
