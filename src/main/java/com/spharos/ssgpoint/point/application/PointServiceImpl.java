@@ -57,12 +57,13 @@ public class PointServiceImpl implements PointService {
             Receipt receipt = Receipt.builder()
                     .alliance(pointCreateDto.getReceipt().getAlliance())
                     .brand(pointCreateDto.getReceipt().getBrand())
-                    .cardName(pointCreateDto.getReceipt().getCardName())
-                    .number(pointCreateDto.getReceipt().getNumber())
                     .storeName(pointCreateDto.getReceipt().getStoreName())
+                    .number(pointCreateDto.getReceipt().getNumber())
                     .amount(pointCreateDto.getReceipt().getAmount())
-                    .cardNumber(pointCreateDto.getReceipt().getCardNumber())
                     .point(pointCreateDto.getReceipt().getReceiptPoint())
+                    .cardName(pointCreateDto.getReceipt().getCardName())
+                    .cardNumber(pointCreateDto.getReceipt().getCardNumber())
+                    .status(1)
                     .build();
 
             Point point = Point.builder()

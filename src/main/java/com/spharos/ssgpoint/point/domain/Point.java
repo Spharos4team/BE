@@ -30,7 +30,6 @@ public class Point extends BaseEntity {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
     private String content;
 
     @Column(nullable = false)

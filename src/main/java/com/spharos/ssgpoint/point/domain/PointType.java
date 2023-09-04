@@ -13,7 +13,8 @@ public enum PointType implements CodeValue {
     선물사용취소("5", "선물사용취소"),
     선물적립("6", "선물적립"),
     전환적립("7", "전환적립"),
-    전환사용("8", "전환사용"),;
+    전환사용("8", "전환사용"),
+    영수증적립("9", "영수증적립");    // TODO: 영수증으로 적립했을 때 이름 확인해보기
 
     private final String code;
     private final String value;
