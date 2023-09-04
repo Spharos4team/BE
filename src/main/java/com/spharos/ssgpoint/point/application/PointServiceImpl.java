@@ -40,10 +40,10 @@ public class PointServiceImpl implements PointService {
             totalPoint = pointCreateDto.getPoint();
         } else {
             for (Point point : pointList) {
-                if (point.getUsed().equals(1)) {
+                if (point.getUsed().equals(0) || point.getUsed().equals(2)) {
                     totalPoint = point.getTotalPoint() + pointCreateDto.getPoint();
                 }
-                if (point.getUsed().equals(0)) {
+                if (point.getUsed().equals(1)) {
                     totalPoint = point.getTotalPoint() - pointCreateDto.getPoint();
                 }
             }
