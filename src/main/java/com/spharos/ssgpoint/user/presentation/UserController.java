@@ -116,14 +116,14 @@ public class UserController {
         PointGetDto pointGetDto = userService.getPoint(UUID);
         return ResponseEntity.ok(pointGetDto);
     }
-    /**
+   /* *//**
      * 신세계포인트 이용 - 적립부분
-     */
+     *//*
     @GetMapping("/user/save-point/{UUID}")
     public ResponseEntity<UserSavePointDto> getSavePoint(@PathVariable String UUID) {
         UserSavePointDto userSavePointDto = userService.getSavePoint(UUID);
         return ResponseEntity.ok(userSavePointDto);
-    }
+    }*/
     /**
      * 신세계포인트 이용 - 사용부분
      */
@@ -163,7 +163,7 @@ public class UserController {
 
         userCompositeDto.setPointGetDto(userService.getPoint(UUID));
         userCompositeDto.setUserSavePointDto(userService.getSavePoint(UUID));
-        userCompositeDto.setUserUsePointDto(userService.getUsePoint(UUID));
+       // userCompositeDto.setUserUsePointDto(userService.getUsePoint(UUID));
         userCompositeDto.setVisitedCountDto(userService.getVisitedCount(UUID));
         userCompositeDto.setTotalPointDtoByReceipt(userService.getTotalPoint(UUID));
         userCompositeDto.setFrequentBrandTop3Dto(userService.getFrequentBrandTop3Count(UUID));
