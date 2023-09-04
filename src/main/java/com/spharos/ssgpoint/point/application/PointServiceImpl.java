@@ -41,39 +41,53 @@ public class PointServiceImpl implements PointService {
         } else {
             for (Point point : pointList) {
                 if (pointType.getCode().equals("1") || pointType.getCode().equals("2")
-                        || pointType.getCode().equals("6") || pointType.getCode().equals("7")
-                        || pointType.getCode().equals("8")) {
+                        || pointType.getCode().equals("5") || pointType.getCode().equals("6")
+                        || pointType.getCode().equals("7")) {
                     totalPoint = point.getTotalPoint() + pointCreateDto.getPoint();
                 }
                 if (pointType.getCode().equals("3") || pointType.getCode().equals("4")
-                        || pointType.getCode().equals("5") || pointType.getCode().equals("9")) {
+                        || pointType.getCode().equals("8")) {
                     totalPoint = point.getTotalPoint() - pointCreateDto.getPoint();
                 }
             }
         }
 
-        Receipt receipt = Receipt.builder()
-                .alliance(pointCreateDto.getReceipt().getAlliance())
-                .brand(pointCreateDto.getReceipt().getBrand())
-                .cardName(pointCreateDto.getReceipt().getCardName())
-                .number(pointCreateDto.getReceipt().getNumber())
-                .storeName(pointCreateDto.getReceipt().getStoreName())
-                .amount(pointCreateDto.getReceipt().getAmount())
-                .cardNumber(pointCreateDto.getReceipt().getCardNumber())
-                .point(pointCreateDto.getReceipt().getReceiptPoint())
-                .build();
+        // 결제적립
+        if (pointCreateDto.getType().equals("1")) {
+            Receipt receipt = Receipt.builder()
+                    .alliance(pointCreateDto.getReceipt().getAlliance())
+                    .brand(pointCreateDto.getReceipt().getBrand())
+                    .cardName(pointCreateDto.getReceipt().getCardName())
+                    .number(pointCreateDto.getReceipt().getNumber())
+                    .storeName(pointCreateDto.getReceipt().getStoreName())
+                    .amount(pointCreateDto.getReceipt().getAmount())
+                    .cardNumber(pointCreateDto.getReceipt().getCardNumber())
+                    .point(pointCreateDto.getReceipt().getReceiptPoint())
+                    .build();
 
-        Point build = Point.builder()
-                .totalPoint(totalPoint)
-                .point(pointCreateDto.getPoint())
-                .title(pointCreateDto.getTitle())
-                .content(pointCreateDto.getContent())
-                .type(pointType)
-                .user(user)
-                .receipt(receipt)
-                .build();
-        pointRepository.save(build);
+            Point point = Point.builder()
+                    .totalPoint(totalPoint)
+                    .point(pointCreateDto.getPoint())
+                    .title(pointCreateDto.getTitle())
+                    .content(pointCreateDto.getContent())
+                    .type(pointType)
+                    .user(user)
+                    .receipt(receipt)
+                    .build();
 
+            pointRepository.save(point);
+        } else {
+            Point point = Point.builder()
+                    .totalPoint(totalPoint)
+                    .point(pointCreateDto.getPoint())
+                    .title(pointCreateDto.getTitle())
+                    .content(pointCreateDto.getContent())
+                    .type(pointType)
+                    .user(user)
+                    .build();
+
+            pointRepository.save(point);
+        }
 
     }
 

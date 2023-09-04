@@ -30,7 +30,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom{
                 .from(point1)
                 .join(point1.user, user)
                 .on(user.uuid.eq(uuid))
-                .where(point1.type.eq(일반적립).
+                .where(point1.type.eq(결제적립).
                                 or(point1.type.eq(이벤트적립)),
                         point1.createdDate.year().eq(currentYear))
                 .fetchOne();
@@ -46,8 +46,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom{
                 .from(point1)
                 .join(point1.user, user)
                 .on(user.uuid.eq(uuid))
-                .where(point1.type.eq(일반사용).
-                                or(point1.type.eq(이벤트사용)),
+                .where(point1.type.eq(이벤트사용),
                         point1.createdDate.year().eq(currentYear))
                 .fetchOne();
         return result != null ? result : 0;
@@ -60,7 +59,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom{
                 .from(point1)
                 .join(point1.user, user)
                 .join(point1.receipt, receipt)
-                .where(user.uuid.eq(uuid).and((point1.type.eq(일반적립)
+                .where(user.uuid.eq(uuid).and((point1.type.eq(결제적립)
                                 .or(point1.type.eq(이벤트적립)))))
                 .fetchOne();
         return result != null ? result : 0;
@@ -73,7 +72,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom{
                 .from(point1)
                 .join(point1.user, user)
                 .on(user.uuid.eq(uuid))
-                .where(point1.type.eq(일반적립)
+                .where(point1.type.eq(결제적립)
                         .or(point1.type.eq(이벤트적립)))
                 .fetchOne();
         return result != null ? result : 0;
@@ -86,7 +85,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom{
                 .from(point1)
                 .join(point1.user, user)
                 .on(user.uuid.eq(uuid))
-                .where(point1.type.eq(일반적립)
+                .where(point1.type.eq(결제적립)
                         .or(point1.type.eq(이벤트적립)))
                 .groupBy(point1.receipt.alliance)
                 .orderBy(receipt.alliance.count().desc())
@@ -101,7 +100,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom{
                 .from(point1)
                 .join(point1.user, user)
                 .on(user.uuid.eq(uuid))
-                .where(point1.type.eq(일반적립)
+                .where(point1.type.eq(결제적립)
                         .or(point1.type.eq(이벤트적립)))
                 .groupBy(point1.receipt.alliance)
                 .orderBy(receipt.alliance.count().desc())
