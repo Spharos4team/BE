@@ -24,7 +24,7 @@ public class PointCardController {
                 .number(pointCardCreateVo.getNumber())
                 .agency(pointCardCreateVo.getAgency())
                 .UUID(UUID)
-                .pointCardType(pointCardCreateVo.getPointCardType())
+                .type(pointCardCreateVo.getType())
                 .build();
 
         pointCardService.createPointCard(UUID, pointCardCreateDto);

@@ -14,6 +14,6 @@ public class PointCardCreateVo {
     private String number;
     private String agency;
     private String UUID;
-    private String pointCardType;
+    private String type;
 
 }

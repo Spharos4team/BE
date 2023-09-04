@@ -22,24 +22,38 @@ public class PointController {
     // 포인트 생성
     @PostMapping("/point")
     public void createPoint(@RequestParam("UUID") String UUID, @RequestBody PointCreateVo pointCreateVo) {
-        PointCreateDto pointCreateDto = PointCreateDto.builder()
-                .point(pointCreateVo.getPoint())
-                .title(pointCreateVo.getTitle())
-                .content(pointCreateVo.getContent())
-                .type(pointCreateVo.getType())
-                .receipt(PointCreateDto.ReceiptDto.builder()
-                        .alliance(pointCreateVo.getReceipt().getAlliance())
-                        .brand(pointCreateVo.getReceipt().getBrand())
-                        .storeName(pointCreateVo.getReceipt().getStoreName())
-                        .number(pointCreateVo.getReceipt().getNumber())
-                        .amount(pointCreateVo.getReceipt().getAmount())
-                        .receiptPoint(pointCreateVo.getReceipt().getPoint()) // 변경된 필드명
-                        .cardName(pointCreateVo.getReceipt().getCardName())
-                        .cardNumber(pointCreateVo.getReceipt().getCardNumber())
-                        .build())
-                .build();
+        if (pointCreateVo.getType().equals("1")) {
+            PointCreateDto pointCreateDto = PointCreateDto.builder()
+                    .point(pointCreateVo.getPoint())
+                    .title(pointCreateVo.getTitle())
+                    .content(pointCreateVo.getContent())
+                    .used(pointCreateVo.getUsed())
+                    .type(pointCreateVo.getType())
+                    .receipt(PointCreateDto.ReceiptDto.builder()
+                            .alliance(pointCreateVo.getReceipt().getAlliance())
+                            .brand(pointCreateVo.getReceipt().getBrand())
+                            .storeName(pointCreateVo.getReceipt().getStoreName())
+                            .number(pointCreateVo.getReceipt().getNumber())
+                            .amount(pointCreateVo.getReceipt().getAmount())
+                            .receiptPoint(pointCreateVo.getReceipt().getPoint()) // 변경된 필드명
+                            .cardName(pointCreateVo.getReceipt().getCardName())
+                            .cardNumber(pointCreateVo.getReceipt().getCardNumber())
+                            .build())
+                    .build();
 
-        pointService.createPoint(UUID, pointCreateDto);
+            pointService.createPoint(UUID, pointCreateDto);
+        } else {
+            PointCreateDto pointCreateDto = PointCreateDto.builder()
+                    .point(pointCreateVo.getPoint())
+                    .title(pointCreateVo.getTitle())
+                    .content(pointCreateVo.getContent())
+                    .used(pointCreateVo.getUsed())
+                    .type(pointCreateVo.getType())
+                    .build();
+
+            pointService.createPoint(UUID, pointCreateDto);
+        }
+
     }
 
     // 포인트 목록
