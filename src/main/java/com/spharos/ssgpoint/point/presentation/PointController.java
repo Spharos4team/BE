@@ -5,9 +5,7 @@ import com.spharos.ssgpoint.point.dto.PointCreateDto;
 import com.spharos.ssgpoint.point.dto.PointGetDto;
 import com.spharos.ssgpoint.point.vo.PointCreateVo;
 import com.spharos.ssgpoint.point.vo.PointGetVo;
-import com.spharos.ssgpoint.user.dto.TermUpdateDto;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
