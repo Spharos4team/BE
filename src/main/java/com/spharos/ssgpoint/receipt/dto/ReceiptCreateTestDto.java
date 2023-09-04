@@ -8,7 +8,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReceiptCreateDto {
+public class ReceiptCreateTestDto {
 
     private String alliance;
     private String brand;

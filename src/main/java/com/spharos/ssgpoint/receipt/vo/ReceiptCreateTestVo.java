@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReceiptCreateVo {
+public class ReceiptCreateTestVo {
 
     private String alliance;
     private String brand;

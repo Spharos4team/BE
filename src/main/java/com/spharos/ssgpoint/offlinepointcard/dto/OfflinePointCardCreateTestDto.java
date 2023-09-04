@@ -8,11 +8,12 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OfflinePointCardCreateDto {
+public class OfflinePointCardCreateTestDto {
 
     private String number;
     private Integer CVC;
     private String alliance;
     private String store;
+    private Integer status;
 
 }
