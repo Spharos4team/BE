@@ -45,7 +45,7 @@ public class OfflinePointCardServiceImpl implements OfflinePointCardService {
                     .number(offlinePointCard.getNumber())
                     .agency(offlinePointCard.getAlliance())
                     .UUID(UUID)
-                    .pointCardType("OFF")
+                    .type("OFF")
                     .createdDate(LocalDate.from(offlinePointCard.getCreatedDate()))
                     .build();
             pointCardService.createPointCard(UUID, pointCardCreateDto);
