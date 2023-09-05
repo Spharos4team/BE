@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface TemporaryCardService {
 
-    // 임시 발급 카드 조회
-    List<TemporaryCardGetDto> getTemporaryCardByNumber(String number);
+    // 임시 발급 카드를 포인트 카드에 등록
+    void createTemporaryCardByNumber(String UUID, TemporaryCardGetDto temporaryCardGetDto);
 
 }
