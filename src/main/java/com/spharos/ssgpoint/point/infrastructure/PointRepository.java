@@ -1,8 +1,10 @@
 package com.spharos.ssgpoint.point.infrastructure;
 
 import com.spharos.ssgpoint.point.domain.Point;
+import jakarta.persistence.LockModeType;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -24,12 +26,22 @@ public interface PointRepository extends JpaRepository<Point, Long> , PointRepos
             + " ORDER BY p.createdDate DESC ")
     Page<Point> findBySavePoint(@Param("uuid") String uuid, Pageable pageRequest);
 
-    @Query("SELECT p FROM Point p"
+
+
+
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT p.totalPoint FROM Point p"
             + " JOIN p.user u on u.id = p.user.id"
             + " WHERE u.uuid = :uuid"
             + " ORDER BY p.id DESC LIMIT 1")
-    List<Point> findByUserIdOrderById(@Param("uuid") String uuid);
+    Integer findByUserIdOrderById(@Param("uuid") String uuid);
 
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT p.totalPoint FROM Point p where p.user.id = :user_id order by p.createdDate desc")
+    Integer findTotalPoint(@Param("user_id") Long user_id);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
     Long countByUserId(Long user_id);
 
 }

@@ -45,7 +45,17 @@ public class PointRepositoryImpl implements PointRepositoryCustom{
                 .limit(pageable.getPageSize())
                 .fetchResults();
         List<Point> results = result.getResults();
-        return new PageImpl<>(results, pageable, result.getTotal());
+
+        long total = queryFactory
+                .select(point1)
+                .from(point1)
+                .where(pointUseEq(pointUse), pointTypeEq(pointType),point1.user.id.eq(userId), point1.createdDate.between(startDate.atStartOfDay(), endDate.atStartOfDay()))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetchCount();
+
+
+        return new PageImpl<>(results, pageable, total);
     }
 
     private BooleanExpression pointUseEq(String pointUse) {
@@ -66,6 +76,13 @@ public class PointRepositoryImpl implements PointRepositoryCustom{
         } else {
             return null;
         }}
+
+
+
+
+
+
+
 
 
 }

@@ -9,6 +9,7 @@ import com.spharos.ssgpoint.point.vo.PointFilterVo;
 import com.spharos.ssgpoint.receipt.domain.Receipt;
 import com.spharos.ssgpoint.user.domain.User;
 import com.spharos.ssgpoint.user.infrastructure.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +30,7 @@ public class PointServiceImpl implements PointService {
 
     // 포인트 생성
     @Override
+    @Transactional
     public void createPoint(String UUID, PointCreateDto pointCreateDto) {
         PointType pointType
                 = new PointTypeConverter().convertToEntityAttribute(pointCreateDto.getType());
@@ -37,20 +40,20 @@ public class PointServiceImpl implements PointService {
                 new IllegalArgumentException("UUID 정보 없음 = " + UUID));
 
         // totalPoint 계산
-        List<Point> pointList = pointRepository.findByUserIdOrderById(user.getUuid());
+        Integer totalpoint = pointRepository.findByUserIdOrderById(user.getUuid());
         Long count = pointRepository.countByUserId(user.getId());
 
-        int calctotalPoint = 0;
+        int calctotalPoint;
 
         if (count.equals(0L)) {
             calctotalPoint = pointCreateDto.getPoint();
-        } else {
-            for (Point point : pointList) {
-                if (pointStatusType.getCode().equals("0") || pointStatusType.getCode().equals("2")) {
-                    calctotalPoint = point.getTotalPoint() + pointCreateDto.getPoint();
-                } else if (pointStatusType.getCode().equals("1")) {
-                    calctotalPoint = point.getTotalPoint() - pointCreateDto.getPoint();
-                }
+        }
+        else {
+            if (pointStatusType.getCode().equals("0") || pointStatusType.getCode().equals("2")) {
+                calctotalPoint= totalpoint + pointCreateDto.getPoint();
+            }
+            else{
+                calctotalPoint= totalpoint - pointCreateDto.getPoint();
             }
         }
 
