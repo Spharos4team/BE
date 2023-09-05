@@ -4,10 +4,13 @@ import com.spharos.ssgpoint.point.domain.*;
 import com.spharos.ssgpoint.point.dto.PointCreateDto;
 import com.spharos.ssgpoint.point.dto.PointGetDto;
 import com.spharos.ssgpoint.point.infrastructure.PointRepository;
+import com.spharos.ssgpoint.point.vo.PointCreateVo;
+import com.spharos.ssgpoint.point.vo.PointFilterVo;
 import com.spharos.ssgpoint.receipt.domain.Receipt;
 import com.spharos.ssgpoint.user.domain.User;
 import com.spharos.ssgpoint.user.infrastructure.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +20,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PointServiceImpl implements PointService {
 
     private final UserRepository userRepository;
@@ -119,7 +123,15 @@ public class PointServiceImpl implements PointService {
         User user = userRepository.findByUuid(UUID).orElseThrow(() ->
                 new IllegalArgumentException("UUID 정보 없음 = " + UUID));
 
-        Slice<Point> pointList = pointRepository.findBySavePoint(user.getUuid(),page);
+        Page<Point> pointList = pointRepository.findBySavePoint(user.getUuid(), page);
+        return pointList.map(m -> new PointGetDto(m.getPoint(),
+                m.getTitle(), m.getContent(), m.getType().getCode(), m.getCreatedDate())).stream().toList();
+    }
+
+    @Override
+    public List<PointGetDto> test(String UUID, Pageable page, PointFilterVo p) {
+
+        Page<Point> pointList = pointRepository.findByFilter(UUID,p.getStartDate(),p.getEndDate(),p.getPointUse(),p.getPointType(),page);
         return pointList.map(m -> new PointGetDto(m.getPoint(),
                 m.getTitle(), m.getContent(), m.getType().getCode(), m.getCreatedDate())).stream().toList();
     }

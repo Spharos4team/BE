@@ -12,7 +12,10 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PointFilterVo {
+
     private LocalDate startDate;
-    private LocalDate endtDate;
+    private LocalDate endDate;
+    private String pointUse;
+    private String pointType;
 
 }

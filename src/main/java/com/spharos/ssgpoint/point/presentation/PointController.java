@@ -4,6 +4,7 @@ import com.spharos.ssgpoint.point.application.PointService;
 import com.spharos.ssgpoint.point.dto.PointCreateDto;
 import com.spharos.ssgpoint.point.dto.PointGetDto;
 import com.spharos.ssgpoint.point.vo.PointCreateVo;
+import com.spharos.ssgpoint.point.vo.PointFilterVo;
 import com.spharos.ssgpoint.point.vo.PointGetVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -92,5 +93,15 @@ public class PointController {
                         .build()
         ).toList();
     }
+
+    /**
+     * 포인트 내역 필터
+     */
+    @GetMapping("/test")
+    public List<PointGetDto> pointListFilter(@RequestParam("UUID") String UUID,@PageableDefault(size=10, sort="createdDate") Pageable pageRequest
+    , @RequestBody PointFilterVo pointFilterVo) {
+        return pointService.test(UUID, pageRequest,pointFilterVo);
+    }
+
 
 }
