@@ -16,6 +16,7 @@ public interface PointGiftService {
     // 포인트 선물 수락/거절
     void updatePoint(Long id, String status);
 
+    // TODO: 안 쓰면 삭제
     // 포인트 선물 목록 (테스트 용)
     List<PointGiftGetDto> getPointGiftByUser(String UUID);
 

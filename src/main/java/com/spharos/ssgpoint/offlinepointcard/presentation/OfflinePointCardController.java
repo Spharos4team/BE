@@ -16,6 +16,7 @@ public class OfflinePointCardController {
 
     private final OfflinePointCardService offlinePointCardService;
 
+    // TODO: 안 쓰면 삭제
     // 오프라인 포인트 카드 생성 (테스트 용)
     @PostMapping("/offline-point-card/test")
     public void createOfflinePointCardTest(@RequestBody OfflinePointCardCreateTestVo offlinePointCardCreateVo) {

@@ -118,6 +118,7 @@ public class PointGiftServiceImpl implements PointGiftService {
 
     }
 
+    // TODO: 안 쓰면 삭제
     // 포인트 선물 목록 (테스트 용)
     @Override
     public List<PointGiftGetDto> getPointGiftByUser(String UUID) {

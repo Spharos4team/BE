@@ -5,6 +5,7 @@ import com.spharos.ssgpoint.offlinepointcard.dto.OfflinePointCardCreateTestDto;
 
 public interface OfflinePointCardService {
 
+    // TODO: 안 쓰면 삭제
     // 오프라인 포인트 카드 생성 (테스트 용)
     void createOfflinePointCardTest(OfflinePointCardCreateTestDto offlinePointCardCreateDto);
     
