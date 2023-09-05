@@ -3,8 +3,10 @@ package com.spharos.ssgpoint.pointgift.presentation;
 import com.spharos.ssgpoint.pointgift.application.PointGiftService;
 import com.spharos.ssgpoint.pointgift.dto.PointGiftCreateDto;
 import com.spharos.ssgpoint.pointgift.dto.PointGiftGetDto;
+import com.spharos.ssgpoint.pointgift.dto.PointGiftUserGetDto;
 import com.spharos.ssgpoint.pointgift.vo.PointGiftCreateVo;
 import com.spharos.ssgpoint.pointgift.vo.PointGiftGetVo;
+import com.spharos.ssgpoint.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +22,16 @@ public class PointGiftController {
 
     // 포인트 선물 수신인 확인
     @GetMapping("/point/gift/user")
-    public String getPointGiftUser(@RequestParam("phone") String phone, @RequestParam("name") String name) {
-        return pointGiftService.getPointGiftUser(phone, name);
+    public ResponseEntity<PointGiftUserGetDto> getPointGiftUser(@RequestParam("phone") String phone, @RequestParam("name") String name) {
+        User user = pointGiftService.getPointGiftUser(phone, name);
+
+        PointGiftUserGetDto pointGiftUserGetDto = PointGiftUserGetDto.builder()
+                .loginId(user.getLoginId())
+                .name(user.getName())
+                .phone(user.getPhone())
+                .build();
+
+        return ResponseEntity.ok(pointGiftUserGetDto);
     }
 
     // 포인트 선물 보내기
