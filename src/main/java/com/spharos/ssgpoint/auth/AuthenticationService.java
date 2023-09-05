@@ -153,11 +153,8 @@ public class AuthenticationService {
         String refreshToken = jwtTokenProvider.generateRefreshToken(user);
         String uuid = jwtTokenProvider.getUUID(accessToken);
 
-
-        Point pointByUUID = userRepository.findTotalByUuid(uuid);
-        int totalPoint = (pointByUUID != null) ? pointByUUID.getTotalPoint() : 0;
-
-        log.info("uuid is: {}" , uuid);
+        Optional<Point> totalByUuid = userRepository.findTotalByUuid(uuid);
+        int totalPoint = (totalByUuid.isPresent()) ? totalByUuid.get().getTotalPoint() : 0;
 
         log.info("accessToken is : {}" , accessToken);
         log.info("refreshToken is : {}" , refreshToken);
@@ -257,14 +254,7 @@ public class AuthenticationService {
                 .build();
 
 
-
     }
-
-
-
-
-
-
 
 
     /**
@@ -276,35 +266,8 @@ public class AuthenticationService {
         String uuid = jwtTokenProvider.getUUID(refreshToken);
         log.info("u is : {}" , uuid);
         redisTemplate.delete(uuid); //Token 삭제
-        /*if (redisTemplate.opsForValue().get("JWT_TOKEN:" + admin.getLoginId()) != null) {
-            redisTemplate.delete("JWT_TOKEN:" + admin.getLoginId()); //Token 삭제
-        }*/
-    }
-
-
-
-
-
-
-
-
-
-
-    /*private void saveUserToken(User user, String refreshToken) {
-
 
     }
-
-    private void revokeAllUserTokens(User user) {
-        var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getUuid());
-        if (validUserTokens.isEmpty())
-            return;
-        validUserTokens.forEach(token -> {
-            token.setExpired(true);
-            token.setRevoked(true);
-        });
-        tokenRepository.saveAll(validUserTokens);
-    }*/
 
 
 }

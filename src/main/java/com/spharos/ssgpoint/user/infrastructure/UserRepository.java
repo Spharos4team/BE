@@ -22,6 +22,6 @@ public interface UserRepository extends JpaRepository<User, Long>, UserRepositor
     Optional<UserTermList> findTermJsonByUuid(@Param("uuid") String uuid);
 
     @Query("SELECT p from Point p join p.user u where u.uuid = :uuid order by p.updatedDate desc limit 1")
-    Point findTotalByUuid(@Param("uuid") String uuid);
+    Optional<Point> findTotalByUuid(@Param("uuid") String uuid);
 
 }

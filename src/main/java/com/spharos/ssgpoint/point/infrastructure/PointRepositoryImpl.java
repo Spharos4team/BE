@@ -46,15 +46,13 @@ public class PointRepositoryImpl implements PointRepositoryCustom{
                 .fetchResults();
         List<Point> results = result.getResults();
         return new PageImpl<>(results, pageable, result.getTotal());
-
     }
-
 
     private BooleanExpression pointUseEq(String pointUse) {
         if ("1".equals(pointUse)) { // 적립
             return point1.statusType.eq(적립);
-        } else if ("2".equals(pointUse)) {
-            return point1.statusType.in(사용);
+        } else if ("2".equals(pointUse)) { // 사용
+            return point1.statusType.in(사용, 사용취소);
         } else {
             return null;
         }

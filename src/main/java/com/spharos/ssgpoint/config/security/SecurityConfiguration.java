@@ -17,6 +17,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -43,7 +46,8 @@ public class SecurityConfiguration {
         return httpSecurity
                 .csrf(CsrfConfigurer::disable)
                 .authorizeHttpRequests(
-                        authorizeHttpRequests -> authorizeHttpRequests
+                        authorizeHttpRequests -> authorizeHttpRequests.requestMatchers(org.springframework.web.cors.CorsUtils::isPreFlightRequest)
+                                .permitAll()
                                 .requestMatchers("/api/v1/auth/**","/swagger-ui/**", "/swagger-resources/**", "/api-docs/**","/v3/**")
                                 .permitAll()
                                 .anyRequest()
@@ -63,5 +67,17 @@ public class SecurityConfiguration {
 
 
     }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource () {
+        return request -> {
+            var cors = new org.springframework.web.cors.CorsConfiguration();
+            cors.setAllowedOriginPatterns(List.of("*"));
+            cors.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+            cors.setAllowedHeaders(List.of("*"));
+            return cors;
+        };
+    }
+
 
 }

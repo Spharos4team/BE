@@ -5,7 +5,11 @@ import com.spharos.ssgpoint.user.application.UserService;
 import com.spharos.ssgpoint.user.dto.password.PasswordUpdateDto;
 import com.spharos.ssgpoint.user.dto.shoppinghistory.*;
 import com.spharos.ssgpoint.user.dto.user.*;
-import com.spharos.ssgpoint.user.vo.*;
+import com.spharos.ssgpoint.user.vo.password.PasswordUpdateInfo;
+import com.spharos.ssgpoint.user.vo.user.TermUpdateInfo;
+import com.spharos.ssgpoint.user.vo.user.UserGetOut;
+import com.spharos.ssgpoint.user.vo.user.UserSignUpIn;
+import com.spharos.ssgpoint.user.vo.user.UserUpdateIn;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -163,7 +167,7 @@ public class UserController {
 
         userCompositeDto.setPointGetDto(userService.getPoint(UUID));
         userCompositeDto.setUserSavePointDto(userService.getSavePoint(UUID));
-       // userCompositeDto.setUserUsePointDto(userService.getUsePoint(UUID));
+        userCompositeDto.setUserUsePointDto(userService.getUsePoint(UUID));
         userCompositeDto.setVisitedCountDto(userService.getVisitedCount(UUID));
         userCompositeDto.setTotalPointDtoByReceipt(userService.getTotalPoint(UUID));
         userCompositeDto.setFrequentBrandTop3Dto(userService.getFrequentBrandTop3Count(UUID));

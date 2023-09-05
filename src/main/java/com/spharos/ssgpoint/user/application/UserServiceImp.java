@@ -169,8 +169,15 @@ public class UserServiceImp implements UserService{
      */
     @Override
     public PointGetDto getPoint(String UUID) {
-        Point topByUuid = userRepository.findTotalByUuid(UUID);
-        Integer totalPoint = topByUuid.getTotalPoint();
+        Integer totalPoint;
+        Optional<Point> totalByUuid = userRepository.findTotalByUuid(UUID);
+
+        if (!totalByUuid.isPresent()) {
+            totalPoint = 0;
+        } else {
+            totalPoint = totalByUuid.get().getTotalPoint();
+        }
+
         return PointGetDto.builder()
                 .totalPoint(totalPoint)
                 .build();
