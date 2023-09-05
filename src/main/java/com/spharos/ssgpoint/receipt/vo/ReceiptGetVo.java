@@ -11,7 +11,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ReceiptGetVo {
 
+    private String alliance;
+    private String brand;
     private String storeName;
+    private String number;
     private Integer point;
 
 }

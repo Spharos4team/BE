@@ -9,11 +9,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OfflinePointCardCreateVo {
+public class OfflinePointCardCreateTestVo {
 
     private String number;
     private Integer CVC;
     private String alliance;
     private String store;
+    private Integer status;
 
 }

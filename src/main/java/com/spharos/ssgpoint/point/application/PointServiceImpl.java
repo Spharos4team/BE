@@ -1,8 +1,6 @@
 package com.spharos.ssgpoint.point.application;
 
-import com.spharos.ssgpoint.point.domain.Point;
-import com.spharos.ssgpoint.point.domain.PointType;
-import com.spharos.ssgpoint.point.domain.PointTypeConverter;
+import com.spharos.ssgpoint.point.domain.*;
 import com.spharos.ssgpoint.point.dto.PointCreateDto;
 import com.spharos.ssgpoint.point.dto.PointGetDto;
 import com.spharos.ssgpoint.point.infrastructure.PointRepository;
@@ -26,7 +24,10 @@ public class PointServiceImpl implements PointService {
     // 포인트 생성
     @Override
     public void createPoint(String UUID, PointCreateDto pointCreateDto) {
-        PointType pointType = new PointTypeConverter().convertToEntityAttribute(pointCreateDto.getType());
+        PointType pointType
+                = new PointTypeConverter().convertToEntityAttribute(pointCreateDto.getType());
+        PointStatusType pointStatusType
+                = new PointStatusTypeConverter().convertToEntityAttribute(pointCreateDto.getStatusType());
         User user = userRepository.findByUuid(UUID).orElseThrow(() ->
                 new IllegalArgumentException("UUID 정보 없음 = " + UUID));
 
@@ -34,46 +35,59 @@ public class PointServiceImpl implements PointService {
         List<Point> pointList = pointRepository.findByUserIdOrderById(user.getUuid());
         Long count = pointRepository.countByUserId(user.getId());
 
-        int totalPoint = 0;
+        int calctotalPoint = 0;
 
         if (count.equals(0L)) {
-            totalPoint = pointCreateDto.getPoint();
+            calctotalPoint = pointCreateDto.getPoint();
         } else {
             for (Point point : pointList) {
-                if (pointType.getCode().equals("1") || pointType.getCode().equals("2")
-                        || pointType.getCode().equals("6") || pointType.getCode().equals("7")
-                        || pointType.getCode().equals("8")) {
-                    totalPoint = point.getTotalPoint() + pointCreateDto.getPoint();
-                }
-                if (pointType.getCode().equals("3") || pointType.getCode().equals("4")
-                        || pointType.getCode().equals("5") || pointType.getCode().equals("9")) {
-                    totalPoint = point.getTotalPoint() - pointCreateDto.getPoint();
+                if (pointStatusType.getCode().equals("0") || pointStatusType.getCode().equals("2")) {
+                    calctotalPoint = point.getTotalPoint() + pointCreateDto.getPoint();
+                } else if (pointStatusType.getCode().equals("1")) {
+                    calctotalPoint = point.getTotalPoint() - pointCreateDto.getPoint();
                 }
             }
         }
 
-        Receipt receipt = Receipt.builder()
-                .alliance(pointCreateDto.getReceipt().getAlliance())
-                .brand(pointCreateDto.getReceipt().getBrand())
-                .cardName(pointCreateDto.getReceipt().getCardName())
-                .number(pointCreateDto.getReceipt().getNumber())
-                .storeName(pointCreateDto.getReceipt().getStoreName())
-                .amount(pointCreateDto.getReceipt().getAmount())
-                .cardNumber(pointCreateDto.getReceipt().getCardNumber())
-                .point(pointCreateDto.getReceipt().getReceiptPoint())
-                .build();
+        // 결제적립
+        if (pointCreateDto.getType().equals("1")) {
+            Receipt receipt = Receipt.builder()
+                    .alliance(pointCreateDto.getReceipt().getAlliance())
+                    .brand(pointCreateDto.getReceipt().getBrand())
+                    .storeName(pointCreateDto.getReceipt().getStoreName())
+                    .number(pointCreateDto.getReceipt().getNumber())
+                    .amount(pointCreateDto.getReceipt().getAmount())
+                    .point(pointCreateDto.getReceipt().getReceiptPoint())
+                    .cardName(pointCreateDto.getReceipt().getCardName())
+                    .cardNumber(pointCreateDto.getReceipt().getCardNumber())
+                    .status(1)
+                    .build();
 
-        Point build = Point.builder()
-                .totalPoint(totalPoint)
-                .point(pointCreateDto.getPoint())
-                .title(pointCreateDto.getTitle())
-                .content(pointCreateDto.getContent())
-                .type(pointType)
-                .user(user)
-                .receipt(receipt)
-                .build();
-        pointRepository.save(build);
+            Point point = Point.builder()
+                    .totalPoint(calctotalPoint)
+                    .point(pointCreateDto.getPoint())
+                    .title(pointCreateDto.getTitle())
+                    .content(pointCreateDto.getContent())
+                    .statusType(pointStatusType)
+                    .type(pointType)
+                    .user(user)
+                    .receipt(receipt)
+                    .build();
 
+            pointRepository.save(point);
+        } else {
+            Point point = Point.builder()
+                    .totalPoint(calctotalPoint)
+                    .point(pointCreateDto.getPoint())
+                    .title(pointCreateDto.getTitle())
+                    .content(pointCreateDto.getContent())
+                    .statusType(pointStatusType)
+                    .type(pointType)
+                    .user(user)
+                    .build();
+
+            pointRepository.save(point);
+        }
 
     }
 
