@@ -7,6 +7,7 @@ import java.util.Optional;
 
 public interface OfflinePointCardRepository extends JpaRepository<OfflinePointCard, Long> {
 
-    Optional<OfflinePointCard> findByNumberAndCVCAndAllianceAndStore(String number, Integer CVC, String alliance, String store);
+    Optional<OfflinePointCard> findByNumberAndCVCAndAllianceAndStore(String number, Integer CVC,
+                                                                     String alliance, String store);
 
 }

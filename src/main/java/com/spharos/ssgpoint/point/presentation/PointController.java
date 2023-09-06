@@ -5,9 +5,7 @@ import com.spharos.ssgpoint.point.dto.PointCreateDto;
 import com.spharos.ssgpoint.point.dto.PointGetDto;
 import com.spharos.ssgpoint.point.vo.PointCreateVo;
 import com.spharos.ssgpoint.point.vo.PointGetVo;
-import com.spharos.ssgpoint.user.dto.TermUpdateDto;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,8 +20,9 @@ public class PointController {
     // 포인트 생성
     @PostMapping("/point")
     public void createPoint(@RequestParam("UUID") String UUID, @RequestBody PointCreateVo pointCreateVo) {
+        PointCreateDto pointCreateDto;
         if (pointCreateVo.getType().equals("1")) {
-            PointCreateDto pointCreateDto = PointCreateDto.builder()
+            pointCreateDto = PointCreateDto.builder()
                     .point(pointCreateVo.getPoint())
                     .title(pointCreateVo.getTitle())
                     .content(pointCreateVo.getContent())
@@ -41,9 +40,8 @@ public class PointController {
                             .build())
                     .build();
 
-            pointService.createPoint(UUID, pointCreateDto);
         } else {
-            PointCreateDto pointCreateDto = PointCreateDto.builder()
+            pointCreateDto = PointCreateDto.builder()
                     .point(pointCreateVo.getPoint())
                     .title(pointCreateVo.getTitle())
                     .content(pointCreateVo.getContent())
@@ -51,8 +49,8 @@ public class PointController {
                     .type(pointCreateVo.getType())
                     .build();
 
-            pointService.createPoint(UUID, pointCreateDto);
         }
+        pointService.createPoint(UUID, pointCreateDto);
 
     }
 

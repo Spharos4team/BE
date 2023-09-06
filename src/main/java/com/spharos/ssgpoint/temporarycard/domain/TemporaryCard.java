@@ -32,4 +32,11 @@ public class TemporaryCard {
     @Column(nullable = false, length = 20)
     private String agency;
 
+    @Column(nullable = false, columnDefinition = "int default 0")
+    private Integer status;
+
+    public void update(Integer status) {
+        this.status = status;
+    }
+
 }
