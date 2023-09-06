@@ -58,7 +58,13 @@ public class PointController {
 
     }
 
-    // 포인트 목록
+
+
+
+
+
+
+    // 포인트필터 목록
     @GetMapping("/test")
     public List<PointGetDto> pointListFilter(@RequestParam("UUID") String UUID,
                                              @RequestParam(value = "lastId", required = false) Long lastId,

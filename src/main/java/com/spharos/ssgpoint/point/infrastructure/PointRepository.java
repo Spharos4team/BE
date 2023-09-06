@@ -28,8 +28,6 @@ public interface PointRepository extends JpaRepository<Point, Long> , PointRepos
 
 
 
-
-
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT p.totalPoint FROM Point p"
             + " JOIN p.user u on u.id = p.user.id"
@@ -43,5 +41,9 @@ public interface PointRepository extends JpaRepository<Point, Long> , PointRepos
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     Long countByUserId(Long user_id);
+
+    @Query("select p from Point p where p.user.id = :user_id")
+    Point findByUserId(String userId);
+
 
 }

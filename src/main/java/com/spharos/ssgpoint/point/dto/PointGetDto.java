@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 @Builder
-
+@AllArgsConstructor
 @NoArgsConstructor
 public class PointGetDto {
 
@@ -18,6 +18,7 @@ public class PointGetDto {
     private String title;
     private String content;
     private String type;
+    private String statusType;
     private LocalDateTime createdDate;
 
     @QueryProjection

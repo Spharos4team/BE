@@ -30,7 +30,7 @@ public class PointServiceImpl implements PointService {
     // 포인트 생성
     @Override
     @Transactional
-    public void createPoint(String UUID, PointCreateDto pointCreateDto) {
+    public Point createPoint(String UUID, PointCreateDto pointCreateDto) {
         PointType pointType
                 = new PointTypeConverter().convertToEntityAttribute(pointCreateDto.getType());
         PointStatusType pointStatusType
@@ -80,8 +80,7 @@ public class PointServiceImpl implements PointService {
                     .user(user)
                     .receipt(receipt)
                     .build();
-
-            pointRepository.save(point);
+             return pointRepository.save(point);
         } else {
             Point point = Point.builder()
                     .totalPoint(calctotalPoint)
@@ -93,7 +92,7 @@ public class PointServiceImpl implements PointService {
                     .user(user)
                     .build();
 
-            pointRepository.save(point);
+            return pointRepository.save(point);
         }
 
     }
@@ -133,9 +132,10 @@ public class PointServiceImpl implements PointService {
     @Override
     public List<PointGetDto> test(Long id, String UUID, Pageable page, PointFilterVo p) {
 
-        Page<Point> pointList = pointRepository.findByFilter(id, UUID,p.getStartDate(),p.getEndDate(),p.getPointUse(),p.getPointType(),page);
-        return pointList.map(m -> new PointGetDto(m.getPoint(),
-                m.getTitle(), m.getContent(), m.getType().getCode(), m.getCreatedDate())).stream().toList();
+        Slice<Point> byFilter = pointRepository.findByFilter(id, UUID, p.getStartDate(), p.getEndDate(), p.getPointUse(), p.getPointType(), page);
+        return byFilter.map(m -> new PointGetDto(m.getPoint(),
+                m.getTitle(), m.getContent(), m.getStatusType().getCode(),
+                m.getType().getCode(), m.getCreatedDate())).stream().toList();
     }
 
 }

@@ -28,14 +28,14 @@ public class PointRepositoryImpl implements PointRepositoryCustom{
     }
 
     @Override
-    public Page<Point> findByFilter(Long pointId, String uuid, LocalDate startDate,LocalDate endDate, String pointUse, String pointType,  Pageable pageable) {
+    public Slice<Point> findByFilter(Long pointId, String uuid, LocalDate startDate,LocalDate endDate, String pointUse, String pointType,  Pageable pageable) {
 
         Long userId = queryFactory.select(user.id)
                 .from(user)
                 .where(user.uuid.eq(uuid))
                 .fetchOne();
 
-        QueryResults<Point> result = queryFactory
+        List<Point> results = queryFactory
                 .select(point1)
                 .from(point1)
                 .where(ltStoreId(pointId),
@@ -44,19 +44,18 @@ public class PointRepositoryImpl implements PointRepositoryCustom{
                         point1.createdDate.between(startDate.atStartOfDay(), endDate.atStartOfDay()))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .fetchResults();
-        List<Point> results = result.getResults();
+                .fetch();
 
-        long total = queryFactory
+
+        /*long total = queryFactory
                 .select(point1)
                 .from(point1)
                 .where(pointUseEq(pointUse), pointTypeEq(pointType),point1.user.id.eq(userId), point1.createdDate.between(startDate.atStartOfDay(), endDate.atStartOfDay()))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .fetchCount();
+                .fetchCount();*/
 
-
-        return new PageImpl<>(results, pageable, total);
+        return checkLastPage(pageable, results);
     }
 
     private BooleanExpression pointUseEq(String pointUse) {
