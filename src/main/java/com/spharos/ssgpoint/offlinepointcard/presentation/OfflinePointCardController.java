@@ -7,6 +7,7 @@ import com.spharos.ssgpoint.offlinepointcard.vo.OfflinePointCardCreateTestVo;
 import com.spharos.ssgpoint.offlinepointcard.vo.OfflinePointCardCreateVo;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,6 +17,7 @@ public class OfflinePointCardController {
 
     private final OfflinePointCardService offlinePointCardService;
 
+    // TODO: 안 쓰면 삭제
     // 오프라인 포인트 카드 생성 (테스트 용)
     @PostMapping("/offline-point-card/test")
     public void createOfflinePointCardTest(@RequestBody OfflinePointCardCreateTestVo offlinePointCardCreateVo) {
@@ -28,8 +30,8 @@ public class OfflinePointCardController {
 
     // 오프라인 포인트 카드 등록
     @PostMapping("/offline-point-card")
-    public void createOfflinePointCard(@RequestParam("UUID") String UUID,
-                                       @RequestBody OfflinePointCardCreateVo offlinePointCardCreateVo) {
+    public ResponseEntity<String> createOfflinePointCard(@RequestParam("UUID") String UUID,
+                                                         @RequestBody OfflinePointCardCreateVo offlinePointCardCreateVo) {
         OfflinePointCardCreateDto offlinePointCardCreateDto = OfflinePointCardCreateDto.builder()
                 .number(offlinePointCardCreateVo.getNumber())
                 .CVC(offlinePointCardCreateVo.getCVC())
@@ -38,6 +40,8 @@ public class OfflinePointCardController {
                 .build();
 
         offlinePointCardService.createOfflinePointCard(UUID, offlinePointCardCreateDto);
+
+        return ResponseEntity.ok("신규 포인트 카드 생성 완료");
     }
 
 }

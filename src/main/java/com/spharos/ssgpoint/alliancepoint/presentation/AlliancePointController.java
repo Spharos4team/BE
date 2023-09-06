@@ -32,7 +32,7 @@ public class AlliancePointController {
     }
 
     // 제휴사 포인트 조회
-    @GetMapping("/alliance-point/all")
+    @GetMapping("/alliance-point")
     public List<AlliancePointGetVo> getAlliancePointByUUID(@RequestParam("UUID") String UUID) {
         List<AlliancePointGetDto> alliancePointGetDtoList
                 = alliancePointService.getAlliancePointByUUID(UUID);
@@ -48,13 +48,13 @@ public class AlliancePointController {
     // 제휴사 포인트 전환
     @PutMapping("/alliance-point")
     public void updateAlliancePoint(@RequestParam("UUID") String UUID, @RequestParam("type") String type,
-                                    @RequestParam("access") String access,
+                                    @RequestParam("status") String status,
                                     @RequestBody AlliancePointUpdateVo alliancePointUpdateVo) {
         AlliancePointUpdateDto alliancePointUpdateDto = AlliancePointUpdateDto.builder()
                 .point(alliancePointUpdateVo.getPoint())
                 .build();
 
-        alliancePointService.updateAlliancePoint(UUID, type, access, alliancePointUpdateDto);
+        alliancePointService.updateAlliancePoint(UUID, type, status, alliancePointUpdateDto);
     }
 
 }

@@ -29,14 +29,12 @@ public class PointGiftServiceImpl implements PointGiftService {
 
     // 포인트 선물 수신인 확인
     @Override
-    public String getPointGiftUser(String phone, String name) {
-        Optional<User> user = userRepository.findByPhoneAndName(phone, name);
+    public User getPointGiftUser(String phone, String name) {
 
-        if (user.isEmpty()) {
-            return "입력하신 정보로 가입된 신세계포인트 회원이 없습니다." + System.lineSeparator() + "포인트 선물하기는 신세계포인트 회원에게만 가능합니다.";
-        }
-
-        return "선물하려는 분이 맞는지 확인해 주세요.";
+        return userRepository.findByPhoneAndName(phone, name).orElseThrow(() ->
+                new IllegalArgumentException("입력하신 정보로 가입된 신세계포인트 회원이 없습니다."
+                        + System.lineSeparator()
+                        + "포인트 선물하기는 신세계포인트 회원에게만 가능합니다."));
 
     }
 
@@ -48,7 +46,8 @@ public class PointGiftServiceImpl implements PointGiftService {
                 .point(pointGiftCreateDto.getPoint())
                 .title(pointGiftCreateDto.getName() + "(ID : " + pointGiftCreateDto.getLoginId() + ")")
                 .content("보낸 선물 : " + pointGiftCreateDto.getStatus())
-                .type("5")
+                .statusType("1")
+                .type("3")
                 .user(UUID)
                 .build();
 
@@ -91,7 +90,8 @@ public class PointGiftServiceImpl implements PointGiftService {
                     .point(pointGiftList.get().getPoint())
                     .title(sender.getName() + "(ID : " + sender.getLoginId() + ")")
                     .content("받은 선물 : " + pointGiftList.get().getStatus())
-                    .type("7")
+                    .statusType("0")
+                    .type("3")
                     .user(receiver.getUuid())
                     .build();
             pointService.createPoint(receiver.getUuid(), pointCreateDto);
@@ -107,7 +107,8 @@ public class PointGiftServiceImpl implements PointGiftService {
                     .point(pointGiftList.get().getPoint())
                     .title(receiver.getName() + "(ID : " + receiver.getLoginId() + ")")
                     .content("보낸 선물 : " + pointGiftList.get().getStatus())
-                    .type("6")
+                    .statusType("2")
+                    .type("3")
                     .user(sender.getUuid())
                     .build();
             pointService.createPoint(sender.getUuid(), pointCreateDto);
@@ -115,6 +116,7 @@ public class PointGiftServiceImpl implements PointGiftService {
 
     }
 
+    // TODO: 안 쓰면 삭제
     // 포인트 선물 목록 (테스트 용)
     @Override
     public List<PointGiftGetDto> getPointGiftByUser(String UUID) {
