@@ -13,13 +13,13 @@ import lombok.Setter;
 public class UserCouponDto {
 
     private Long id;
-    private String UUID;
+    private String uuid;
     private Long couponId;
     private boolean used;
 
     public UserCouponDto(UserCoupon userCoupon) {
         this.id = userCoupon.getId();
-        this.UUID = userCoupon.getUuid();
+        this.uuid = userCoupon.getUuid();
         this.couponId = userCoupon.getCoupon().getId();
         this.used = userCoupon.isUsed();
     }

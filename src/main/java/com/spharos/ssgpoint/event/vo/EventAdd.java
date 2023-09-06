@@ -1,13 +1,15 @@
 package com.spharos.ssgpoint.event.vo;
 
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.Date;
 import java.util.List;
 
 @Getter
-@ToString
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class EventAdd {
 
     private String title;
@@ -23,5 +25,7 @@ public class EventAdd {
     private Date startDate;
 
     private Date endDate;
+
+
 
 }

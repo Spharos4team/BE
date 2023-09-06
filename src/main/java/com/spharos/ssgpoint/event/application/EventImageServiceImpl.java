@@ -5,11 +5,14 @@ import com.spharos.ssgpoint.event.infrastructure.EventImageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
-public class EventImageServiceImple implements EventImageService {
+public class EventImageServiceImpl implements EventImageService {
 
     private final EventImageRepository eventImageRepository;
+
 
     @Override
     public void addEventImage(String imageUrl) {
@@ -19,8 +22,9 @@ public class EventImageServiceImple implements EventImageService {
     }
 
     @Override
-    public EventImage getEventImageById(Long id) {
+    public List<String> getEventImageById(Long id) {
         EventImage eventImage = eventImageRepository.findById(id).orElse(null);
-        return eventImage;
+        return (List<String>) eventImage;
     }
+
 }

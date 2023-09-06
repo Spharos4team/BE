@@ -1,10 +1,10 @@
 package com.spharos.ssgpoint.event.application;
 
-import com.spharos.ssgpoint.event.domain.EventImage;
+import java.util.List;
 
 public interface EventImageService {
 
     void addEventImage(String imageUrl);
-    EventImage getEventImageById(Long id);
 
+    List<String> getEventImageById(Long id);
 }

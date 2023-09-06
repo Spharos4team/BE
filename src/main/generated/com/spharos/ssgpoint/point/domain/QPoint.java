@@ -37,6 +37,8 @@ public class QPoint extends EntityPathBase<Point> {
 
     public final com.spharos.ssgpoint.receipt.domain.QReceipt receipt;
 
+    public final EnumPath<PointStatusType> statusType = createEnum("statusType", PointStatusType.class);
+
     public final StringPath title = createString("title");
 
     public final NumberPath<Integer> totalPoint = createNumber("totalPoint", Integer.class);

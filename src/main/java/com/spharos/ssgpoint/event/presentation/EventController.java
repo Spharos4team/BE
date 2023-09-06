@@ -77,9 +77,29 @@ public class EventController {
     }
 
     @PostMapping("/events/upload")
-    public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) throws IOException {
-        String imageUrl = s3Service.uploadFile(file);
-        return ResponseEntity.ok(imageUrl);
+    public ResponseEntity<String> uploadImage(
+                @RequestParam("thumb_file") MultipartFile thumbFile,
+                @RequestParam("other_files") List<MultipartFile> otherFiles,
+                @RequestParam("title") String title,
+                @RequestParam("content") String content
+            ) throws IOException {
+
+        boolean result = eventService.addAllEvent(thumbFile, otherFiles, title, content);
+
+        String body;
+        if(result){
+            body = "ok";
+        }else{
+            body = "fail";
+        }
+
+        return ResponseEntity.ok(body);
+    }
+
+    @GetMapping("/events/list")
+    public ResponseEntity<List<EventDto>> getEventsList() {
+        List<EventDto> eventsList = eventService.getEventsList();
+        return ResponseEntity.ok(eventsList);
     }
 
 

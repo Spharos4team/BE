@@ -1,30 +1,46 @@
 package com.spharos.ssgpoint.coupon.application;
 
-import com.spharos.ssgpoint.coupon.exception.UnknownStoreException;
-import lombok.RequiredArgsConstructor;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
 import java.util.Random;
 
 @Component
-@RequiredArgsConstructor
 public class StoreManager {
 
-    private final Map<String, String> storePrefixes = Map.of(
-            "이마트24", "${store.emart24.prefix}",
-            "이마트everyday", "${store.emarteveryday.prefix}",
-            "신세계백화점", "${store.shinsegae.prefix}",
-            "SpeedMate", "${store.speedmate.prefix}"
-    );
+    @Value("${store.emart24.prefix}")
+    private String emart24Prefix;
+
+    @Value("${store.emarteveryday.prefix}")
+    private String emarteverydayPrefix;
+
+    @Value("${store.shinsegae.prefix}")
+    private String shinsegaePrefix;
+
+    @Value("${store.speedmate.prefix}")
+    private String speedmatePrefix;
+
+    private Map<String, String> storePrefixes;
+
+    @PostConstruct
+    public void init() {
+        storePrefixes = Map.of(
+                "이마트24", emart24Prefix,
+                "이마트everyday", emarteverydayPrefix,
+                "신세계백화점", shinsegaePrefix,
+                "SpeedMate", speedmatePrefix
+        );
+    }
 
     public String generateCouponNumber(String storeName) {
-        String storePrefix = storePrefixes.getOrDefault(storeName, null);
+        String storePrefix = storePrefixes.get(storeName);
         if (storePrefix == null) {
-            throw new UnknownStoreException(storeName);
+            throw new IllegalArgumentException("Unknown store: " + storeName);
         }
         Random random = new Random();
-        String randomDigits = String.format("%012d", random.nextLong() % 1000000000000L);
+        String randomDigits = String.format("%012d", Math.abs(random.nextLong()) % 1000000000000L);
         return storePrefix + randomDigits;
     }
 }

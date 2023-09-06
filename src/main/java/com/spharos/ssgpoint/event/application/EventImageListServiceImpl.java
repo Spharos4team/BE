@@ -15,7 +15,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class EventImageListServiceImple implements EventImageListService {
+public class EventImageListServiceImpl implements EventImageListService {
 
     private final EventRepository eventRepository;
     private final EventImageRepository eventImageRepository;

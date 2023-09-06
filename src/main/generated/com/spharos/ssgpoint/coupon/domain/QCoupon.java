@@ -35,7 +35,7 @@ public class QCoupon extends EntityPathBase<Coupon> {
 
     public final BooleanPath isUsed = createBoolean("isUsed");
 
-    public final NumberPath<Integer> number = createNumber("number", Integer.class);
+    public final StringPath number = createString("number");
 
     public final DatePath<java.time.LocalDate> startDate = createDate("startDate", java.time.LocalDate.class);
 

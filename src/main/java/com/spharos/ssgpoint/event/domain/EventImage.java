@@ -19,6 +19,7 @@ public class EventImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private Long eventId;
     private String imageUrl;
     private String imageAlt;
 

@@ -11,8 +11,8 @@ import lombok.ToString;
 @RequiredArgsConstructor
 public class CouponOut {
 
-    private final Long couponId;
-    private final String uuid;
+    private Long couponId;
+    private String uuid;
 
     public boolean isValidUUID() {
         return uuid != null && !uuid.trim().isEmpty();

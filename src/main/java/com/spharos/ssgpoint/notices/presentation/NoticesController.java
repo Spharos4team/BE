@@ -5,6 +5,7 @@ import com.spharos.ssgpoint.notices.domain.Notices;
 import com.spharos.ssgpoint.notices.dto.NoticesCreateRequestDto;
 import com.spharos.ssgpoint.notices.dto.NoticesDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,15 +30,18 @@ public class NoticesController {
     }
 
     @PostMapping("/notices")
-    public NoticesDto createNotice(@RequestBody NoticesCreateRequestDto requestDto) {
+    public ResponseEntity<?> createNotice(@RequestBody NoticesCreateRequestDto requestDto) {
         Notices notices = noticesService.createNotice(requestDto.toEntity());
-        return convertToDto(notices);
+        return ResponseEntity.ok().body("공지사항이 성공적으로 등록되었습니다.");
     }
 
-    @DeleteMapping("/notiecs/{id}")
-    public void deleteNotice(@PathVariable Long id) {
+
+    @DeleteMapping("/notices/{id}")
+    public ResponseEntity<?> deleteNotice(@PathVariable Long id) {
         noticesService.deleteNotice(id);
+        return ResponseEntity.ok().body("공지사항이 성공적으로 삭제되었습니다.");
     }
+
 
     private NoticesDto convertToDto(Notices notices) {
         return new NoticesDto(notices.getId(), notices.getTitle(), notices.getContent());

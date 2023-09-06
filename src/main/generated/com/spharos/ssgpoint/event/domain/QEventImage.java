@@ -19,6 +19,8 @@ public class QEventImage extends EntityPathBase<EventImage> {
 
     public static final QEventImage eventImage = new QEventImage("eventImage");
 
+    public final NumberPath<Long> eventId = createNumber("eventId", Long.class);
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final StringPath imageAlt = createString("imageAlt");

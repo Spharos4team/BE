@@ -19,8 +19,7 @@ public class Coupon {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true, length = 20)
-    private Integer number;
+    private String number;
 
     @Column(length = 45, nullable = false)
     private String title;
@@ -46,7 +45,7 @@ public class Coupon {
 
     public boolean isValid() {
         LocalDate now = LocalDate.now();  // java.time.LocalDate로 변경
-        return isActive && !isUsed && !startDate.isAfter(now) && !endDate.isBefore(now);
+        return this.isActive && !this.isUsed && !this.startDate.isAfter(now) && !this.endDate.isBefore(now);
     }
 }
 

@@ -14,7 +14,7 @@ public class CouponDto {
 
     private Long id;
     private String title;          // 쿠폰 이름
-    private Integer number;           // 쿠폰 번호
+    private String number;           // 쿠폰 번호
     private String store;          // 쿠폰 사용처
     private String description;    // 쿠폰 설명
     private boolean isUsed;        // 쿠폰 사용 여부

@@ -22,32 +22,3 @@ spring:
       host: localhost
       port: 6379
 
-JWT:
-  secret_key: fbcb542e08e7feed1c9ebc3740ee092f43304e0b8a666d63bc36fbe785ad447a
-  expiration_time: 14400000
-  header: Authorization
-  prefix: Bearer
-  token:
-    access-expiration-time: 43200000    # 12??
-    refresh-expiration-time: 604800000   # 7?
-
-
-cloud:
-  aws:
-    s3:
-      bucket: ssgpoint
-    stack.auto: false
-    region.static: ap-northeast-2
-    credentials:
-      accessKey: AKIATYFWGSCF3AGZCJXF
-      secretKey: 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
-
-store:
-  emart24:
-    prefix: 12345678
-  emarteveryday:
-    prefix: 87654321
-  shinsegae:
-    prefix: 11223344
-  speedmate:
-    prefix: 44332211
