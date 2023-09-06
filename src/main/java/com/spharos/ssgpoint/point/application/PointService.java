@@ -15,6 +15,6 @@ public interface PointService {
     // 포인트 목록
     List<PointGetDto> getTotalPointByUser(String UUID, Pageable page);
     List<PointGetDto> getSavePointByUser(String UUID, Pageable page);
-    List<PointGetDto> test(String UUID, Pageable page, PointFilterVo pointFilterVo);
+    List<PointGetDto> test(Long id, String UUID, Pageable page, PointFilterVo pointFilterVo);
 
 }

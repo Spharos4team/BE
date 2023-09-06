@@ -131,9 +131,9 @@ public class PointServiceImpl implements PointService {
     }
 
     @Override
-    public List<PointGetDto> test(String UUID, Pageable page, PointFilterVo p) {
+    public List<PointGetDto> test(Long id, String UUID, Pageable page, PointFilterVo p) {
 
-        Page<Point> pointList = pointRepository.findByFilter(UUID,p.getStartDate(),p.getEndDate(),p.getPointUse(),p.getPointType(),page);
+        Page<Point> pointList = pointRepository.findByFilter(id, UUID,p.getStartDate(),p.getEndDate(),p.getPointUse(),p.getPointType(),page);
         return pointList.map(m -> new PointGetDto(m.getPoint(),
                 m.getTitle(), m.getContent(), m.getType().getCode(), m.getCreatedDate())).stream().toList();
     }

@@ -4,10 +4,12 @@ import com.spharos.ssgpoint.point.application.PointService;
 import com.spharos.ssgpoint.point.dto.PointCreateDto;
 import com.spharos.ssgpoint.point.dto.PointGetDto;
 import com.spharos.ssgpoint.point.vo.PointCreateVo;
+import com.spharos.ssgpoint.point.vo.PointFilterVo;
 import com.spharos.ssgpoint.point.vo.PointGetVo;
-import com.spharos.ssgpoint.user.dto.TermUpdateDto;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -57,20 +59,12 @@ public class PointController {
     }
 
     // 포인트 목록
-    @GetMapping("/point")
-    public List<PointGetVo> getPointByUser(@RequestParam("UUID") String UUID) {
-        List<PointGetDto> pointGetDtoList = pointService.getPointByUser(UUID);
-
-        return pointGetDtoList.stream().map(pointGetDto ->
-                PointGetVo.builder()
-                        .totalPoint(pointGetDto.getTotalPoint())
-                        .point(pointGetDto.getPoint())
-                        .title(pointGetDto.getTitle())
-                        .content(pointGetDto.getContent())
-                        .type(pointGetDto.getType())
-                        .createdDate(pointGetDto.getCreatedDate())
-                        .build()
-        ).toList();
+    @GetMapping("/test")
+    public List<PointGetDto> pointListFilter(@RequestParam("UUID") String UUID,
+                                             @RequestParam(value = "lastId", required = false) Long lastId,
+                                             @PageableDefault(size=10, sort="createdDate") Pageable pageRequest
+            , @RequestBody PointFilterVo pointFilterVo) {
+        return pointService.test(lastId,UUID, pageRequest,pointFilterVo);
     }
 
 }

@@ -8,6 +8,6 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDate;
 
 public interface PointRepositoryCustom {
-    Page<Point> findByFilter(String uuid, LocalDate startDate,LocalDate endDate, String pointUse, String pointType,  Pageable pageable);
+    Page<Point> findByFilter(Long pointId, String uuid, LocalDate startDate,LocalDate endDate, String pointUse, String pointType,  Pageable pageable);
 
 }

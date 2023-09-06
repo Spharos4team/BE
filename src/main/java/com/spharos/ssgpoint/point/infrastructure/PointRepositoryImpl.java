@@ -8,9 +8,7 @@ import com.spharos.ssgpoint.point.domain.Point;
 import com.spharos.ssgpoint.point.dto.PointGetDto;
 import com.spharos.ssgpoint.user.domain.User;
 import jakarta.persistence.EntityManager;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 
 
 import java.time.LocalDate;
@@ -30,7 +28,7 @@ public class PointRepositoryImpl implements PointRepositoryCustom{
     }
 
     @Override
-    public Page<Point> findByFilter(String uuid, LocalDate startDate,LocalDate endDate, String pointUse, String pointType,  Pageable pageable) {
+    public Page<Point> findByFilter(Long pointId, String uuid, LocalDate startDate,LocalDate endDate, String pointUse, String pointType,  Pageable pageable) {
 
         Long userId = queryFactory.select(user.id)
                 .from(user)
@@ -40,7 +38,10 @@ public class PointRepositoryImpl implements PointRepositoryCustom{
         QueryResults<Point> result = queryFactory
                 .select(point1)
                 .from(point1)
-                .where(pointUseEq(pointUse), pointTypeEq(pointType),point1.user.id.eq(userId), point1.createdDate.between(startDate.atStartOfDay(), endDate.atStartOfDay()))
+                .where(ltStoreId(pointId),
+                        pointUseEq(pointUse), pointTypeEq(pointType),
+                        point1.user.id.eq(userId),
+                        point1.createdDate.between(startDate.atStartOfDay(), endDate.atStartOfDay()))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetchResults();
@@ -75,10 +76,31 @@ public class PointRepositoryImpl implements PointRepositoryCustom{
             return point1.type.eq(이벤트);
         } else {
             return null;
-        }}
+        }
+    }
 
+    // no-offset 방식 처리하는 메서드
+    private BooleanExpression ltStoreId(Long pointId) {
+        if (pointId == null) {
+            return null;
+        }
 
+        return point1.id.lt(pointId);
+    }
 
+    // 무한 스크롤 방식 처리하는 메서드
+    private Slice<Point> checkLastPage(Pageable pageable, List<Point> results) {
+
+        boolean hasNext = false;
+
+        // 조회한 결과 개수가 요청한 페이지 사이즈보다 크면 뒤에 더 있음, next = true
+        if (results.size() > pageable.getPageSize()) {
+            hasNext = true;
+            results.remove(pageable.getPageSize());
+        }
+
+        return new SliceImpl<>(results, pageable, hasNext);
+    }
 
 
 
