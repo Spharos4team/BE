@@ -5,7 +5,10 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.spharos.ssgpoint.point.domain.Point;
 
+import com.spharos.ssgpoint.point.dto.PointFilterDto;
 import com.spharos.ssgpoint.point.dto.PointGetDto;
+
+import com.spharos.ssgpoint.point.dto.QPointFilterDto;
 import com.spharos.ssgpoint.user.domain.User;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.*;
@@ -28,24 +31,25 @@ public class PointRepositoryImpl implements PointRepositoryCustom{
     }
 
     @Override
-    public Slice<Point> findByFilter(Long pointId, String uuid, LocalDate startDate,LocalDate endDate, String pointUse, String pointType,  Pageable pageable) {
+    public Slice<PointFilterDto> findByFilter(Long pointId, String uuid, LocalDate startDate,LocalDate endDate, String pointUse, String pointType,  Pageable pageable) {
 
         Long userId = queryFactory.select(user.id)
                 .from(user)
                 .where(user.uuid.eq(uuid))
                 .fetchOne();
 
-        List<Point> results = queryFactory
-                .select(point1)
+        List<PointFilterDto> results = queryFactory
+                .select(new QPointFilterDto(point1.id, point1.point, point1.title, point1.content, point1.type,
+                        point1.statusType, point1.createdDate, point1.receipt.id))
                 .from(point1)
                 .where(ltStoreId(pointId),
                         pointUseEq(pointUse), pointTypeEq(pointType),
                         point1.user.id.eq(userId),
                         point1.createdDate.between(startDate.atStartOfDay(), endDate.atStartOfDay()))
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
+                //.offset(pageable.getOffset())
+                .orderBy(point1.id.desc())
+                .limit(pageable.getPageSize()+1)
                 .fetch();
-
 
         /*long total = queryFactory
                 .select(point1)
@@ -88,7 +92,7 @@ public class PointRepositoryImpl implements PointRepositoryCustom{
     }
 
     // 무한 스크롤 방식 처리하는 메서드
-    private Slice<Point> checkLastPage(Pageable pageable, List<Point> results) {
+    private Slice<PointFilterDto> checkLastPage(Pageable pageable, List<PointFilterDto> results) {
 
         boolean hasNext = false;
 
@@ -100,10 +104,6 @@ public class PointRepositoryImpl implements PointRepositoryCustom{
 
         return new SliceImpl<>(results, pageable, hasNext);
     }
-
-
-
-
 
 
 }

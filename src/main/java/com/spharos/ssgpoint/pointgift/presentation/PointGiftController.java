@@ -36,7 +36,7 @@ public class PointGiftController {
 
     // 포인트 선물 보내기
     @PostMapping("/point/gift")
-    public void createPointGift(@RequestParam("UUID") String UUID, @RequestBody PointGiftCreateVo pointGiftCreateVo) {
+    public ResponseEntity<String> createPointGift(@RequestParam("UUID") String UUID, @RequestBody PointGiftCreateVo pointGiftCreateVo) {
         PointGiftCreateDto pointGiftCreateDto = PointGiftCreateDto.builder()
                 .point(pointGiftCreateVo.getPoint())
                 .message(pointGiftCreateVo.getMessage())
@@ -48,6 +48,7 @@ public class PointGiftController {
                 .build();
 
         pointGiftService.createPointGift(UUID, pointGiftCreateDto);
+        return ResponseEntity.ok("포인트 선물 완료");
     }
 
     // 포인트 선물 수락/거절

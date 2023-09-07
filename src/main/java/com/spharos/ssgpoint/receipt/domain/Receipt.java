@@ -44,6 +44,8 @@ public class Receipt {
     @Column(nullable = false, columnDefinition = "int default 0")
     private Integer status;
 
+    private Long pointId;
+
     public void update(Integer status) {
         this.status = status;
     }

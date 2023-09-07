@@ -148,6 +148,9 @@ public class AuthenticationService {
         );
 
         User user = userRepository.findByLoginId(authenticationRequest.getLoginId()).orElseThrow(()-> new IllegalArgumentException("아이디가 존재하지 않습니다."));
+        if (user.getStatus() == 0) {
+            throw new IllegalArgumentException("탈퇴한 회원입니다.");
+        }
         log.info("user is : {}" , user.getUuid());
         String accessToken = jwtTokenProvider.generateToken(user);
         String refreshToken = jwtTokenProvider.generateRefreshToken(user);

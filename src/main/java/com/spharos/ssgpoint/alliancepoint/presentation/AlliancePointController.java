@@ -7,7 +7,10 @@ import com.spharos.ssgpoint.alliancepoint.dto.AlliancePointUpdateDto;
 import com.spharos.ssgpoint.alliancepoint.vo.AlliancePointCreateVo;
 import com.spharos.ssgpoint.alliancepoint.vo.AlliancePointGetVo;
 import com.spharos.ssgpoint.alliancepoint.vo.AlliancePointUpdateVo;
+import com.spharos.ssgpoint.user.dto.user.UserUpdateDto;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,14 +24,15 @@ public class AlliancePointController {
 
     // 제휴사 포인트 생성 (테스트 위해 생성)
     @PostMapping("/alliance-point")
-    public void createAlliancePoint(@RequestParam("UUID") String UUID, @RequestBody AlliancePointCreateVo alliancePointCreateVo) {
-        AlliancePointCreateDto alliancePointCreateDto = AlliancePointCreateDto.builder()
-                .point(alliancePointCreateVo.getPoint())
-                .type(alliancePointCreateVo.getType())
-                .UUID(UUID)
-                .build();
+    public ResponseEntity<String> createAlliancePoint(@RequestParam("UUID") String UUID, @RequestBody AlliancePointCreateVo alliancePointCreateVo) {
 
+
+        AlliancePointCreateDto alliancePointCreateDto = AlliancePointCreateDto.builder()
+                .type(alliancePointCreateVo.getType())
+                .point(alliancePointCreateVo.getPoint())
+                .build();
         alliancePointService.createAlliancePoint(UUID, alliancePointCreateDto);
+        return ResponseEntity.ok("전환 포인트 생성");
     }
 
     // 제휴사 포인트 조회

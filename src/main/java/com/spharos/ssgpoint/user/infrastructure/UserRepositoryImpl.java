@@ -36,8 +36,8 @@ public class UserRepositoryImpl implements UserRepositoryCustom{
                                 and(point1.type.in(결제,이벤트,선물,전환)),
                         point1.createdDate.year().eq(currentYear))
                 .fetchOne();
+        
         return result != null ? result : 0;
-
     }
 
     @Override

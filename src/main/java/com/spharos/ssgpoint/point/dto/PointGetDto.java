@@ -21,12 +21,5 @@ public class PointGetDto {
     private String statusType;
     private LocalDateTime createdDate;
 
-    @QueryProjection
-    public PointGetDto(Integer point, String title, String content, String type, LocalDateTime createdDate) {
-        this.point = point;
-        this.title = title;
-        this.content = content;
-        this.type = type;
-        this.createdDate = createdDate;
-    }
+
 }

@@ -2,11 +2,13 @@ package com.spharos.ssgpoint.point.application;
 
 import com.spharos.ssgpoint.point.domain.*;
 import com.spharos.ssgpoint.point.dto.PointCreateDto;
+import com.spharos.ssgpoint.point.dto.PointFilterDto;
 import com.spharos.ssgpoint.point.dto.PointGetDto;
 import com.spharos.ssgpoint.point.infrastructure.PointRepository;
 import com.spharos.ssgpoint.point.vo.PointCreateVo;
 import com.spharos.ssgpoint.point.vo.PointFilterVo;
 import com.spharos.ssgpoint.receipt.domain.Receipt;
+import com.spharos.ssgpoint.receipt.infrastructure.ReceiptRepository;
 import com.spharos.ssgpoint.user.domain.User;
 import com.spharos.ssgpoint.user.infrastructure.UserRepository;
 import jakarta.transaction.Transactional;
@@ -26,6 +28,8 @@ public class PointServiceImpl implements PointService {
 
     private final UserRepository userRepository;
     private final PointRepository pointRepository;
+
+    private final ReceiptRepository receiptRepository;
 
     // 포인트 생성
     @Override
@@ -58,6 +62,18 @@ public class PointServiceImpl implements PointService {
 
         // 결제적립
         if (pointCreateDto.getType().equals("1")) {
+
+            Point point = Point.builder()
+                    .totalPoint(calctotalPoint)
+                    .point(pointCreateDto.getPoint())
+                    .title(pointCreateDto.getTitle())
+                    .content(pointCreateDto.getContent())
+                    .statusType(pointStatusType)
+                    .type(pointType)
+                    .user(user)
+                    .build();
+            Point save = pointRepository.save(point);
+
             Receipt receipt = Receipt.builder()
                     .alliance(pointCreateDto.getReceipt().getAlliance())
                     .brand(pointCreateDto.getReceipt().getBrand())
@@ -68,19 +84,11 @@ public class PointServiceImpl implements PointService {
                     .cardName(pointCreateDto.getReceipt().getCardName())
                     .cardNumber(pointCreateDto.getReceipt().getCardNumber())
                     .status(1)
+                    .pointId(save.getId())
                     .build();
 
-            Point point = Point.builder()
-                    .totalPoint(calctotalPoint)
-                    .point(pointCreateDto.getPoint())
-                    .title(pointCreateDto.getTitle())
-                    .content(pointCreateDto.getContent())
-                    .statusType(pointStatusType)
-                    .type(pointType)
-                    .user(user)
-                    .receipt(receipt)
-                    .build();
-             return pointRepository.save(point);
+            receiptRepository.save(receipt);
+            return save;
         } else {
             Point point = Point.builder()
                     .totalPoint(calctotalPoint)
@@ -104,8 +112,9 @@ public class PointServiceImpl implements PointService {
                 new IllegalArgumentException("UUID 정보 없음 = " + UUID));
 
         Slice<Point> pointList = pointRepository.findByUserId(user.getUuid(),page);
-        return pointList.map(m -> new PointGetDto(m.getPoint(),
-                m.getTitle(), m.getContent(), m.getType().getCode(), m.getCreatedDate())).stream().toList();
+        return null;
+        /*        pointList.map(m -> new PointGetDto(m.getPoint(),
+                m.getTitle(), m.getContent(), m.getType().getCode(), m.getCreatedDate())).stream().toList();*/
 
         /*return pointList.stream().map(point ->
                 PointGetDto.builder()
@@ -126,16 +135,18 @@ public class PointServiceImpl implements PointService {
 
         Page<Point> pointList = pointRepository.findBySavePoint(user.getUuid(), page);
         return pointList.map(m -> new PointGetDto(m.getPoint(),
-                m.getTitle(), m.getContent(), m.getType().getCode(), m.getCreatedDate())).stream().toList();
+                m.getTitle(), m.getContent(), m.getType().getCode(), m.getStatusType().getCode(),
+                m.getCreatedDate())).stream().toList();
     }
 
     @Override
-    public List<PointGetDto> test(Long id, String UUID, Pageable page, PointFilterVo p) {
+    public Slice<PointFilterDto> test(Long id, String UUID, Pageable page, PointFilterVo p) {
 
-        Slice<Point> byFilter = pointRepository.findByFilter(id, UUID, p.getStartDate(), p.getEndDate(), p.getPointUse(), p.getPointType(), page);
-        return byFilter.map(m -> new PointGetDto(m.getPoint(),
+        return pointRepository.findByFilter(id, UUID, p.getStartDate(), p.getEndDate(), p.getPointUse(), p.getPointType(), page);
+
+       /* return byFilter.map(m -> new PointGetDto(m.getPoint(),
                 m.getTitle(), m.getContent(), m.getStatusType().getCode(),
-                m.getType().getCode(), m.getCreatedDate())).stream().toList();
+                m.getType().getCode(), m.getCreatedDate())).stream().toList();*/
     }
 
 }

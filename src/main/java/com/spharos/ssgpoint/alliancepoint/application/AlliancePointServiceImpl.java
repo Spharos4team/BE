@@ -11,12 +11,14 @@ import com.spharos.ssgpoint.point.application.PointService;
 import com.spharos.ssgpoint.point.dto.PointCreateDto;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AlliancePointServiceImpl implements AlliancePointService {
 
     private final PointService pointService;
@@ -28,11 +30,10 @@ public class AlliancePointServiceImpl implements AlliancePointService {
     public void createAlliancePoint(String UUID, AlliancePointCreateDto alliancePointCreateDto) {
         AlliancePointType alliancePointType
                 = new AlliancePointTypeConverter().convertToEntityAttribute(alliancePointCreateDto.getType());
-
         alliancePointRepository.save(AlliancePoint.builder()
                 .point(alliancePointCreateDto.getPoint())
                 .type(alliancePointType)
-                .UUID(alliancePointCreateDto.getUUID())
+                .UUID(UUID)
                 .build());
     }
 
@@ -45,6 +46,8 @@ public class AlliancePointServiceImpl implements AlliancePointService {
                 AlliancePointGetDto.builder()
                         .point(alliancePoint.getPoint())
                         .type(String.valueOf(alliancePoint.getType().getValue()))
+                        .fromPoint(alliancePoint.getFromPoint())
+                        .toPoint(alliancePoint.getToPoint())
                         .build()
         ).toList();
     }
@@ -67,15 +70,16 @@ public class AlliancePointServiceImpl implements AlliancePointService {
             // 제휴사 포인트 -> 신세계 포인트 전환 시
             if (status.equals("1")) {
                 // 전환 포인트만큼 제휴사 포인트 (-)
+                log.info("alliancePointUpdateDto.getPoint() = " + alliancePointUpdateDto.getPoint());
                 alliancePoint.updateMinus(alliancePointUpdateDto.getPoint());
-
+                log.info("alliancePoint.getPoint() = " + alliancePoint.getPoint());
                 // 전환 포인트 포인트 테이블에 저장
                 PointCreateDto pointCreateDto = PointCreateDto.builder()
                         .point(alliancePointUpdateDto.getPoint())
                         .title("신세계포인트 전환")
                         .content("(" + alliancePointName + "->신세계P)")
                         .statusType("0")
-                        .type("4")
+                        .type("7")
                         .user(UUID)
                         .build();
 
