@@ -5,13 +5,17 @@ import com.spharos.ssgpoint.alliancepoint.domain.AlliancePointType;
 import com.spharos.ssgpoint.alliancepoint.domain.AlliancePointTypeConverter;
 import com.spharos.ssgpoint.alliancepoint.dto.AlliancePointCreateDto;
 import com.spharos.ssgpoint.alliancepoint.dto.AlliancePointGetDto;
+import com.spharos.ssgpoint.alliancepoint.dto.AlliancePointListDto;
 import com.spharos.ssgpoint.alliancepoint.dto.AlliancePointUpdateDto;
 import com.spharos.ssgpoint.alliancepoint.infrastructure.AlliancePointRepository;
 import com.spharos.ssgpoint.point.application.PointService;
 import com.spharos.ssgpoint.point.dto.PointCreateDto;
+import com.spharos.ssgpoint.pointgift.vo.PointListInVo;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -112,7 +116,11 @@ public class AlliancePointServiceImpl implements AlliancePointService {
                 pointService.createPoint(UUID, pointCreateDto);
             }
         }
+    }
 
+    @Override
+    public Slice<AlliancePointListDto> getPointAllianceList(Long lastId, String uuid, Pageable page, PointListInVo p) {
+       return alliancePointRepository.findPointAllianceList(lastId, uuid, p.getStartDate(), p.getEndDate(), page);
     }
 
 }

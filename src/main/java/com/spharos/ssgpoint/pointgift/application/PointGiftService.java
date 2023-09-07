@@ -1,10 +1,9 @@
 package com.spharos.ssgpoint.pointgift.application;
 
-import com.spharos.ssgpoint.point.vo.PointFilterVo;
 import com.spharos.ssgpoint.pointgift.dto.PointGiftCreateDto;
 import com.spharos.ssgpoint.pointgift.dto.PointGiftGetDto;
 import com.spharos.ssgpoint.pointgift.dto.PointGiftListDto;
-import com.spharos.ssgpoint.pointgift.vo.PointGiftListInVo;
+import com.spharos.ssgpoint.pointgift.vo.PointListInVo;
 import com.spharos.ssgpoint.user.domain.User;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -26,5 +25,5 @@ public interface PointGiftService {
     // 포인트 선물 목록 (테스트 용)
     List<PointGiftGetDto> getPointGiftByUser(String UUID);
 
-    Slice<PointGiftListDto> getPointGiftList(Long pointId, String uuid, Pageable page, PointGiftListInVo pointFilterVo);
+    Slice<PointGiftListDto> getPointGiftList(Long pointId, String uuid, Pageable page, PointListInVo pointFilterVo);
 }

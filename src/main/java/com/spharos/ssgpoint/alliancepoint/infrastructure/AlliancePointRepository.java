@@ -9,10 +9,9 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface AlliancePointRepository extends JpaRepository<AlliancePoint, Long> {
+public interface AlliancePointRepository extends JpaRepository<AlliancePoint, Long> ,AlliancePointRepositoryCustom {
 
     List<AlliancePoint> findByUUID(String UUID);
-
 
     @Query("select a from AlliancePoint a where a.UUID = :UUID and a.type = :alliancePointType")
     Optional<AlliancePoint> findByAllianceUUID(@Param("UUID") String UUID,@Param("alliancePointType") AlliancePointType alliancePointType);

@@ -1,16 +1,24 @@
 package com.spharos.ssgpoint.alliancepoint.presentation;
 
 import com.spharos.ssgpoint.alliancepoint.application.AlliancePointService;
-import com.spharos.ssgpoint.alliancepoint.domain.AlliancePoint;
+
 import com.spharos.ssgpoint.alliancepoint.dto.AlliancePointCreateDto;
 import com.spharos.ssgpoint.alliancepoint.dto.AlliancePointGetDto;
+import com.spharos.ssgpoint.alliancepoint.dto.AlliancePointListDto;
 import com.spharos.ssgpoint.alliancepoint.dto.AlliancePointUpdateDto;
 import com.spharos.ssgpoint.alliancepoint.vo.AlliancePointCreateVo;
 import com.spharos.ssgpoint.alliancepoint.vo.AlliancePointGetVo;
 import com.spharos.ssgpoint.alliancepoint.vo.AlliancePointUpdateVo;
-import com.spharos.ssgpoint.user.dto.user.UserUpdateDto;
+
+import com.spharos.ssgpoint.pointgift.vo.PointListInVo;
+import com.spharos.ssgpoint.pointgift.vo.PointListOutVo;
+
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -60,6 +68,25 @@ public class AlliancePointController {
 
         alliancePointService.updateAlliancePoint(UUID, type, status, alliancePointUpdateDto);
         return ResponseEntity.ok("포인트전환 완료");
+    }
+
+    // 전환 목록
+    @GetMapping("/alliance-list")
+    public ResponseEntity<Slice<PointListOutVo>> alliancePointListFilter
+    (@RequestParam("UUID") String UUID,
+     @RequestParam(value = "lastId", required = false) Long lastId,
+     @PageableDefault(size = 10, sort = "createdDate") Pageable pageRequest,
+     @RequestBody PointListInVo pointFilterVo)
+    {
+        ModelMapper modelMapper = new ModelMapper();
+        Slice<AlliancePointListDto> pointAllianceList = alliancePointService.getPointAllianceList(lastId, UUID, pageRequest, pointFilterVo);
+        Slice<PointListOutVo> pointFilterOutVos = modelMapper.map(alliancePointService.getPointAllianceList(lastId,
+                        UUID, pageRequest, pointFilterVo)
+                , new TypeToken<Slice<PointListOutVo>>() {}.getType());
+
+        // ResponseEntity로 감싸서 반환
+       return ResponseEntity.ok(pointFilterOutVos);
+        //return pointAllianceList;
     }
 
 }

@@ -4,7 +4,6 @@ import com.spharos.ssgpoint.point.application.PointService;
 import com.spharos.ssgpoint.point.domain.Point;
 import com.spharos.ssgpoint.point.dto.PointCreateDto;
 import com.spharos.ssgpoint.point.infrastructure.PointRepository;
-import com.spharos.ssgpoint.point.vo.PointFilterVo;
 import com.spharos.ssgpoint.pointgift.domain.PointGift;
 import com.spharos.ssgpoint.pointgift.domain.PointGiftStatusType;
 import com.spharos.ssgpoint.pointgift.domain.PointGiftType;
@@ -12,7 +11,7 @@ import com.spharos.ssgpoint.pointgift.dto.PointGiftCreateDto;
 import com.spharos.ssgpoint.pointgift.dto.PointGiftGetDto;
 import com.spharos.ssgpoint.pointgift.dto.PointGiftListDto;
 import com.spharos.ssgpoint.pointgift.infrastructure.PointGiftRepository;
-import com.spharos.ssgpoint.pointgift.vo.PointGiftListInVo;
+import com.spharos.ssgpoint.pointgift.vo.PointListInVo;
 import com.spharos.ssgpoint.user.domain.User;
 import com.spharos.ssgpoint.user.infrastructure.UserRepository;
 import jakarta.transaction.Transactional;
@@ -165,7 +164,7 @@ public class PointGiftServiceImpl implements PointGiftService {
     }
 
     @Override
-    public Slice<PointGiftListDto> getPointGiftList(Long lastId, String UUID, Pageable page, PointGiftListInVo p) {
+    public Slice<PointGiftListDto> getPointGiftList(Long lastId, String UUID, Pageable page, PointListInVo p) {
         return pointGiftRepository.findPointGiftList(lastId, UUID, p.getStartDate(), p.getEndDate(), page);
 
     }

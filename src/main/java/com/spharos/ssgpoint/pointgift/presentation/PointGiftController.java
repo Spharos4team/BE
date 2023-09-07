@@ -1,13 +1,12 @@
 package com.spharos.ssgpoint.pointgift.presentation;
 
-import com.spharos.ssgpoint.point.vo.PointFilterOutVo;
 import com.spharos.ssgpoint.pointgift.application.PointGiftService;
 import com.spharos.ssgpoint.pointgift.dto.PointGiftCreateDto;
-import com.spharos.ssgpoint.pointgift.dto.PointGiftListDto;
 import com.spharos.ssgpoint.pointgift.dto.PointGiftUserGetDto;
 import com.spharos.ssgpoint.pointgift.vo.PointGiftCreateVo;
-import com.spharos.ssgpoint.pointgift.vo.PointGiftListInVo;
-import com.spharos.ssgpoint.pointgift.vo.PointGiftListOutVo;
+import com.spharos.ssgpoint.pointgift.vo.PointListInVo;
+
+import com.spharos.ssgpoint.pointgift.vo.PointListOutVo;
 import com.spharos.ssgpoint.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -68,24 +67,19 @@ public class PointGiftController {
 
 
     //포인트 선물 목록
-    @GetMapping("/point/gift")
-    public ResponseEntity<Slice<PointGiftListOutVo>> pointListFilter(@RequestParam("UUID") String UUID,
-                                                                     @RequestParam(value = "lastId", required = false) Long lastId,
-                                                                     @PageableDefault(size=10, sort="createdDate") Pageable pageRequest
-            , @RequestBody PointGiftListInVo pointGiftListVo){
+    @GetMapping("/point/gift-list")
+    public ResponseEntity<Slice<PointListOutVo>> pointListFilter(@RequestParam("UUID") String UUID,
+                                                                 @RequestParam(value = "lastId", required = false) Long lastId,
+                                                                 @PageableDefault(size=10, sort="createdDate") Pageable pageRequest
+            , @RequestBody PointListInVo pointGiftListVo){
 
         ModelMapper modelMapper = new ModelMapper();
-        Slice<PointGiftListOutVo> pointFilterOutVos = modelMapper.map(pointGiftService.getPointGiftList(lastId, UUID, pageRequest, pointGiftListVo)
-                , new TypeToken<Slice<PointGiftListOutVo>>() {}.getType());
 
-
+        Slice<PointListOutVo> pointFilterOutVos = modelMapper.map(pointGiftService.getPointGiftList(lastId, UUID, pageRequest, pointGiftListVo)
+                , new TypeToken<Slice<PointListOutVo>>() {}.getType());
         return ResponseEntity.ok(pointFilterOutVos);
 
-
-
-
     }
-
 
 
 }
