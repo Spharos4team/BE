@@ -6,13 +6,16 @@ import com.spharos.ssgpoint.point.dto.PointCreateDto;
 import com.spharos.ssgpoint.point.dto.PointFilterDto;
 import com.spharos.ssgpoint.point.dto.PointGetDto;
 import com.spharos.ssgpoint.point.vo.PointCreateVo;
+import com.spharos.ssgpoint.point.vo.PointFilterOutVo;
 import com.spharos.ssgpoint.point.vo.PointFilterVo;
 import com.spharos.ssgpoint.point.vo.PointGetVo;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -63,11 +66,17 @@ public class PointController {
 
     // 포인트필터 목록
     @GetMapping("/test")
-    public Slice<PointFilterDto> pointListFilter(@RequestParam("UUID") String UUID,
-                                                 @RequestParam(value = "lastId", required = false) Long lastId,
-                                                 @PageableDefault(size=10, sort="createdDate") Pageable pageRequest
-            , @RequestBody PointFilterVo pointFilterVo) {
-        return pointService.pointFilter(lastId,UUID, pageRequest,pointFilterVo);
+    public ResponseEntity<Slice<PointFilterOutVo>> pointListFilter(@RequestParam("UUID") String UUID,
+                                                                   @RequestParam(value = "lastId", required = false) Long lastId,
+                                                                   @PageableDefault(size = 10, sort = "createdDate") Pageable pageRequest,
+                                                                   @RequestBody PointFilterVo pointFilterVo) {
+        ModelMapper modelMapper = new ModelMapper();
+        Slice<PointFilterOutVo> pointFilterOutVos = modelMapper.map(pointService.pointFilter(lastId, UUID, pageRequest, pointFilterVo)
+                , new TypeToken<Slice<PointFilterOutVo>>() {}.getType());
+
+        // ResponseEntity로 감싸서 반환
+        return ResponseEntity.ok(pointFilterOutVos);
     }
+
 
 }

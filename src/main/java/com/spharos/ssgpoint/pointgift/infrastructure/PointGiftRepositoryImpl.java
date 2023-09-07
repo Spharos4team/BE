@@ -35,36 +35,18 @@ public class PointGiftRepositoryImpl implements PointGiftRepositoryCustom{
                                                      Pageable pageable) {
         List<PointGiftListDto> results = queryFactory
                 .select(Projections.fields(PointGiftListDto.class,
-                        point1.id, point1.point, point1.title, point1.content, point1.type, point1.createdDate))
-
+                        point1.id , point1.point, point1.title, point1.content, point1.type,
+                        point1.statusType, point1.createdDate))
                 .from(point1)
                 .where(ltStoreId(pointId),
                         point1.user.uuid.eq(uuid),
-                        point1.createdDate.between(startDate.atStartOfDay(), endDate.atStartOfDay()))
+                        point1.createdDate.between(startDate.atStartOfDay(), endDate.atStartOfDay()),
+                        point1.type.eq(선물)
+                )
                 .orderBy(point1.id.desc())
                 .limit(pageable.getPageSize() + 1).fetch();
 
         return checkLastPage(pageable, results);
-    }
-
-    private BooleanExpression pointUseEq(String pointUse) {
-        if ("1".equals(pointUse)) { // 적립
-            return point1.statusType.eq(적립);
-        } else if ("2".equals(pointUse)) { // 사용
-            return point1.statusType.in(사용, 사용취소);
-        } else {
-            return null;
-        }
-    }
-
-    private BooleanExpression pointTypeEq(String pointType) {
-        if ("1".equals(pointType)) { // 일반
-            return point1.type.in(결제, 선물, 전환, 추후, 소멸);
-        } else if ("2".equals(pointType)) { // 이벤트
-            return point1.type.eq(이벤트);
-        } else {
-            return null;
-        }
     }
 
         // no-offset 방식 처리하는 메서드
@@ -72,7 +54,6 @@ public class PointGiftRepositoryImpl implements PointGiftRepositoryCustom{
             if (pointId == null) {
                 return null;
             }
-
             return point1.id.lt(pointId);
         }
 

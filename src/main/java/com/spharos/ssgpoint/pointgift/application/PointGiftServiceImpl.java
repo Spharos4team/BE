@@ -12,6 +12,7 @@ import com.spharos.ssgpoint.pointgift.dto.PointGiftCreateDto;
 import com.spharos.ssgpoint.pointgift.dto.PointGiftGetDto;
 import com.spharos.ssgpoint.pointgift.dto.PointGiftListDto;
 import com.spharos.ssgpoint.pointgift.infrastructure.PointGiftRepository;
+import com.spharos.ssgpoint.pointgift.vo.PointGiftListInVo;
 import com.spharos.ssgpoint.user.domain.User;
 import com.spharos.ssgpoint.user.infrastructure.UserRepository;
 import jakarta.transaction.Transactional;
@@ -164,8 +165,8 @@ public class PointGiftServiceImpl implements PointGiftService {
     }
 
     @Override
-    public Slice<PointGiftListDto> getPointGiftList(Long id, String UUID, Pageable page, PointFilterVo p) {
-        return pointGiftRepository.findPointGiftList(id, UUID, p.getStartDate(), p.getEndDate(), page);
+    public Slice<PointGiftListDto> getPointGiftList(Long lastId, String UUID, Pageable page, PointGiftListInVo p) {
+        return pointGiftRepository.findPointGiftList(lastId, UUID, p.getStartDate(), p.getEndDate(), page);
 
     }
 
