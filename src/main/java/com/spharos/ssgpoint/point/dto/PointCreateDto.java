@@ -19,7 +19,6 @@ public class PointCreateDto {
     private String type;
     private String user;
     private Long pointCardId;
-
     private ReceiptDto receipt;
 
     @Data

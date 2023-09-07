@@ -1,4 +1,4 @@
-package com.spharos.ssgpoint.user.vo;
+package com.spharos.ssgpoint.user.vo.user;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

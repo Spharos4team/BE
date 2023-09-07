@@ -13,6 +13,7 @@ public class AlliancePointCreateVo {
 
     private Integer point;
     private String type;
-    private String UUID;
+
+
 
 }

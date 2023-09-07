@@ -1,17 +1,24 @@
 package com.spharos.ssgpoint.pointgift.application;
 
 import com.spharos.ssgpoint.point.application.PointService;
+import com.spharos.ssgpoint.point.domain.Point;
 import com.spharos.ssgpoint.point.dto.PointCreateDto;
+import com.spharos.ssgpoint.point.infrastructure.PointRepository;
+import com.spharos.ssgpoint.point.vo.PointFilterVo;
 import com.spharos.ssgpoint.pointgift.domain.PointGift;
 import com.spharos.ssgpoint.pointgift.domain.PointGiftStatusType;
 import com.spharos.ssgpoint.pointgift.domain.PointGiftType;
 import com.spharos.ssgpoint.pointgift.dto.PointGiftCreateDto;
 import com.spharos.ssgpoint.pointgift.dto.PointGiftGetDto;
+import com.spharos.ssgpoint.pointgift.dto.PointGiftListDto;
 import com.spharos.ssgpoint.pointgift.infrastructure.PointGiftRepository;
 import com.spharos.ssgpoint.user.domain.User;
 import com.spharos.ssgpoint.user.infrastructure.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -20,12 +27,16 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PointGiftServiceImpl implements PointGiftService {
 
     private final PointService pointService;
 
     private final UserRepository userRepository;
     private final PointGiftRepository pointGiftRepository;
+
+    private final PointRepository pointRepository;
+
 
     // 포인트 선물 수신인 확인
     @Override
@@ -51,9 +62,9 @@ public class PointGiftServiceImpl implements PointGiftService {
                 .user(UUID)
                 .build();
 
-        pointService.createPoint(UUID, pointCreateDto);
+        Point point = pointService.createPoint(UUID, pointCreateDto);
 
-        // 포인트 선물 테이블에 저장
+        // 포인트 선물 테이블에 저장 - 할필요없는데
         pointGiftRepository.save(PointGift.builder()
                 .point(pointGiftCreateDto.getPoint())
                 .message(pointGiftCreateDto.getMessage())
@@ -62,6 +73,7 @@ public class PointGiftServiceImpl implements PointGiftService {
                 .UUID(pointGiftCreateDto.getUUID())
                 .loginId(pointGiftCreateDto.getLoginId())
                 .name(pointGiftCreateDto.getName())
+                        .pointId(point.getId())
                 .build());
     }
 
@@ -71,6 +83,7 @@ public class PointGiftServiceImpl implements PointGiftService {
     public void updatePoint(Long id, String status) {
         // 포인트 선물 ID로 포인트 선물 정보 찾기
         Optional<PointGift> pointGiftList = pointGiftRepository.findById(id);
+
 
         // 보낸 사람 정보 찾기
         User sender = userRepository.findByUuid(pointGiftList.get().getUUID()).orElseThrow(() ->
@@ -95,6 +108,14 @@ public class PointGiftServiceImpl implements PointGiftService {
                     .user(receiver.getUuid())
                     .build();
             pointService.createPoint(receiver.getUuid(), pointCreateDto);
+
+            //해야할것 보낸 선물 수락 저장이 안되있다 보낸선물: 대기 -> 보낸선물 수락으로 변경해야한다
+            Long pointId = pointGiftList.get().getPointId();
+            Point point = pointRepository.findById(pointId).orElseThrow(() ->
+                    new IllegalArgumentException("보낸 선물 정보 없음"));
+            log.info("pointGiftList.get().getStatus()={}",pointGiftList.get().getStatus());
+            point.changeGiftStatus("보낸 선물 : " + pointGiftList.get().getStatus());
+
         }
 
         // 포인트 선물 거절 시
@@ -112,6 +133,13 @@ public class PointGiftServiceImpl implements PointGiftService {
                     .user(sender.getUuid())
                     .build();
             pointService.createPoint(sender.getUuid(), pointCreateDto);
+
+            //보낸선물: 대기 -> 거절
+            Long pointId = pointGiftList.get().getPointId();
+            Point point = pointRepository.findById(pointId).orElseThrow(() ->
+                    new IllegalArgumentException("보낸 선물 정보 없음"));
+            point.changeGiftStatus("보낸 선물 : " + pointGiftList.get().getStatus());
+
         }
 
     }
@@ -134,5 +162,14 @@ public class PointGiftServiceImpl implements PointGiftService {
                 .build()
         ).toList();
     }
+
+    @Override
+    public Slice<PointGiftListDto> getPointGiftList(Long id, String UUID, Pageable page, PointFilterVo p) {
+        return pointGiftRepository.findPointGiftList(id, UUID, p.getStartDate(), p.getEndDate(), page);
+
+    }
+
+    // 포인트 내역 - 선물
+
 
 }

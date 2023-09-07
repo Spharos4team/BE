@@ -37,7 +37,7 @@ public class PointCardController {
 
         return pointCardGetDtoList.stream().map(pointCardGetDto ->
                 PointCardGetVo.builder()
-                        .name(pointCardGetDto.getName())
+                        .createdDate(pointCardGetDto.getCreatedDate().toLocalDate())
                         .number(pointCardGetDto.getNumber())
                         .agency(pointCardGetDto.getAgency())
                         .build()

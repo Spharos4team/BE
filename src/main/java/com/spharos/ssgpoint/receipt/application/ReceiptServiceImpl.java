@@ -48,7 +48,7 @@ public class ReceiptServiceImpl implements ReceiptService {
                 .title(receipt.getStoreName())
                 .statusType("0")
                 .type("5")
-                .user(UUID)
+                //.user(UUID)
                 .build();
 
         pointService.createPoint(UUID, pointCreateDto);

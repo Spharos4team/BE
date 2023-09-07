@@ -1,6 +1,8 @@
 package com.spharos.ssgpoint.user.application;
 
-import com.spharos.ssgpoint.user.dto.*;
+import com.spharos.ssgpoint.user.dto.password.PasswordUpdateDto;
+import com.spharos.ssgpoint.user.dto.shoppinghistory.*;
+import com.spharos.ssgpoint.user.dto.user.*;
 
 import java.util.List;
 import java.util.Map;

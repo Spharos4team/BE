@@ -1,4 +1,4 @@
-package com.spharos.ssgpoint.user.vo;
+package com.spharos.ssgpoint.user.vo.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

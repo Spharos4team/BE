@@ -49,4 +49,8 @@ public class Point extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Receipt receipt;
 
+
+    public void changeGiftStatus(String content) {
+        this.content = content;
+    }
 }

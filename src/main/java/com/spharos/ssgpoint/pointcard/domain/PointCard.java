@@ -1,11 +1,15 @@
 package com.spharos.ssgpoint.pointcard.domain;
 
 import com.spharos.ssgpoint.global.BaseEntity;
+import com.spharos.ssgpoint.point.domain.Point;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -33,5 +37,7 @@ public class PointCard extends BaseEntity {
     @Column(nullable = false)
     @Convert(converter = PointCardTypeConverter.class)
     private PointCardType type;
+
+
 
 }

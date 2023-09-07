@@ -6,18 +6,16 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PointGetVo {
+public class PointFilterVo {
 
-    private Integer point;
-    private String title;
-    private String content;
-    private String type;
-    private LocalDateTime createdDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private String pointUse;
+    private String pointType;
 
 }
