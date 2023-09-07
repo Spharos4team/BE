@@ -23,7 +23,6 @@ public class EventEntries {
     @ManyToOne(fetch = FetchType.LAZY)
     private Event event;
 
-    private boolean isWinning;
 
 
 }

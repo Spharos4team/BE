@@ -2,8 +2,9 @@ package com.spharos.ssgpoint.event.presentation;
 
 import com.spharos.ssgpoint.event.application.EventService;
 import com.spharos.ssgpoint.event.domain.Event;
-import com.spharos.ssgpoint.event.domain.EventEntries;
 import com.spharos.ssgpoint.event.domain.EventType;
+import com.spharos.ssgpoint.event.domain.UserEvent;
+import com.spharos.ssgpoint.event.dto.UserEventDTO;
 import com.spharos.ssgpoint.event.exception.EventException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -79,20 +80,50 @@ public class EventController {
 
 
     @GetMapping("/events/participated")
-    public ResponseEntity<List<EventEntries>> getEventsParticipatedByUuid(@RequestParam String uuid) {
-        List<EventEntries> eventEntries = eventService.getEventsParticipatedByUuid(uuid);
+    public ResponseEntity<List<UserEvent>> getEventsParticipatedByUuid(@RequestParam String uuid) {
+        List<UserEvent> eventEntries = eventService.getEventsParticipatedByUuid(uuid);
         return ResponseEntity.ok(eventEntries);
     }
 
     @GetMapping("/events/winning")
-    public ResponseEntity<List<EventEntries>> getWinningEventsByUuid(@RequestParam String uuid) {
-        List<EventEntries> winningEvents = eventService.getWinningEventsByUuid(uuid);
+    public ResponseEntity<List<UserEventDTO>> getWinningEventsByUuid(@RequestParam String uuid) {
+        List<UserEventDTO> winningEvents = eventService.getWinningEventsByUuid(uuid);
         return ResponseEntity.ok(winningEvents);
     }
+
 
 
     @ExceptionHandler(EventException.class)
     public ResponseEntity<String> handleEventException(EventException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+
+    @PostMapping("/events/{eventId}/assign")
+    public ResponseEntity<String> assignUserToEvent(
+            @PathVariable Long eventId,
+            @RequestParam String uuid) {
+        try {
+            eventService.assignEventToUuid(uuid, eventId);
+            return ResponseEntity.ok("UUID가 이벤트에 할당되었습니다.");
+        } catch (EventException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 내부 오류가 발생했습니다.");
+        }
+    }
+
+    @PostMapping("/events/{eventId}/assign/winner")
+    public ResponseEntity<String> assignWinnerToEvent(
+            @PathVariable Long eventId,
+            @RequestParam String uuid) {
+        try {
+            eventService.assignWinnerToUuid(uuid, eventId);
+            return ResponseEntity.ok("UUID가 이벤트 당첨자로 할당되었습니다.");
+        } catch (EventException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 내부 오류가 발생했습니다.");
+        }
     }
 }
