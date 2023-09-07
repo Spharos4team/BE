@@ -2,7 +2,7 @@ package com.spharos.ssgpoint.event.vo;
 
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -22,9 +22,11 @@ public class EventAdd {
 
     private List<String> eventImages;
 
-    private Date startDate;
+    private LocalDateTime startDate;
 
-    private Date endDate;
+    private LocalDateTime endDate;
+
+    private LocalDateTime winningDate;
 
 
 
