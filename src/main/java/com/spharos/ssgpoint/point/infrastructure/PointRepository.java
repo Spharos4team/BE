@@ -33,17 +33,14 @@ public interface PointRepository extends JpaRepository<Point, Long> , PointRepos
             + " JOIN p.user u on u.id = p.user.id"
             + " WHERE u.uuid = :uuid"
             + " ORDER BY p.id DESC LIMIT 1")
-    Integer findByUserIdOrderById(@Param("uuid") String uuid);
+    Integer findTotalPoint(@Param("uuid") String uuid);
 
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @Query("SELECT p.totalPoint FROM Point p where p.user.id = :user_id order by p.createdDate desc")
-    Integer findTotalPoint(@Param("user_id") Long user_id);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     Long countByUserId(Long user_id);
 
-    @Query("select p from Point p where p.user.id = :user_id")
-    Point findByUserId(String userId);
+    @Query("select p from Point p where p.user.id = :userid")
+    Point findByUserId(@Param("userid")String userId);
 
 
 }

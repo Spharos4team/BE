@@ -1,6 +1,7 @@
 package com.spharos.ssgpoint.alliancepoint.presentation;
 
 import com.spharos.ssgpoint.alliancepoint.application.AlliancePointService;
+import com.spharos.ssgpoint.alliancepoint.domain.AlliancePoint;
 import com.spharos.ssgpoint.alliancepoint.dto.AlliancePointCreateDto;
 import com.spharos.ssgpoint.alliancepoint.dto.AlliancePointGetDto;
 import com.spharos.ssgpoint.alliancepoint.dto.AlliancePointUpdateDto;
@@ -26,13 +27,12 @@ public class AlliancePointController {
     @PostMapping("/alliance-point")
     public ResponseEntity<String> createAlliancePoint(@RequestParam("UUID") String UUID, @RequestBody AlliancePointCreateVo alliancePointCreateVo) {
 
-
         AlliancePointCreateDto alliancePointCreateDto = AlliancePointCreateDto.builder()
                 .type(alliancePointCreateVo.getType())
                 .point(alliancePointCreateVo.getPoint())
                 .build();
         alliancePointService.createAlliancePoint(UUID, alliancePointCreateDto);
-        return ResponseEntity.ok("전환 포인트 생성");
+        return ResponseEntity.ok("포인트생성");
     }
 
     // 제휴사 포인트 조회

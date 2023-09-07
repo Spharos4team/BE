@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDate;
 
 public interface PointRepositoryCustom {
-    Slice<PointFilterDto> findByFilter(Long pointId, String uuid, LocalDate startDate, LocalDate endDate, String pointUse, String pointType, Pageable pageable);
+    Slice<PointFilterDto> findByFilter(Long pointId, String uuid, LocalDate startDate, LocalDate endDate,
+                                       String pointUse, String pointType, Pageable pageable);
 
 }

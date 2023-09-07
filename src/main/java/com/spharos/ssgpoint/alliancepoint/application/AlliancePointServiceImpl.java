@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -27,15 +28,24 @@ public class AlliancePointServiceImpl implements AlliancePointService {
 
     // 제휴사 포인트 생성 (테스트 위해 생성)
     @Override
+    @Transactional
     public void createAlliancePoint(String UUID, AlliancePointCreateDto alliancePointCreateDto) {
+
         AlliancePointType alliancePointType
                 = new AlliancePointTypeConverter().convertToEntityAttribute(alliancePointCreateDto.getType());
+
+        Optional<AlliancePoint> byAllianceUUID = alliancePointRepository.findByAllianceUUID(UUID,alliancePointType);
+        if(byAllianceUUID.isPresent()){
+            byAllianceUUID.get().updatePlus(alliancePointCreateDto.getPoint());
+        }
+        else{
         alliancePointRepository.save(AlliancePoint.builder()
                 .point(alliancePointCreateDto.getPoint())
                 .type(alliancePointType)
                 .UUID(UUID)
-                .build());
+                .build());}
     }
+
 
     // 제휴사 포인트 조회
     @Override
@@ -46,8 +56,6 @@ public class AlliancePointServiceImpl implements AlliancePointService {
                 AlliancePointGetDto.builder()
                         .point(alliancePoint.getPoint())
                         .type(String.valueOf(alliancePoint.getType().getValue()))
-                        .fromPoint(alliancePoint.getFromPoint())
-                        .toPoint(alliancePoint.getToPoint())
                         .build()
         ).toList();
     }
@@ -80,7 +88,7 @@ public class AlliancePointServiceImpl implements AlliancePointService {
                         .content("(" + alliancePointName + "->신세계P)")
                         .statusType("0")
                         .type("7")
-                        .user(UUID)
+                       // .user(UUID)
                         .build();
 
                 pointService.createPoint(UUID, pointCreateDto);
@@ -98,7 +106,7 @@ public class AlliancePointServiceImpl implements AlliancePointService {
                         .content("(신세계P->" + alliancePointName + ")")
                         .statusType("1")
                         .type("4")
-                        .user(UUID)
+                        //.user(UUID)
                         .build();
 
                 pointService.createPoint(UUID, pointCreateDto);

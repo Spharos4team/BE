@@ -27,8 +27,7 @@ public class AlliancePoint {
     @Column(nullable = false, length = 100)
     private String UUID;
 
-    private String fromPoint;
-    private String toPoint;
+
 
 
     public void updateMinus(Integer minusPoint) {

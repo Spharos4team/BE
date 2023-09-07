@@ -27,6 +27,7 @@ public class PointController {
     // 포인트 생성
     @PostMapping("/point")
     public void createPoint(@RequestParam("UUID") String UUID, @RequestBody PointCreateVo pointCreateVo) {
+
         if (pointCreateVo.getType().equals("1")) {
             PointCreateDto pointCreateDto = PointCreateDto.builder()
                     .point(pointCreateVo.getPoint())
@@ -45,7 +46,6 @@ public class PointController {
                             .cardNumber(pointCreateVo.getReceipt().getCardNumber())
                             .build())
                     .build();
-
             pointService.createPoint(UUID, pointCreateDto);
         } else {
             PointCreateDto pointCreateDto = PointCreateDto.builder()
@@ -55,7 +55,6 @@ public class PointController {
                     .statusType(pointCreateVo.getStatusType())
                     .type(pointCreateVo.getType())
                     .build();
-
             pointService.createPoint(UUID, pointCreateDto);
         }
 
@@ -68,7 +67,7 @@ public class PointController {
                                                  @RequestParam(value = "lastId", required = false) Long lastId,
                                                  @PageableDefault(size=10, sort="createdDate") Pageable pageRequest
             , @RequestBody PointFilterVo pointFilterVo) {
-        return pointService.test(lastId,UUID, pageRequest,pointFilterVo);
+        return pointService.pointFilter(lastId,UUID, pageRequest,pointFilterVo);
     }
 
 }

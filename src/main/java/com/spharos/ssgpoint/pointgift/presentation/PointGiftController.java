@@ -1,13 +1,19 @@
 package com.spharos.ssgpoint.pointgift.presentation;
 
+import com.spharos.ssgpoint.point.dto.PointFilterDto;
+import com.spharos.ssgpoint.point.vo.PointFilterVo;
 import com.spharos.ssgpoint.pointgift.application.PointGiftService;
 import com.spharos.ssgpoint.pointgift.dto.PointGiftCreateDto;
 import com.spharos.ssgpoint.pointgift.dto.PointGiftGetDto;
+import com.spharos.ssgpoint.pointgift.dto.PointGiftListDto;
 import com.spharos.ssgpoint.pointgift.dto.PointGiftUserGetDto;
 import com.spharos.ssgpoint.pointgift.vo.PointGiftCreateVo;
 import com.spharos.ssgpoint.pointgift.vo.PointGiftGetVo;
 import com.spharos.ssgpoint.user.domain.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,22 +65,16 @@ public class PointGiftController {
         return ResponseEntity.ok("포인트 선물 상태 변경 완료");
     }
 
-    // TODO: 안 쓰면 삭제
-    // 포인트 선물 목록
-    @GetMapping("/point/gift")
-    public List<PointGiftGetVo> getPointGiftByUser(@RequestParam("UUID") String UUID) {
-        List<PointGiftGetDto> pointGiftGetDtoList = pointGiftService.getPointGiftByUser(UUID);
 
-        return pointGiftGetDtoList.stream().map(pointGiftGetDto -> PointGiftGetVo.builder()
-                .point(pointGiftGetDto.getPoint())
-                .message(pointGiftGetDto.getMessage())
-                .type(pointGiftGetDto.getType())
-                .status(pointGiftGetDto.getStatus())
-                .UUID(UUID)
-                .loginId(pointGiftGetDto.getLoginId())
-                .name(pointGiftGetDto.getName())
-                .createdDate(pointGiftGetDto.getCreatedDate())
-                .build()
-        ).toList();
+    //포인트 선물 목록
+    @GetMapping("/point/gift")
+    public Slice<PointGiftListDto> pointListFilter(@RequestParam("UUID") String UUID,
+                                                   @RequestParam(value = "lastId", required = false) Long lastId,
+                                                   @PageableDefault(size=10, sort="createdDate") Pageable pageRequest
+            , @RequestBody PointFilterVo pointFilterVo){
+        return pointGiftService.getPointGiftList(lastId,UUID,pageRequest,pointFilterVo);
     }
+
+
+
 }

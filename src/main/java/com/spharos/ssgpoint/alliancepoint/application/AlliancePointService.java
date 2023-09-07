@@ -1,5 +1,6 @@
 package com.spharos.ssgpoint.alliancepoint.application;
 
+import com.spharos.ssgpoint.alliancepoint.domain.AlliancePoint;
 import com.spharos.ssgpoint.alliancepoint.dto.AlliancePointCreateDto;
 import com.spharos.ssgpoint.alliancepoint.dto.AlliancePointGetDto;
 import com.spharos.ssgpoint.alliancepoint.dto.AlliancePointUpdateDto;

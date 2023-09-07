@@ -19,8 +19,8 @@ public class PointCreateVo {
     private String statusType;
     private String type;
     private Long pointCardId;
-
     private ReceiptDto receipt;
+
 
     @Data
     public static class ReceiptDto {

@@ -31,7 +31,8 @@ public class PointRepositoryImpl implements PointRepositoryCustom{
     }
 
     @Override
-    public Slice<PointFilterDto> findByFilter(Long pointId, String uuid, LocalDate startDate,LocalDate endDate, String pointUse, String pointType,  Pageable pageable) {
+    public Slice<PointFilterDto> findByFilter(Long pointId, String uuid, LocalDate startDate,LocalDate endDate,
+                                              String pointUse, String pointType,  Pageable pageable) {
 
         Long userId = queryFactory.select(user.id)
                 .from(user)
@@ -104,6 +105,7 @@ public class PointRepositoryImpl implements PointRepositoryCustom{
 
         return new SliceImpl<>(results, pageable, hasNext);
     }
+
 
 
 }
