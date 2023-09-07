@@ -1,7 +1,10 @@
 package com.spharos.ssgpoint.event.domain;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -10,7 +13,6 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class Event {
 
     @Id
@@ -26,12 +28,19 @@ public class Event {
     @Column(nullable = false)
     private String thumbnailUrl; // S3나 다른 스토리지 서비스에 저장된 이미지의 URL
 
+    private String bannerUrl;
+
+
     @Column(nullable = false)
     private EventType eventType;
 
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private LocalDateTime winningDate;
+
+    public void addEventImageList(EventImageList eventImageList) {
+    }
+
 
 
 }

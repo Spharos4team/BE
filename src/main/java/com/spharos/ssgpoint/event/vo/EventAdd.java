@@ -20,6 +20,8 @@ public class EventAdd {
 
     private String thumbnailUrl;
 
+    private String bannerUrl;
+
     private List<String> eventImages;
 
     private LocalDateTime startDate;

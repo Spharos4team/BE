@@ -4,9 +4,7 @@ import com.spharos.ssgpoint.event.application.EventService;
 import com.spharos.ssgpoint.event.domain.Event;
 import com.spharos.ssgpoint.event.domain.EventEntries;
 import com.spharos.ssgpoint.event.domain.EventType;
-import com.spharos.ssgpoint.event.dto.EventDto;
 import com.spharos.ssgpoint.event.exception.EventException;
-import com.spharos.ssgpoint.event.vo.EventOut;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -18,7 +16,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,31 +30,14 @@ public class EventController {
             @RequestParam(required = false, defaultValue = "false") boolean all
     ) {
         if (all || type == null) {
-            List<EventDto> events = eventService.getAllEvents();
-            List<EventOut> eventOuts = events.stream().map(
-                    eventDto -> {
-                        return EventOut.builder()
-                                .id(eventDto.getId())
-                                .title(eventDto.getTitle())
-                                .content(eventDto.getContent())
-                                .eventType(eventDto.getEventType().name())
-                                .eventImages(eventDto.getEventImages())
-                                .thumbnailUrl(eventDto.getThumbnailUrl())
-                                .startDate(eventDto.getStartDate())
-                                .endDate(eventDto.getEndDate())
-                                .winningDate(eventDto.getWinningDate())
-                                .build();
-                    }).collect(Collectors.toList());
-
-
-            return ResponseEntity.ok(eventOuts);
+            List<Event> events = eventService.getAllEvents();
+            return ResponseEntity.ok(events);
         } else {
             EventType eventType = EventType.valueOf(type.toUpperCase());
             List<Event> events = eventService.getEventsByType(eventType);
             return ResponseEntity.ok(events);
         }
     }
-
 
 
     @GetMapping("/events/{id}")
@@ -69,6 +49,7 @@ public class EventController {
         }
         return ResponseEntity.ok(event); // 200 OK
     }
+
 
     @PostMapping("/events")
     public ResponseEntity<String> addEvent(
@@ -98,8 +79,8 @@ public class EventController {
 
 
     @GetMapping("/events/participated")
-    public ResponseEntity<List<EventEntries>> getEventsParticipatedByUser(@RequestParam String uuid) {
-        List<EventEntries> eventEntries = eventService.getEventsParticipatedByUser(uuid);
+    public ResponseEntity<List<EventEntries>> getEventsParticipatedByUuid(@RequestParam String uuid) {
+        List<EventEntries> eventEntries = eventService.getEventsParticipatedByUuid(uuid);
         return ResponseEntity.ok(eventEntries);
     }
 

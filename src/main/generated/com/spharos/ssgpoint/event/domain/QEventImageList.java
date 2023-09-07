@@ -47,7 +47,7 @@ public class QEventImageList extends EntityPathBase<EventImageList> {
     public QEventImageList(Class<? extends EventImageList> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.event = inits.isInitialized("event") ? new QEvent(forProperty("event")) : null;
-        this.eventImage = inits.isInitialized("eventImage") ? new QEventImage(forProperty("eventImage")) : null;
+        this.eventImage = inits.isInitialized("eventImage") ? new QEventImage(forProperty("eventImage"), inits.get("eventImage")) : null;
     }
 
 }

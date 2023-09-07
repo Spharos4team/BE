@@ -1,8 +1,10 @@
 package com.spharos.ssgpoint.event.dto;
 
-import com.spharos.ssgpoint.event.domain.EventImage;
 import com.spharos.ssgpoint.event.domain.EventType;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -11,8 +13,6 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
-@Builder
 public class EventDto {
 
     private Long id;
@@ -25,12 +25,8 @@ public class EventDto {
     private LocalDateTime endDate;
     private LocalDateTime winningDate;
     private String thumbnailUrl;
-    private List<EventImage> eventImages;
+    private List<String> eventImages;
 
-
-
-    public EventDto(Long id, String title, String content, EventType name, String thumbnailUrl, List<String> eventImageById) {
-    }
-
+    
 
 }

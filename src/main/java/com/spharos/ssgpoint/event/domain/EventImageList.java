@@ -17,10 +17,9 @@ public class EventImageList {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id")
-    private Event event_id;
+    private Event event;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_image_id")
     private EventImage eventImage;
-
 }
