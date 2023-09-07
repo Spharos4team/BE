@@ -79,7 +79,7 @@ public class PointRepositoryImpl implements PointRepositoryCustom{
         } else if ("2".equals(pointType)) { // 이벤트
             return point1.type.eq(이벤트);
         } else {
-            return null;
+            return point1.type.in(결제, 선물, 전환, 추후, 소멸,이벤트);
         }
     }
 
@@ -105,7 +105,4 @@ public class PointRepositoryImpl implements PointRepositoryCustom{
 
         return new SliceImpl<>(results, pageable, hasNext);
     }
-
-
-
 }

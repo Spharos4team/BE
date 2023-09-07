@@ -51,7 +51,7 @@ public class AlliancePointController {
 
     // 제휴사 포인트 전환
     @PutMapping("/alliance-point")
-    public void updateAlliancePoint(@RequestParam("UUID") String UUID, @RequestParam("type") String type,
+    public ResponseEntity<String> updateAlliancePoint(@RequestParam("UUID") String UUID, @RequestParam("type") String type,
                                     @RequestParam("status") String status,
                                     @RequestBody AlliancePointUpdateVo alliancePointUpdateVo) {
         AlliancePointUpdateDto alliancePointUpdateDto = AlliancePointUpdateDto.builder()
@@ -59,6 +59,7 @@ public class AlliancePointController {
                 .build();
 
         alliancePointService.updateAlliancePoint(UUID, type, status, alliancePointUpdateDto);
+        return ResponseEntity.ok("포인트전환 완료");
     }
 
 }
