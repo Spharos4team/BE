@@ -1,5 +1,7 @@
 package com.spharos.ssgpoint.pointgift.application;
 
+import com.spharos.ssgpoint.point.dto.PointFilterSumDto;
+import com.spharos.ssgpoint.point.vo.PointFilterVo;
 import com.spharos.ssgpoint.pointgift.dto.PointGiftCreateDto;
 import com.spharos.ssgpoint.pointgift.dto.PointGiftGetDto;
 import com.spharos.ssgpoint.pointgift.dto.PointGiftListDto;
@@ -26,4 +28,6 @@ public interface PointGiftService {
     List<PointGiftGetDto> getPointGiftByUser(String UUID);
 
     Slice<PointGiftListDto> getPointGiftList(Long pointId, String uuid, Pageable page, PointListInVo pointFilterVo);
+
+    PointFilterSumDto sumPointsGiftByFilter(String UUID, PointListInVo p);
 }

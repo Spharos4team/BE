@@ -3,6 +3,7 @@ package com.spharos.ssgpoint.point.application;
 import com.spharos.ssgpoint.point.domain.*;
 import com.spharos.ssgpoint.point.dto.PointCreateDto;
 import com.spharos.ssgpoint.point.dto.PointFilterDto;
+import com.spharos.ssgpoint.point.dto.PointFilterSumDto;
 import com.spharos.ssgpoint.point.dto.PointGetDto;
 import com.spharos.ssgpoint.point.infrastructure.PointRepository;
 import com.spharos.ssgpoint.point.vo.PointCreateVo;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
@@ -132,5 +134,13 @@ public class PointServiceImpl implements PointService {
         return pointRepository.findByFilter(id, UUID, p.getStartDate(), p.getEndDate(), p.getPointUse(), p.getPointType(), page);
 
     }
+
+    @Override
+    public PointFilterSumDto sumPointsByFilter(String UUID, PointFilterVo p) {
+        return pointRepository.sumPointsByFilter(UUID,p.getPointUse(),p.getPointType(),p.getStartDate(),p.getEndDate());
+    }
+
+    // 포인터 필터 적용된거 적립 사용 합계
+
 
 }

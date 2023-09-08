@@ -3,6 +3,7 @@ package com.spharos.ssgpoint.point.application;
 import com.spharos.ssgpoint.point.domain.Point;
 import com.spharos.ssgpoint.point.dto.PointCreateDto;
 import com.spharos.ssgpoint.point.dto.PointFilterDto;
+import com.spharos.ssgpoint.point.dto.PointFilterSumDto;
 import com.spharos.ssgpoint.point.dto.PointGetDto;
 import com.spharos.ssgpoint.point.vo.PointFilterVo;
 import com.spharos.ssgpoint.pointgift.vo.PointListInVo;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 
 import java.util.List;
+import java.util.Map;
 
 public interface PointService {
 
@@ -20,5 +22,8 @@ public interface PointService {
     List<PointGetDto> getTotalPointByUser(String UUID, Pageable page);
     List<PointGetDto> getSavePointByUser(String UUID, Pageable page);
     Slice<PointFilterDto> pointFilter(Long id, String UUID, Pageable page, PointFilterVo pointFilterVo);
+
+
+    PointFilterSumDto sumPointsByFilter(String UUID, PointFilterVo p);
 
 }

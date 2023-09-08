@@ -15,6 +15,7 @@ import java.util.List;
 
 import static com.spharos.ssgpoint.point.domain.PointType.*;
 import static com.spharos.ssgpoint.point.domain.QPoint.point1;
+import static com.spharos.ssgpoint.user.domain.QUser.user;
 
 public class AlliancePointRepositoryImpl implements AlliancePointRepositoryCustom{
     private final JPAQueryFactory queryFactory;
@@ -31,6 +32,7 @@ public class AlliancePointRepositoryImpl implements AlliancePointRepositoryCusto
                         point1.id , point1.point, point1.title, point1.content, point1.type,
                         point1.statusType, point1.createdDate))
                 .from(point1)
+                .join(point1.user, user)
                 .where(ltStoreId(pointId),
                         point1.user.uuid.eq(uuid),
                         point1.createdDate.between(startDate.atStartOfDay(), endDate.atStartOfDay()),

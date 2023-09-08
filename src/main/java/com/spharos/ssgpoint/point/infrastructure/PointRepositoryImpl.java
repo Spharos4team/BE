@@ -2,20 +2,22 @@ package com.spharos.ssgpoint.point.infrastructure;
 
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.spharos.ssgpoint.point.domain.Point;
 
-import com.spharos.ssgpoint.point.dto.PointFilterDto;
-import com.spharos.ssgpoint.point.dto.PointGetDto;
+import com.spharos.ssgpoint.point.dto.*;
 
-import com.spharos.ssgpoint.point.dto.QPointFilterDto;
 import com.spharos.ssgpoint.user.domain.User;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.*;
 
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.spharos.ssgpoint.point.domain.PointStatusType.*;
 
@@ -34,33 +36,84 @@ public class PointRepositoryImpl implements PointRepositoryCustom{
     public Slice<PointFilterDto> findByFilter(Long pointId, String uuid, LocalDate startDate,LocalDate endDate,
                                               String pointUse, String pointType,  Pageable pageable) {
 
-        Long userId = queryFactory.select(user.id)
-                .from(user)
-                .where(user.uuid.eq(uuid))
-                .fetchOne();
-
         List<PointFilterDto> results = queryFactory
                 .select(new QPointFilterDto(point1.id, point1.point, point1.title, point1.content, point1.type,
                         point1.statusType, point1.createdDate, point1.receipt.id))
                 .from(point1)
+                .join(point1.user, user)
                 .where(ltStoreId(pointId),
                         pointUseEq(pointUse), pointTypeEq(pointType),
-                        point1.user.id.eq(userId),
+                        user.uuid.eq(uuid),
                         point1.createdDate.between(startDate.atStartOfDay(), endDate.atStartOfDay()))
-                //.offset(pageable.getOffset())
                 .orderBy(point1.id.desc())
                 .limit(pageable.getPageSize()+1)
                 .fetch();
-
-        /*long total = queryFactory
-                .select(point1)
-                .from(point1)
-                .where(pointUseEq(pointUse), pointTypeEq(pointType),point1.user.id.eq(userId), point1.createdDate.between(startDate.atStartOfDay(), endDate.atStartOfDay()))
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetchCount();*/
-
         return checkLastPage(pageable, results);
+    }
+
+    @Override
+    public PointFilterSumDto sumPointsByFilter(String uuid, String pointUse, String pointType, LocalDate startDate, LocalDate endDate) {
+        Integer save ;
+        Integer use ;
+
+    if("1".equals(pointUse)) {
+        save = queryFactory
+                .select(point1.point.sum())
+                .from(point1)
+                .join(point1.user, user)
+                .where(
+                        pointUseEq(pointUse),
+                        pointTypeEq(pointType),
+                        user.uuid.eq(uuid),
+                        point1.createdDate.between(startDate.atStartOfDay(), endDate.atStartOfDay()))
+                .orderBy(point1.id.desc())
+                .fetchOne();
+
+        use = 0;
+    }
+    else if("2".equals(pointUse)){
+            save = 0;
+            use =queryFactory
+                    .select(point1.point.sum())
+                    .from(point1)
+                    .join(point1.user, user)
+                    .where(
+                            pointUseEq(pointUse),
+                            pointTypeEq(pointType),
+                            user.uuid.eq(uuid),
+                            point1.createdDate.between(startDate.atStartOfDay(), endDate.atStartOfDay()))
+                    .orderBy(point1.id.desc())
+                    .fetchOne();
+        }
+    else{ //전체니까 적립 사용 둘다
+        save = queryFactory
+                .select(point1.point.sum())
+                .from(point1)
+                .join(point1.user, user)
+                .where(
+                        pointUseEq("1"),
+                        pointTypeEq(pointType),
+                        user.uuid.eq(uuid),
+                        point1.createdDate.between(startDate.atStartOfDay(), endDate.atStartOfDay()))
+                .orderBy(point1.id.desc())
+                .fetchOne();
+        use =queryFactory
+                .select(point1.point.sum())
+                .from(point1)
+                .join(point1.user, user)
+                .where(
+                        pointUseEq("2"),
+                        pointTypeEq(pointType),
+                        user.uuid.eq(uuid),
+                        point1.createdDate.between(startDate.atStartOfDay(), endDate.atStartOfDay()))
+                .orderBy(point1.id.desc())
+                .fetchOne();
+
+    }
+        return PointFilterSumDto.builder()
+                .savePoint(save)
+                .usePoint(use)
+                .build();
     }
 
     private BooleanExpression pointUseEq(String pointUse) {
