@@ -10,6 +10,7 @@ import com.spharos.ssgpoint.alliancepoint.dto.AlliancePointUpdateDto;
 import com.spharos.ssgpoint.alliancepoint.infrastructure.AlliancePointRepository;
 import com.spharos.ssgpoint.point.application.PointService;
 import com.spharos.ssgpoint.point.dto.PointCreateDto;
+import com.spharos.ssgpoint.point.dto.PointFilterSumDto;
 import com.spharos.ssgpoint.pointgift.vo.PointListInVo;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -118,9 +119,18 @@ public class AlliancePointServiceImpl implements AlliancePointService {
         }
     }
 
+    //전환 포인트 리스트
     @Override
     public Slice<AlliancePointListDto> getPointAllianceList(Long lastId, String uuid, Pageable page, PointListInVo p) {
        return alliancePointRepository.findPointAllianceList(lastId, uuid, p.getStartDate(), p.getEndDate(), page);
     }
+
+
+    //전환 포인트 적립 사용 합계
+    @Override
+    public PointFilterSumDto sumPointsAllianceByFilter(String UUID, PointListInVo p) {
+        return alliancePointRepository.sumPointsAllianceByFilter(UUID, p.getStartDate(), p.getEndDate());
+    }
+
 
 }

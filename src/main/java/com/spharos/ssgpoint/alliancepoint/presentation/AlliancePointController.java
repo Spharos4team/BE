@@ -10,6 +10,7 @@ import com.spharos.ssgpoint.alliancepoint.vo.AlliancePointCreateVo;
 import com.spharos.ssgpoint.alliancepoint.vo.AlliancePointGetVo;
 import com.spharos.ssgpoint.alliancepoint.vo.AlliancePointUpdateVo;
 
+import com.spharos.ssgpoint.point.dto.PointFilterSumDto;
 import com.spharos.ssgpoint.pointgift.vo.PointListInVo;
 import com.spharos.ssgpoint.pointgift.vo.PointListOutVo;
 
@@ -32,7 +33,7 @@ public class AlliancePointController {
     private final AlliancePointService alliancePointService;
 
     // 제휴사 포인트 생성 (테스트 위해 생성)
-    @PostMapping("/alliance-point")
+    @PostMapping("/point/alliance")
     public ResponseEntity<String> createAlliancePoint(@RequestParam("UUID") String UUID, @RequestBody AlliancePointCreateVo alliancePointCreateVo) {
 
         AlliancePointCreateDto alliancePointCreateDto = AlliancePointCreateDto.builder()
@@ -44,7 +45,7 @@ public class AlliancePointController {
     }
 
     // 제휴사 포인트 조회
-    @GetMapping("/alliance-point")
+    @GetMapping("/point/alliance")
     public List<AlliancePointGetVo> getAlliancePointByUUID(@RequestParam("UUID") String UUID) {
         List<AlliancePointGetDto> alliancePointGetDtoList
                 = alliancePointService.getAlliancePointByUUID(UUID);
@@ -58,7 +59,7 @@ public class AlliancePointController {
     }
 
     // 제휴사 포인트 전환
-    @PutMapping("/alliance-point")
+    @PutMapping("/point/alliance")
     public ResponseEntity<String> updateAlliancePoint(@RequestParam("UUID") String UUID, @RequestParam("type") String type,
                                     @RequestParam("status") String status,
                                     @RequestBody AlliancePointUpdateVo alliancePointUpdateVo) {
@@ -71,7 +72,7 @@ public class AlliancePointController {
     }
 
     // 전환 목록
-    @GetMapping("/alliance-list")
+    @GetMapping("/point/alliance/list")
     public ResponseEntity<Slice<PointListOutVo>> alliancePointListFilter
     (@RequestParam("UUID") String UUID,
      @RequestParam(value = "lastId", required = false) Long lastId,
@@ -87,6 +88,16 @@ public class AlliancePointController {
         // ResponseEntity로 감싸서 반환
        return ResponseEntity.ok(pointFilterOutVos);
         //return pointAllianceList;
+    }
+
+    // 전환 포인트 목록 적립 사용 합계
+    @GetMapping("/point/alliance/sum")
+    public ResponseEntity<PointFilterSumDto> giftPointListSum(@RequestParam("UUID") String UUID,
+                                                              @RequestBody PointListInVo pointGiftListVo){
+
+        PointFilterSumDto pointFilterSumDto = alliancePointService.sumPointsAllianceByFilter(UUID, pointGiftListVo);
+        return ResponseEntity.ok(pointFilterSumDto);
+
     }
 
 }

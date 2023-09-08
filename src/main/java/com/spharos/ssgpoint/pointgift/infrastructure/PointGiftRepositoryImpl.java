@@ -19,9 +19,7 @@ import org.springframework.data.domain.SliceImpl;
 import java.time.LocalDate;
 import java.util.List;
 
-import static com.spharos.ssgpoint.point.domain.PointStatusType.*;
 import static com.spharos.ssgpoint.point.domain.PointType.*;
-import static com.spharos.ssgpoint.point.domain.PointType.이벤트;
 import static com.spharos.ssgpoint.point.domain.QPoint.point1;
 import static com.spharos.ssgpoint.user.domain.QUser.user;
 

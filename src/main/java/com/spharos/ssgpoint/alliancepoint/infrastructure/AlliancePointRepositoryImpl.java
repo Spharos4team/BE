@@ -4,6 +4,8 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.spharos.ssgpoint.alliancepoint.dto.AlliancePointListDto;
+import com.spharos.ssgpoint.point.domain.PointStatusType;
+import com.spharos.ssgpoint.point.dto.PointFilterSumDto;
 import com.spharos.ssgpoint.pointgift.dto.PointGiftListDto;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Pageable;
@@ -43,6 +45,68 @@ public class AlliancePointRepositoryImpl implements AlliancePointRepositoryCusto
 
         return checkLastPage(pageable, results);
     }
+
+    @Override
+    public PointFilterSumDto sumPointsAllianceByFilter(String uuid, LocalDate startDate, LocalDate endDate) {
+        Integer save=0;
+        Integer use=0;
+        Integer subtract=0;
+
+        List<PointGiftListDto> results = queryFactory
+                .select(Projections.fields(PointGiftListDto.class,
+                        point1.point , point1.statusType))
+                .from(point1)
+                .join(point1.user, user)
+                .where(
+                        point1.user.uuid.eq(uuid),
+                        point1.createdDate.between(startDate.atStartOfDay(), endDate.atStartOfDay()),
+                        point1.type.in(전환,제휴사전환)
+                )
+                .fetch();
+
+        use = results.stream()
+                .filter(result -> result.getStatusType() == PointStatusType.사용)
+                .mapToInt(PointGiftListDto::getPoint)
+                .sum();
+
+        save = results.stream()
+                .filter(result -> result.getStatusType() == PointStatusType.적립)
+                .mapToInt(PointGiftListDto::getPoint)
+                .sum();
+
+        subtract = results.stream()
+                .filter(result -> result.getStatusType() != PointStatusType.사용 && result.getStatusType() != PointStatusType.적립)
+                .mapToInt(PointGiftListDto::getPoint)
+                .sum();
+
+        save -= subtract;
+
+        return PointFilterSumDto.builder()
+                .savePoint(save)
+                .usePoint(use)
+                .build();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     // no-offset 방식 처리하는 메서드
     private BooleanExpression ltStoreId(Long pointId) {
