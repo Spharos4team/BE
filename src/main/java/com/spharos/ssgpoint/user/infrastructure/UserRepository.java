@@ -15,7 +15,7 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long>, UserRepositoryCustom{
     Optional<User> findByLoginId(String loginId);
     Optional<User> findByUuid(String UUID);
-    Optional<User> findByBarCode(String barCode);
+
     Optional<User> findByPhoneAndName(String phone, String name);
 
     @Query("SELECT u.term FROM User u  WHERE u.uuid = :uuid")

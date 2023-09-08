@@ -91,9 +91,5 @@ public class PointGiftController {
         PointFilterSumDto pointFilterSumDto = pointGiftService.sumPointsGiftByFilter(UUID, pointGiftListVo);
         ModelMapper modelMapper = new ModelMapper();
         return ResponseEntity.ok(modelMapper.map(pointFilterSumDto, PointFilterSumVo.class));
-
-
     }
-
-
 }

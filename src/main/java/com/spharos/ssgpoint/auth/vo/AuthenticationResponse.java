@@ -23,7 +23,8 @@ public class AuthenticationResponse {
     @Builder
     @AllArgsConstructor
     public static class User {
-        private String barcode;
+
+        private String bardCode;
         private String name;
         private Integer point;
         private String uuid;
