@@ -1,15 +1,11 @@
-package com.spharos.ssgpoint.pointgift.infrastructure;
+package com.spharos.ssgpoint.alliancepoint.infrastructure;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.spharos.ssgpoint.point.domain.Point;
+import com.spharos.ssgpoint.alliancepoint.dto.AlliancePointListDto;
 import com.spharos.ssgpoint.point.domain.PointStatusType;
-import com.spharos.ssgpoint.point.dto.PointFilterDto;
 import com.spharos.ssgpoint.point.dto.PointFilterSumDto;
-import com.spharos.ssgpoint.point.dto.QPointFilterDto;
-import com.spharos.ssgpoint.pointgift.dto.PointGiftGetDto;
 import com.spharos.ssgpoint.pointgift.dto.PointGiftListDto;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Pageable;
@@ -23,20 +19,18 @@ import static com.spharos.ssgpoint.point.domain.PointType.*;
 import static com.spharos.ssgpoint.point.domain.QPoint.point1;
 import static com.spharos.ssgpoint.user.domain.QUser.user;
 
-public class PointGiftRepositoryImpl implements PointGiftRepositoryCustom{
-
+public class AlliancePointRepositoryImpl implements AlliancePointRepositoryCustom{
     private final JPAQueryFactory queryFactory;
 
-    public PointGiftRepositoryImpl(EntityManager em) {
+    public AlliancePointRepositoryImpl(EntityManager em) {
         this.queryFactory = new JPAQueryFactory(em);
     }
+
     @Override
-    public Slice<PointGiftListDto> findPointGiftList(Long pointId, String uuid, LocalDate startDate, LocalDate endDate,
-                                                     Pageable pageable) {
-
-
-        List<PointGiftListDto> results = queryFactory
-                .select(Projections.fields(PointGiftListDto.class,
+    public Slice<AlliancePointListDto> findPointAllianceList(Long pointId, String uuid, LocalDate startDate, LocalDate endDate,
+                                                         Pageable pageable) {
+        List<AlliancePointListDto> results = queryFactory
+                .select(Projections.fields(AlliancePointListDto.class,
                         point1.id , point1.point, point1.title, point1.content, point1.type,
                         point1.statusType, point1.createdDate))
                 .from(point1)
@@ -44,30 +38,29 @@ public class PointGiftRepositoryImpl implements PointGiftRepositoryCustom{
                 .where(ltStoreId(pointId),
                         point1.user.uuid.eq(uuid),
                         point1.createdDate.between(startDate.atStartOfDay(), endDate.atStartOfDay()),
-                        point1.type.eq(선물)
+                        point1.type.in(전환,제휴사전환)
                 )
                 .orderBy(point1.id.desc())
                 .limit(pageable.getPageSize() + 1).fetch();
-
 
         return checkLastPage(pageable, results);
     }
 
     @Override
-    public PointFilterSumDto sumPointsGiftByFilter(String uuid, LocalDate startDate, LocalDate endDate) {
+    public PointFilterSumDto sumPointsAllianceByFilter(String uuid, LocalDate startDate, LocalDate endDate) {
         Integer save=0;
         Integer use=0;
         Integer subtract=0;
 
         List<PointGiftListDto> results = queryFactory
                 .select(Projections.fields(PointGiftListDto.class,
-                      point1.point , point1.statusType))
+                        point1.point , point1.statusType))
                 .from(point1)
                 .join(point1.user, user)
                 .where(
                         point1.user.uuid.eq(uuid),
                         point1.createdDate.between(startDate.atStartOfDay(), endDate.atStartOfDay()),
-                        point1.type.eq(선물)
+                        point1.type.in(전환,제휴사전환)
                 )
                 .fetch();
 
@@ -95,16 +88,36 @@ public class PointGiftRepositoryImpl implements PointGiftRepositoryCustom{
     }
 
 
-        // no-offset 방식 처리하는 메서드
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // no-offset 방식 처리하는 메서드
     private BooleanExpression ltStoreId(Long pointId) {
-       if (pointId == null) {
+        if (pointId == null) {
             return null;
-       }
-       return point1.id.lt(pointId);
+        }
+        return point1.id.lt(pointId);
     }
 
-        // 무한 스크롤 방식 처리하는 메서드
-    private Slice<PointGiftListDto> checkLastPage(Pageable pageable, List<PointGiftListDto> results) {
+    // 무한 스크롤 방식 처리하는 메서드
+    private Slice<AlliancePointListDto> checkLastPage(Pageable pageable, List<AlliancePointListDto> results) {
 
         boolean hasNext = false;
 
@@ -117,4 +130,3 @@ public class PointGiftRepositoryImpl implements PointGiftRepositoryCustom{
         return new SliceImpl<>(results, pageable, hasNext);
     }
 }
-

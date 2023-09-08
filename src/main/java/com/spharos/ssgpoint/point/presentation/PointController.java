@@ -4,18 +4,20 @@ import com.spharos.ssgpoint.point.application.PointService;
 import com.spharos.ssgpoint.point.domain.Point;
 import com.spharos.ssgpoint.point.dto.PointCreateDto;
 import com.spharos.ssgpoint.point.dto.PointFilterDto;
+import com.spharos.ssgpoint.point.dto.PointFilterSumDto;
 import com.spharos.ssgpoint.point.dto.PointGetDto;
-import com.spharos.ssgpoint.point.vo.PointCreateVo;
-import com.spharos.ssgpoint.point.vo.PointFilterVo;
-import com.spharos.ssgpoint.point.vo.PointGetVo;
+import com.spharos.ssgpoint.point.vo.*;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -62,12 +64,27 @@ public class PointController {
 
 
     // 포인트필터 목록
-    @GetMapping("/test")
-    public Slice<PointFilterDto> pointListFilter(@RequestParam("UUID") String UUID,
-                                                 @RequestParam(value = "lastId", required = false) Long lastId,
-                                                 @PageableDefault(size=10, sort="createdDate") Pageable pageRequest
-            , @RequestBody PointFilterVo pointFilterVo) {
-        return pointService.pointFilter(lastId,UUID, pageRequest,pointFilterVo);
+    @GetMapping("/point-list")
+    public ResponseEntity<Slice<PointFilterOutVo>> pointListFilter(@RequestParam("UUID") String UUID,
+                                                                   @RequestParam(value = "lastId", required = false) Long lastId,
+                                                                   @PageableDefault(size = 10, sort = "createdDate") Pageable pageRequest,
+                                                                   @RequestBody PointFilterVo pointFilterVo) {
+        ModelMapper modelMapper = new ModelMapper();
+        Slice<PointFilterOutVo> pointFilterOutVos = modelMapper.map(pointService.pointFilter(lastId, UUID, pageRequest, pointFilterVo)
+                , new TypeToken<Slice<PointFilterOutVo>>() {}.getType());
+
+        // ResponseEntity로 감싸서 반환
+        return ResponseEntity.ok(pointFilterOutVos);
     }
 
+    // 포인트 목록 적립 사용 포인트 합계
+    @GetMapping("/point-list-sum")
+    public ResponseEntity<PointFilterSumVo> pointListFilterSum(@RequestParam("UUID") String UUID,
+                                                            @RequestBody PointFilterVo pointFilterVo) {
+
+        PointFilterSumDto pointFilterSumDto = pointService.sumPointsByFilter(UUID, pointFilterVo);
+        ModelMapper modelMapper = new ModelMapper();
+        return ResponseEntity.ok(modelMapper.map(pointFilterSumDto, PointFilterSumVo.class));
+
+    }
 }

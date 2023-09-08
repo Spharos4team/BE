@@ -3,6 +3,7 @@ package com.spharos.ssgpoint.pointgift.application;
 import com.spharos.ssgpoint.point.application.PointService;
 import com.spharos.ssgpoint.point.domain.Point;
 import com.spharos.ssgpoint.point.dto.PointCreateDto;
+import com.spharos.ssgpoint.point.dto.PointFilterSumDto;
 import com.spharos.ssgpoint.point.infrastructure.PointRepository;
 import com.spharos.ssgpoint.point.vo.PointFilterVo;
 import com.spharos.ssgpoint.pointgift.domain.PointGift;
@@ -12,6 +13,7 @@ import com.spharos.ssgpoint.pointgift.dto.PointGiftCreateDto;
 import com.spharos.ssgpoint.pointgift.dto.PointGiftGetDto;
 import com.spharos.ssgpoint.pointgift.dto.PointGiftListDto;
 import com.spharos.ssgpoint.pointgift.infrastructure.PointGiftRepository;
+import com.spharos.ssgpoint.pointgift.vo.PointListInVo;
 import com.spharos.ssgpoint.user.domain.User;
 import com.spharos.ssgpoint.user.infrastructure.UserRepository;
 import jakarta.transaction.Transactional;
@@ -162,14 +164,19 @@ public class PointGiftServiceImpl implements PointGiftService {
                 .build()
         ).toList();
     }
-
+    // 포인트 내역 - 선물
     @Override
-    public Slice<PointGiftListDto> getPointGiftList(Long id, String UUID, Pageable page, PointFilterVo p) {
-        return pointGiftRepository.findPointGiftList(id, UUID, p.getStartDate(), p.getEndDate(), page);
+    public Slice<PointGiftListDto> getPointGiftList(Long lastId, String UUID, Pageable page, PointListInVo p) {
+        return pointGiftRepository.findPointGiftList(lastId, UUID, p.getStartDate(), p.getEndDate(), page);
 
     }
+    // 포인트 내역 - 선물 적립 사용 합계
+    @Override
+    public PointFilterSumDto sumPointsGiftByFilter(String UUID, PointListInVo p) {
+        return pointGiftRepository.sumPointsGiftByFilter(UUID, p.getStartDate(), p.getEndDate());
+    }
 
-    // 포인트 내역 - 선물
+
 
 
 }

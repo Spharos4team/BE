@@ -5,6 +5,11 @@ import com.spharos.ssgpoint.auth.vo.AuthenticationResponse;
 import com.spharos.ssgpoint.config.security.JwtTokenProvider;
 import com.spharos.ssgpoint.exception.CustomException;
 import com.spharos.ssgpoint.point.domain.Point;
+import com.spharos.ssgpoint.pointcard.domain.PointCard;
+import com.spharos.ssgpoint.pointcard.domain.PointCardType;
+import com.spharos.ssgpoint.pointcard.domain.PointCardTypeConverter;
+import com.spharos.ssgpoint.pointcard.dto.PointCardCreateDto;
+import com.spharos.ssgpoint.pointcard.infrastructure.PointCardRepository;
 import com.spharos.ssgpoint.term.domain.UserTermList;
 
 
@@ -39,6 +44,7 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final RefreshTokenRepository tokenRepository;
     private final RedisTemplate redisTemplate;
+    private final PointCardRepository  pointCardRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -73,10 +79,34 @@ public class AuthenticationService {
         user.hashPassword(user.getPassword());
         User saveUser = userRepository.save(user);
 
+
         //생성후 바코드 저장
-        String pointBardCode = createPointBardCode(user);
-        String validateBarcode = validateBarcode(pointBardCode);
-        saveUser.generateBarcode(validateBarcode);
+        String pointBardCode1 = createPointBardCode(user);
+        String validateBarcode1 = validateBarcode(pointBardCode1);
+        String pointBardCode2 = createPointBardCode(user);
+        String validateBarcode2 = validateBarcode(pointBardCode2);
+
+        //회원가입후 포인트카드  무조건 2개 생성
+        PointCardType pointCardType
+                = new PointCardTypeConverter().convertToEntityAttribute("ON");
+        PointCard build = PointCard.builder()
+                .agency("신세계")
+                .UUID(uuidString)
+                .number(validateBarcode1)
+                .type(pointCardType)
+                .build();
+        pointCardRepository.save(build);
+
+        PointCard build1 = PointCard.builder()
+                .agency("신세계")
+                .UUID(uuidString)
+                .number(validateBarcode2)
+                .type(pointCardType)
+                .build();
+
+        pointCardRepository.save(build);
+        pointCardRepository.save(build1);
+
 
         return AuthenticationResponse.builder()
                         .accessToken(jwtToken)
@@ -116,7 +146,7 @@ public class AuthenticationService {
      * 바코드만들고 만든거 중복 검사 , todo:추가 수정 필요함
      */
     private String validateBarcode(String checkBarcode) {
-        Optional<User> byBarCode = userRepository.findByBarCode(checkBarcode);
+        Optional<PointCard> byBarCode = pointCardRepository.findByNumber(checkBarcode);
         if (byBarCode.isPresent()){
             //중복인경우
             String substring = checkBarcode.substring(4, 7);
@@ -157,6 +187,7 @@ public class AuthenticationService {
         String uuid = jwtTokenProvider.getUUID(accessToken);
 
         Optional<Point> totalByUuid = userRepository.findTotalByUuid(uuid);
+        String barCode = pointCardRepository.findNumberByUUID(uuid); //바코드 가져오기(바코드는 유니크
         int totalPoint = (totalByUuid.isPresent()) ? totalByUuid.get().getTotalPoint() : 0;
 
         log.info("accessToken is : {}" , accessToken);
@@ -166,10 +197,10 @@ public class AuthenticationService {
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .user(AuthenticationResponse.User.builder()
-                        .barcode(user.getBarCode())
                         .name(user.getName())
                         .point(totalPoint)
                         .uuid(user.getUuid())
+                        .bardCode(barCode)
                         .build())
                 .uuid(uuid)
                 .build();

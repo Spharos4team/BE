@@ -35,10 +35,10 @@ public class PointCardServiceImpl implements PointCardService {
 
     // 중복 검사
     private String validateNumber(String number) {
-        Optional<PointCard> pointCard = pointCardRepository.findByNumber(number);
+        Optional<PointCard> byNumberUUId = pointCardRepository.findByNumber(number);
 
         // 중복인 경우
-        if (pointCard.isPresent()) {
+        if (byNumberUUId.isPresent()) {
             String subString = number.substring(4, 7);
             int plus = Integer.parseInt(subString) + 1;
             String newNumber = number.substring(0, 4) + String.format("%03d", plus) + number.substring(7);

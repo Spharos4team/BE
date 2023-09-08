@@ -1,25 +1,25 @@
-package com.spharos.ssgpoint.pointgift.dto;
+package com.spharos.ssgpoint.point.vo;
 
-import com.querydsl.core.annotations.QueryProjection;
 import com.spharos.ssgpoint.point.domain.PointStatusType;
 import com.spharos.ssgpoint.point.domain.PointType;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-@Getter
-@Setter
-@ToString
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 @Builder
-public class PointGiftListDto {
-
-    private Long id;
+@AllArgsConstructor
+@NoArgsConstructor
+public class PointFilterOutVo {
+    private Long pointId;
     private Integer point;
     private String title;
     private String content;
     private PointType type;
     private PointStatusType statusType;
     private LocalDateTime createdDate;
+    private Long receiptId;
 
 }

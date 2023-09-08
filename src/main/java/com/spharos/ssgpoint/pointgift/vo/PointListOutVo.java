@@ -1,20 +1,12 @@
-package com.spharos.ssgpoint.pointgift.dto;
+package com.spharos.ssgpoint.pointgift.vo;
 
-import com.querydsl.core.annotations.QueryProjection;
 import com.spharos.ssgpoint.point.domain.PointStatusType;
 import com.spharos.ssgpoint.point.domain.PointType;
-import lombok.*;
 
 import java.time.LocalDateTime;
-@Getter
-@Setter
-@ToString
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class PointGiftListDto {
 
-    private Long id;
+public class PointListOutVo {
+    private Long pointId;
     private Integer point;
     private String title;
     private String content;

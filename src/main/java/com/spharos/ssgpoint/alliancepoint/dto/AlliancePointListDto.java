@@ -1,6 +1,5 @@
-package com.spharos.ssgpoint.pointgift.dto;
+package com.spharos.ssgpoint.alliancepoint.dto;
 
-import com.querydsl.core.annotations.QueryProjection;
 import com.spharos.ssgpoint.point.domain.PointStatusType;
 import com.spharos.ssgpoint.point.domain.PointType;
 import lombok.*;
@@ -12,8 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PointGiftListDto {
-
+public class AlliancePointListDto {
     private Long id;
     private Integer point;
     private String title;
@@ -21,5 +19,4 @@ public class PointGiftListDto {
     private PointType type;
     private PointStatusType statusType;
     private LocalDateTime createdDate;
-
 }

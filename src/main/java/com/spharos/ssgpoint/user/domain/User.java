@@ -59,8 +59,7 @@ public class User extends BaseEntity implements UserDetails {
 
     @Column(length = 100)
     private String pointPassword;
-    @Column(length = 500 )
-    private String barCode;
+
 
     @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name = "user_term_id")
@@ -69,7 +68,7 @@ public class User extends BaseEntity implements UserDetails {
 
     @Builder
     public User(String uuid, String loginId, String name, String password, String phone, String address, String email,
-                Integer status, String pointPassword, String barCode, UserTermList term,Role role) {
+                Integer status, String pointPassword, UserTermList term,Role role) {
         this.uuid = uuid;
         this.loginId = loginId;
         this.name = name;
@@ -79,7 +78,7 @@ public class User extends BaseEntity implements UserDetails {
         this.email = email;
         this.status = status;
         this.pointPassword = pointPassword;
-        this.barCode = barCode;
+
         this.term= term;
         this.role= role;
     }
@@ -97,10 +96,6 @@ public class User extends BaseEntity implements UserDetails {
         this.status = status;
     }
 
-
-    public void generateBarcode(String barCode){
-        this.barCode = barCode;
-    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
