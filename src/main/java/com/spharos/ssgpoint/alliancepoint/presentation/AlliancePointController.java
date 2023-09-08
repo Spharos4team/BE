@@ -11,6 +11,7 @@ import com.spharos.ssgpoint.alliancepoint.vo.AlliancePointGetVo;
 import com.spharos.ssgpoint.alliancepoint.vo.AlliancePointUpdateVo;
 
 import com.spharos.ssgpoint.point.dto.PointFilterSumDto;
+import com.spharos.ssgpoint.point.vo.PointFilterSumVo;
 import com.spharos.ssgpoint.pointgift.vo.PointListInVo;
 import com.spharos.ssgpoint.pointgift.vo.PointListOutVo;
 
@@ -92,11 +93,13 @@ public class AlliancePointController {
 
     // 전환 포인트 목록 적립 사용 합계
     @GetMapping("/point/alliance/sum")
-    public ResponseEntity<PointFilterSumDto> giftPointListSum(@RequestParam("UUID") String UUID,
+    public ResponseEntity<PointFilterSumVo> giftPointListSum(@RequestParam("UUID") String UUID,
                                                               @RequestBody PointListInVo pointGiftListVo){
 
         PointFilterSumDto pointFilterSumDto = alliancePointService.sumPointsAllianceByFilter(UUID, pointGiftListVo);
-        return ResponseEntity.ok(pointFilterSumDto);
+        ModelMapper modelMapper = new ModelMapper();
+        return ResponseEntity.ok(modelMapper.map(pointFilterSumDto, PointFilterSumVo.class));
+
 
     }
 

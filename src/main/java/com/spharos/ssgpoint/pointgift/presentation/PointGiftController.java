@@ -1,6 +1,7 @@
 package com.spharos.ssgpoint.pointgift.presentation;
 
 import com.spharos.ssgpoint.point.dto.PointFilterSumDto;
+import com.spharos.ssgpoint.point.vo.PointFilterSumVo;
 import com.spharos.ssgpoint.pointgift.application.PointGiftService;
 import com.spharos.ssgpoint.pointgift.dto.PointGiftCreateDto;
 import com.spharos.ssgpoint.pointgift.dto.PointGiftUserGetDto;
@@ -84,11 +85,13 @@ public class PointGiftController {
 
     //포인트 선물 목록 적립 사용 금액
     @GetMapping("/point/gift-sum")
-    public ResponseEntity<PointFilterSumDto> giftPointListSum(@RequestParam("UUID") String UUID,
+    public ResponseEntity<PointFilterSumVo> giftPointListSum(@RequestParam("UUID") String UUID,
                                                               @RequestBody PointListInVo pointGiftListVo){
 
         PointFilterSumDto pointFilterSumDto = pointGiftService.sumPointsGiftByFilter(UUID, pointGiftListVo);
-        return ResponseEntity.ok(pointFilterSumDto);
+        ModelMapper modelMapper = new ModelMapper();
+        return ResponseEntity.ok(modelMapper.map(pointFilterSumDto, PointFilterSumVo.class));
+
 
     }
 

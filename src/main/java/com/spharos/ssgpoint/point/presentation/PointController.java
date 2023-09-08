@@ -6,10 +6,7 @@ import com.spharos.ssgpoint.point.dto.PointCreateDto;
 import com.spharos.ssgpoint.point.dto.PointFilterDto;
 import com.spharos.ssgpoint.point.dto.PointFilterSumDto;
 import com.spharos.ssgpoint.point.dto.PointGetDto;
-import com.spharos.ssgpoint.point.vo.PointCreateVo;
-import com.spharos.ssgpoint.point.vo.PointFilterOutVo;
-import com.spharos.ssgpoint.point.vo.PointFilterVo;
-import com.spharos.ssgpoint.point.vo.PointGetVo;
+import com.spharos.ssgpoint.point.vo.*;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -82,10 +79,12 @@ public class PointController {
 
     // 포인트 목록 적립 사용 포인트 합계
     @GetMapping("/point-list-sum")
-    public PointFilterSumDto pointListFilterSum(@RequestParam("UUID") String UUID,
+    public ResponseEntity<PointFilterSumVo> pointListFilterSum(@RequestParam("UUID") String UUID,
                                                             @RequestBody PointFilterVo pointFilterVo) {
+
         PointFilterSumDto pointFilterSumDto = pointService.sumPointsByFilter(UUID, pointFilterVo);
-        return pointFilterSumDto;
-        //return ResponseEntity.ok(pointFilterSum);
+        ModelMapper modelMapper = new ModelMapper();
+        return ResponseEntity.ok(modelMapper.map(pointFilterSumDto, PointFilterSumVo.class));
+
     }
 }
