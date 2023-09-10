@@ -43,8 +43,8 @@ public class Point extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private PointCard pointCard;
+/*    @ManyToOne(fetch = FetchType.LAZY)
+    private PointCard pointCard;*/
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Receipt receipt;

@@ -1,6 +1,7 @@
 package com.spharos.ssgpoint.point.vo;
 
 import com.spharos.ssgpoint.auth.vo.AuthenticationResponse;
+import com.spharos.ssgpoint.pointcard.domain.PointCard;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,7 +19,7 @@ public class PointCreateVo {
     private String content;
     private String statusType;
     private String type;
-    private Long pointCardId;
+
     private ReceiptDto receipt;
 
 
@@ -32,6 +33,7 @@ public class PointCreateVo {
         private Integer point;
         private String cardName;
         private String cardNumber;
+        private String pointCardNumber;
 
     }
 }

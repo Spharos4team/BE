@@ -41,8 +41,9 @@ public class PointGiftRepositoryImpl implements PointGiftRepositoryCustom{
                         point1.statusType, point1.createdDate))
                 .from(point1)
                 .join(point1.user, user)
+                .on(user.uuid.eq(uuid))
                 .where(ltStoreId(pointId),
-                        point1.user.uuid.eq(uuid),
+
                         point1.createdDate.between(startDate.atStartOfDay(), endDate.atStartOfDay()),
                         point1.type.eq(선물)
                 )
@@ -64,8 +65,9 @@ public class PointGiftRepositoryImpl implements PointGiftRepositoryCustom{
                       point1.point , point1.statusType))
                 .from(point1)
                 .join(point1.user, user)
+                .on(user.uuid.eq(uuid))
                 .where(
-                        point1.user.uuid.eq(uuid),
+
                         point1.createdDate.between(startDate.atStartOfDay(), endDate.atStartOfDay()),
                         point1.type.eq(선물)
                 )

@@ -8,6 +8,7 @@ import com.spharos.ssgpoint.point.dto.PointGetDto;
 import com.spharos.ssgpoint.point.infrastructure.PointRepository;
 import com.spharos.ssgpoint.point.vo.PointCreateVo;
 import com.spharos.ssgpoint.point.vo.PointFilterVo;
+import com.spharos.ssgpoint.pointcard.domain.PointCard;
 import com.spharos.ssgpoint.receipt.domain.Receipt;
 import com.spharos.ssgpoint.receipt.infrastructure.ReceiptRepository;
 import com.spharos.ssgpoint.user.domain.User;
@@ -65,6 +66,7 @@ public class PointServiceImpl implements PointService {
         // 결제적립
         if (pointCreateDto.getType().equals("1")) {
 
+
             Receipt receipt = Receipt.builder()
                     .alliance(pointCreateDto.getReceipt().getAlliance())
                     .brand(pointCreateDto.getReceipt().getBrand())
@@ -74,6 +76,7 @@ public class PointServiceImpl implements PointService {
                     .point(pointCreateDto.getReceipt().getReceiptPoint())
                     .cardName(pointCreateDto.getReceipt().getCardName())
                     .cardNumber(pointCreateDto.getReceipt().getCardNumber())
+                    .pointCardNumber(pointCreateDto.getReceipt().getPointCardNumber())
                     .status(1)
                     .build();
 
@@ -82,6 +85,7 @@ public class PointServiceImpl implements PointService {
                     .point(pointCreateDto.getPoint())
                     .title(pointCreateDto.getTitle())
                     .content(pointCreateDto.getContent())
+
                     .statusType(pointStatusType)
                     .type(pointType)
                     .user(user)
