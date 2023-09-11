@@ -69,11 +69,8 @@ public class EventServiceImpl implements EventService {
             // Thumbnail Image Upload
             String thumbImageUrl = s3Service.uploadFile(thumbFile);
 
-
-            // Determine EventType
             EventType determinedType = EventType.determineEventType(startDate, endDate, winningDate);
 
-            // Create and Save Event
             Event event = Event.builder()
                     .title(title)
                     .content(content)

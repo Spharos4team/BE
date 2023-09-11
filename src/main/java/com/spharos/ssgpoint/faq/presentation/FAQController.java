@@ -1,8 +1,12 @@
 package com.spharos.ssgpoint.faq.presentation;
 
+import com.spharos.ssgpoint.faq.Exception.ResourceNotFoundException;
 import com.spharos.ssgpoint.faq.application.FAQService;
-import com.spharos.ssgpoint.faq.dto.FAQDto;
+import com.spharos.ssgpoint.faq.domain.FAQCategory;
+import com.spharos.ssgpoint.faq.dto.FAQDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,24 +18,40 @@ public class FAQController {
 
     private final FAQService faqService;
 
-    @GetMapping
-    public List<FAQDto> getAllFAQs() {
-        return faqService.getAllFAQs();
-    }
-
-    @GetMapping("/fap/faq_id={faq_id}")
-    public FAQDto getFAQById(@PathVariable Long faq_id) {
-        // TODO: Implement the method to get FAQ by ID
-        return null;
-    }
-
     @PostMapping("/faq")
-    public void createFAQ(@RequestBody FAQDto faqDto) {
-        // TODO: Implement the method to create a new FAQ
+    public ResponseEntity createFAQ(@RequestBody FAQDTO faqDTO) {
+        faqService.createFAQ(faqDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body("FAQ가 등록되었습니다");
     }
 
-    @DeleteMapping("/faq/faq_id={faq_id}")
-    public void deleteFAQ(@PathVariable Long faq_id) {
-        // TODO: Implement the method to delete FAQ by ID
+    @GetMapping("/faq")
+    public ResponseEntity<List<FAQDTO>> getAllFAQs() {
+        return ResponseEntity.ok(faqService.getAllFAQs());
     }
+
+    @GetMapping("/faq/{categoryId}")
+    public ResponseEntity<List<FAQDTO>> getFAQsByCategory(@PathVariable Long categoryId, @RequestParam(required = false) Long subCategoryId) {
+        return ResponseEntity.ok(faqService.getFAQsByCategory(categoryId, subCategoryId));
+    }
+
+    @DeleteMapping("/faq/{id}")
+    public ResponseEntity<String> deleteFAQ(@PathVariable Long id) {
+        try {
+            faqService.deleteFAQ(id);
+            return ResponseEntity.ok("FAQ가 삭제되었습니다");
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/faq/categories/main")
+    public ResponseEntity<List<FAQCategory>> getMainCategories() {
+        return ResponseEntity.ok(faqService.getMainCategories());
+    }
+
+    @GetMapping("/faq/categories/sub/{mainCategoryId}")
+    public ResponseEntity<List<FAQCategory>> getSubCategories(@PathVariable Long mainCategoryId) {
+        return ResponseEntity.ok(faqService.getSubCategories(mainCategoryId));
+    }
+
 }
