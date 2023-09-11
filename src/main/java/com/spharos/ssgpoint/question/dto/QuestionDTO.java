@@ -10,7 +10,7 @@ public class QuestionDTO {
     private Long id;
     private String uuid;
     private String title;
-    private String content;
+    private String description;
     private String status;
 
     public Question toEntity() {
@@ -18,7 +18,7 @@ public class QuestionDTO {
         question.setId(this.id);
         question.setUuid(this.uuid);
         question.setTitle(this.title);
-        question.setDescription(this.content);
+        question.setDescription(this.description);
         question.setStatus(this.status);
         return question;
     }

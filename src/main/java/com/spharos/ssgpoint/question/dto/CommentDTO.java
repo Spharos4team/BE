@@ -9,13 +9,13 @@ import lombok.Setter;
 public class CommentDTO {
     private Long id;
     private String uuid;
-    private String content;
+    private String comment;
 
     public Comment toEntity() {
         Comment comment = new Comment();
         comment.setId(this.id);
         comment.setUuid(this.uuid);
-        comment.setComment(this.content);
+        comment.setComment(this.comment);
         return comment;
     }
 }

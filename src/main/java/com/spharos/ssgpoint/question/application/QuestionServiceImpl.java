@@ -5,6 +5,7 @@ import com.spharos.ssgpoint.question.domain.Question;
 import com.spharos.ssgpoint.question.dto.QuestionDTO;
 import com.spharos.ssgpoint.question.infrastructure.CommentRepository;
 import com.spharos.ssgpoint.question.infrastructure.QuestionRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,12 +19,15 @@ public class QuestionServiceImpl implements QuestionService {
     private final QuestionRepository questionRepository;
     private final CommentRepository commentRepository;
 
+
+    @Transactional
     @Override
     public Long createQuestion(Question question) {
         Question savedQuestion = questionRepository.save(question);
         return savedQuestion.getId();
     }
 
+    @Transactional
     @Override
     public Long createComment(Long questionId, Comment comment) {
         Question question = questionRepository.findById(questionId)
@@ -43,7 +47,7 @@ public class QuestionServiceImpl implements QuestionService {
                     dto.setId(question.getId());
                     dto.setUuid(question.getUuid());
                     dto.setTitle(question.getTitle());
-                    dto.setContent(question.getDescription());
+                    dto.setDescription(question.getDescription());
                     dto.setStatus(question.getStatus());
                     return dto;
                 })
