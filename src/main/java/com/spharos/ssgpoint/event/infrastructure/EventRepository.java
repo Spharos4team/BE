@@ -18,4 +18,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     @Query("SELECT e FROM Event e WHERE e.winningDate IS NOT NULL AND e.winningDate <= CURRENT_DATE")
     List<Event> findWinnerEvents();
+
+
 }

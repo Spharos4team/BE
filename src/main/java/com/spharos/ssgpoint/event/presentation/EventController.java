@@ -16,7 +16,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
@@ -35,10 +37,12 @@ public class EventController {
             return ResponseEntity.ok(events);
         } else {
             EventType eventType = EventType.valueOf(type.toUpperCase());
-            List<Event> events = eventService.getEventsByType(eventType);
+            Set<EventType> eventTypes = EnumSet.of(eventType);
+            List<Event> events = eventService.getEventsByTypes(eventTypes);
             return ResponseEntity.ok(events);
         }
     }
+
 
 
     @GetMapping("/events/{id}")

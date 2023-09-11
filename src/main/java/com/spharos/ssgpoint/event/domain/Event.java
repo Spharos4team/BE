@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 
+import java.util.Set;
+
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 @Getter
@@ -33,9 +35,11 @@ public class Event {
 
     private String bannerUrl;
 
-
-    @Column(nullable = false)
-    private EventType eventType;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "event_types", joinColumns = @JoinColumn(name = "event_id"))
+    @Column(name = "event_type")
+    private Set<EventType> eventTypes; // 여러 EventType을 관리할 수 있는 Set 필드
 
     private LocalDateTime startDate;
     private LocalDateTime endDate;
@@ -43,7 +47,4 @@ public class Event {
 
     public void addEventImageList(EventImageList eventImageList) {
     }
-
-
-
 }

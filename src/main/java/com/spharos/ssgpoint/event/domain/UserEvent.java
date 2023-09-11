@@ -25,7 +25,7 @@ public class UserEvent {
     @JoinColumn(name = "event_id", nullable = false)
     private Event event;
 
-    private boolean winning; // This field indicates whether the user is a winner in the event
+    private boolean winning; // 당첨 여부
 
     public void setWinning(boolean winning) {
         this.winning = winning;

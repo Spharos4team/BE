@@ -17,7 +17,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -32,23 +34,26 @@ public class EventServiceImpl implements EventService {
     private final EventImageListRepository eventImageListRepository;
 
     @Override
-    public List<Event> getEventsByType(EventType type) {
-        List<Event> result;
-        switch (type) {
-            case ONGOING:
-                result = eventRepository.findOngoingEvents();
-                break;
-            case CLOSED:
-                result = eventRepository.findClosedEvents();
-                break;
-            case WINNER:
-                result = eventRepository.findWinnerEvents();
-                break;
-            default:
-                throw new IllegalArgumentException("Invalid EventType: " + type);
+    public List<Event> getEventsByTypes(Set<EventType> types) {
+        List<Event> result = new ArrayList<>();
+
+        if (types.contains(EventType.ONGOING)) {
+            result.addAll(eventRepository.findOngoingEvents());
         }
+        if (types.contains(EventType.CLOSED)) {
+            result.addAll(eventRepository.findClosedEvents());
+        }
+        if (types.contains(EventType.WINNER)) {
+            result.addAll(eventRepository.findWinnerEvents());
+        }
+
+        if (result.isEmpty()) {
+            throw new IllegalArgumentException("No events found for types: " + types);
+        }
+
         return result;
     }
+
 
     @Override
     public Event getEventById(Long id) {
@@ -69,12 +74,12 @@ public class EventServiceImpl implements EventService {
             // Thumbnail Image Upload
             String thumbImageUrl = s3Service.uploadFile(thumbFile);
 
-            EventType determinedType = EventType.determineEventType(startDate, endDate, winningDate);
+            Set<EventType> determinedTypes = EventType.determineEventTypes(startDate, endDate, winningDate);
 
             Event event = Event.builder()
                     .title(title)
                     .content(content)
-                    .eventType(determinedType)
+                    .eventTypes(determinedTypes)
                     .thumbnailUrl(thumbImageUrl)
                     .startDate(startDate)
                     .endDate(endDate)
@@ -107,6 +112,7 @@ public class EventServiceImpl implements EventService {
             throw new EventException("이벤트 추가 중 오류가 발생했습니다: " + e.getMessage());
         }
     }
+
 
 
     @Override

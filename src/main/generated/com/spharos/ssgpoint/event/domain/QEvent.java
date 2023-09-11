@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -25,7 +26,7 @@ public class QEvent extends EntityPathBase<Event> {
 
     public final DateTimePath<java.time.LocalDateTime> endDate = createDateTime("endDate", java.time.LocalDateTime.class);
 
-    public final EnumPath<EventType> eventType = createEnum("eventType", EventType.class);
+    public final SetPath<EventType, EnumPath<EventType>> eventTypes = this.<EventType, EnumPath<EventType>>createSet("eventTypes", EventType.class, EnumPath.class, PathInits.DIRECT2);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
