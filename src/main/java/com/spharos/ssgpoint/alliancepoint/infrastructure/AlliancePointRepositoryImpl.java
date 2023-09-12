@@ -39,7 +39,7 @@ public class AlliancePointRepositoryImpl implements AlliancePointRepositoryCusto
                 .where(ltStoreId(pointId),
 
                         point1.createdDate.between(startDate.atStartOfDay(), endDate.atStartOfDay()),
-                        point1.type.in(전환,제휴사전환)
+                        point1.type.in(전환,포인트전환)
                 )
                 .orderBy(point1.id.desc())
                 .limit(pageable.getPageSize() + 1).fetch();
@@ -62,7 +62,7 @@ public class AlliancePointRepositoryImpl implements AlliancePointRepositoryCusto
                 .where(
 
                         point1.createdDate.between(startDate.atStartOfDay(), endDate.atStartOfDay()),
-                        point1.type.in(전환,제휴사전환)
+                        point1.type.in(전환,포인트전환)
                 )
                 .fetch();
 
@@ -88,23 +88,6 @@ public class AlliancePointRepositoryImpl implements AlliancePointRepositoryCusto
                 .usePoint(use)
                 .build();
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

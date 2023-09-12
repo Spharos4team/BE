@@ -12,8 +12,6 @@ import com.spharos.ssgpoint.pointcard.dto.PointCardCreateDto;
 import com.spharos.ssgpoint.pointcard.infrastructure.PointCardRepository;
 import com.spharos.ssgpoint.term.domain.UserTermList;
 
-
-import com.spharos.ssgpoint.token.infrastructure.RefreshTokenRepository;
 import com.spharos.ssgpoint.user.domain.Role;
 import com.spharos.ssgpoint.user.domain.User;
 import com.spharos.ssgpoint.user.dto.user.UserSignUpDto;
@@ -42,7 +40,7 @@ public class AuthenticationService {
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManager authenticationManager;
-    private final RefreshTokenRepository tokenRepository;
+
     private final RedisTemplate redisTemplate;
     private final PointCardRepository  pointCardRepository;
 

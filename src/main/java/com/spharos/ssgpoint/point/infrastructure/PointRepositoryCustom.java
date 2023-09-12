@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.Map;
 
 public interface PointRepositoryCustom {
-    Slice<PointFilterDto> findByFilter(Long pointId, String uuid, LocalDate startDate, LocalDate endDate,
-                                       String pointUse, String pointType, Pageable pageable);
+    //Slice<PointFilterDto> findByFilter(Long pointId, String uuid, LocalDate startDate, LocalDate endDate,String pointUse, String pointType, Pageable pageable);
+    Page<PointFilterDto> findByFilter(String uuid, LocalDate startDate,LocalDate endDate, String pointUse, String pointType,  Pageable pageable);
 
     PointFilterSumDto sumPointsByFilter(String uuid, String pointUse, String pointType, LocalDate startDate, LocalDate endDate);
 }

@@ -31,7 +31,7 @@ public class PointCreateDto {
         private String storeName;
         private String number;
         private Integer amount;
-        private Integer receiptPoint; // 주의: receiptPoint로 이름 변경
+        private Integer receiptPoint;
         private String cardName;
         private String cardNumber;
         private String pointCardNumber;
