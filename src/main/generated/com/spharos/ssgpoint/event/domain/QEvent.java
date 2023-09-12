@@ -26,6 +26,8 @@ public class QEvent extends EntityPathBase<Event> {
 
     public final DateTimePath<java.time.LocalDateTime> endDate = createDateTime("endDate", java.time.LocalDateTime.class);
 
+    public final SetPath<EventImage, QEventImage> eventImages = this.<EventImage, QEventImage>createSet("eventImages", EventImage.class, QEventImage.class, PathInits.DIRECT2);
+
     public final SetPath<EventType, EnumPath<EventType>> eventTypes = this.<EventType, EnumPath<EventType>>createSet("eventTypes", EventType.class, EnumPath.class, PathInits.DIRECT2);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);

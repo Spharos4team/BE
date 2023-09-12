@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class EventImage {
 
     @Id
@@ -21,8 +21,10 @@ public class EventImage {
     @JoinColumn(name = "event_id")
     private Event event;
 
-
     private String imageUrl;
     private String imageAlt;
 
+    public void setEvent(Event event) {
+        this.event = event;
+    }
 }

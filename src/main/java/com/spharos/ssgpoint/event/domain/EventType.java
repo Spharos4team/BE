@@ -5,7 +5,7 @@ import java.util.EnumSet;
 import java.util.Set;
 
 public enum EventType {
-    ONGOING, CLOSED, WINNER;  // 진행중, 종료, 당첨자 발표
+    ONGOING, CLOSED, WINNER;
 
     public static Set<EventType> determineEventTypes(LocalDateTime startDate, LocalDateTime endDate, LocalDateTime winningDate) {
         LocalDateTime now = LocalDateTime.now();

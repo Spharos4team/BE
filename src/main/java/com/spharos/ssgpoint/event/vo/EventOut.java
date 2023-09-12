@@ -13,24 +13,15 @@ import java.util.List;
 public class EventOut {
 
     private Long eventId;
-
     private String title;
-
     private String content;
-
-    private String eventType;
-
+    private String eventType; // Assuming EventType is a String. Replace with the correct type if necessary
     private String thumbnailUrl;
-
     private String bannerUrl;
-
-    private List<String> eventImages;
-
+    private List<String> eventImages; // Assuming the images are stored as URLs. Replace with the correct type if necessary
     private LocalDateTime startDate;
-
     private LocalDateTime endDate;
-
     private LocalDateTime winningDate;
 
-
+    // getters and setters
 }

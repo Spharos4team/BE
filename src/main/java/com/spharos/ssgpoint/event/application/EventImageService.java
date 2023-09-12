@@ -1,15 +1,10 @@
 package com.spharos.ssgpoint.event.application;
 
-import com.spharos.ssgpoint.event.domain.EventImageList;
+import com.spharos.ssgpoint.event.domain.EventImage;
+
+import java.util.List;
 
 public interface EventImageService {
-
-    // Event에 EventImageList 추가
-    void addEventImageListToEvent(Long eventId, EventImageList eventImageList);
-
-
-    // EventImageList 추가
-    EventImageList addEventImageList(EventImageList eventImageList);
-
-
+    // EventImage 추가
+    void addEventImage(Long eventId, List<EventImage> eventImage);
 }

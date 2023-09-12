@@ -3,14 +3,12 @@ package com.spharos.ssgpoint.event.application;
 import com.spharos.ssgpoint.event.domain.*;
 import com.spharos.ssgpoint.event.dto.UserEventDTO;
 import com.spharos.ssgpoint.event.exception.EventException;
-import com.spharos.ssgpoint.event.infrastructure.EventImageListRepository;
 import com.spharos.ssgpoint.event.infrastructure.EventImageRepository;
 import com.spharos.ssgpoint.event.infrastructure.EventRepository;
 import com.spharos.ssgpoint.event.infrastructure.UserEventRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,7 +20,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Slf4j
+
+@Transactional
 @Service
 @RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
@@ -31,7 +30,6 @@ public class EventServiceImpl implements EventService {
     private final EventImageRepository eventImageRepository;
     private final S3Service s3Service;
     private final UserEventRepository userEventRepository;
-    private final EventImageListRepository eventImageListRepository;
 
     @Override
     public List<Event> getEventsByTypes(Set<EventType> types) {
@@ -60,9 +58,9 @@ public class EventServiceImpl implements EventService {
         return eventRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("다음 이벤트를 찾을수 없습니다: " + id));
     }
 
-
-    @Transactional
+    @Override
     public boolean addEvent(
+            MultipartFile bannerFile,
             MultipartFile thumbFile,
             List<MultipartFile> otherFiles,
             String title,
@@ -71,7 +69,7 @@ public class EventServiceImpl implements EventService {
             LocalDateTime endDate,
             LocalDateTime winningDate) throws IOException {
         try {
-            // Thumbnail Image Upload
+            String bannerUrl = s3Service.uploadFile(bannerFile);
             String thumbImageUrl = s3Service.uploadFile(thumbFile);
 
             Set<EventType> determinedTypes = EventType.determineEventTypes(startDate, endDate, winningDate);
@@ -80,29 +78,24 @@ public class EventServiceImpl implements EventService {
                     .title(title)
                     .content(content)
                     .eventTypes(determinedTypes)
+                    .bannerUrl(bannerUrl)
                     .thumbnailUrl(thumbImageUrl)
                     .startDate(startDate)
                     .endDate(endDate)
                     .winningDate(winningDate)
                     .build();
 
-            Event savedEvent = eventRepository.save(event); // Save the event and get the saved instance
+            Event savedEvent = eventRepository.save(event);
 
-            // Save Event Images and EventImageList
-            for (MultipartFile one : otherFiles) {
-                String imageUrl = s3Service.uploadFile(one);
+            for (MultipartFile file : otherFiles) {
+                String imageUrl = s3Service.uploadFile(file);
                 EventImage eventImage = EventImage.builder()
                         .event(savedEvent)
                         .imageUrl(imageUrl)
                         .build();
-                EventImage savedEventImage = eventImageRepository.save(eventImage);
-
-                // Create and Save EventImageList
-                EventImageList eventImageList = new EventImageList();
-                eventImageList.setEventImage(savedEventImage);
-                eventImageList.setEvent(savedEvent);
-                eventImageListRepository.save(eventImageList);
+                eventImageRepository.save(eventImage);
             }
+
             return true;
         } catch (DateTimeParseException e) {
             throw new EventException("날짜 형식이 잘못되었습니다.");
@@ -149,7 +142,6 @@ public class EventServiceImpl implements EventService {
 
 
     @Override
-    @Transactional
     public void assignEventToUuid(String uuid, Long eventId) {
         try {
             Event event = eventRepository.findById(eventId)

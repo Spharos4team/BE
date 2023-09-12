@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @RestController
@@ -43,21 +44,15 @@ public class EventController {
         }
     }
 
-
-
     @GetMapping("/events/{id}")
     public ResponseEntity<Event> getEventById(@PathVariable Long id) {
         Event event = eventService.getEventById(id);
-
-        if (event == null) {
-            return ResponseEntity.notFound().build(); // 404 Not Found
-        }
-        return ResponseEntity.ok(event); // 200 OK
+        return ResponseEntity.of(Optional.ofNullable(event));
     }
-
 
     @PostMapping("/events")
     public ResponseEntity<String> addEvent(
+            @RequestParam("bannerFile") MultipartFile bannerFile,
             @RequestParam("thumbFile") MultipartFile thumbFile,
             @RequestParam("otherFiles") List<MultipartFile> otherFiles,
             @RequestParam("title") String title,
@@ -67,7 +62,7 @@ public class EventController {
             @RequestParam("winningDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime winningDate
     ) {
         try {
-            boolean isAdded = eventService.addEvent(thumbFile, otherFiles, title, content, startDate, endDate, winningDate);
+            boolean isAdded = eventService.addEvent(bannerFile, thumbFile, otherFiles, title, content, startDate, endDate, winningDate);
             if (isAdded) {
                 return ResponseEntity.ok("이벤트가 성공적으로 추가되었습니다.");
             } else {
@@ -82,7 +77,6 @@ public class EventController {
         }
     }
 
-
     @GetMapping("/events/participated")
     public ResponseEntity<List<UserEvent>> getEventsParticipatedByUuid(@RequestParam String uuid) {
         List<UserEvent> eventEntries = eventService.getEventsParticipatedByUuid(uuid);
@@ -95,13 +89,10 @@ public class EventController {
         return ResponseEntity.ok(winningEvents);
     }
 
-
-
     @ExceptionHandler(EventException.class)
     public ResponseEntity<String> handleEventException(EventException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
-
 
     @PostMapping("/events/{eventId}/assign")
     public ResponseEntity<String> assignUserToEvent(

@@ -13,7 +13,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class EventDto {
+public class EventDTO {
 
     private Long id;
     private String title;
@@ -24,9 +24,9 @@ public class EventDto {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private LocalDateTime winningDate;
+    private String bannerUrl;
     private String thumbnailUrl;
     private List<String> eventImages;
 
-    
 
 }

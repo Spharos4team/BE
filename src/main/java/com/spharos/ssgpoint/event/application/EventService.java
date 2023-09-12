@@ -18,6 +18,7 @@ public interface EventService {
     Event getEventById(Long id);
 
     boolean addEvent(
+            MultipartFile bannerFile,
             MultipartFile thumbFile,
             List<MultipartFile> otherFiles,
             String title,
