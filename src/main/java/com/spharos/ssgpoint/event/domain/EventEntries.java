@@ -21,6 +21,7 @@ public class EventEntries {
     private Integer status;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @Column(name = "event_id")
     private Event event;
 
     private boolean isWinning;

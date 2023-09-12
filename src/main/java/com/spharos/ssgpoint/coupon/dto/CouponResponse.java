@@ -10,5 +10,4 @@ public class CouponResponse {
     public CouponResponse(String couponNumber) {
         this.couponNumber = couponNumber;
     }
-
 }

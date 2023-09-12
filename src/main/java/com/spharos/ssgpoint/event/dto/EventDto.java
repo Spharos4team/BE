@@ -1,27 +1,36 @@
 package com.spharos.ssgpoint.event.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.spharos.ssgpoint.event.domain.EventImage;
+import com.spharos.ssgpoint.event.domain.EventType;
+import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
+@Builder
 public class EventDto {
 
+    private Long id;
     private String title;
     private String content;
-    private String eventType;
-    private Date startDate;
-    private Date endDate;
-    private String thumbnailUrl;
-    private List<String> eventImages;
 
-    public EventDto(String title, String content, String name, String thumbnailUrl, List<String> eventImages) {
+    private EventType eventType;
+
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
+    private LocalDateTime winningDate;
+    private String thumbnailUrl;
+    private List<EventImage> eventImages;
+
+
+
+    public EventDto(Long id, String title, String content, EventType name, String thumbnailUrl, List<String> eventImageById) {
     }
+
+
 }

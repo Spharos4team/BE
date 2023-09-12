@@ -1,8 +1,9 @@
 package com.spharos.ssgpoint.event.vo;
 
+import com.spharos.ssgpoint.event.domain.EventImage;
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Setter
@@ -12,14 +13,17 @@ import java.util.List;
 @ToString
 public class EventOut {
 
-    private Long eventId;
+    private Long id;
     private String title;
     private String content;
+
     private String eventType;
+
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
+    private LocalDateTime winningDate;
     private String thumbnailUrl;
-    private List<String> eventImages;
-    private Date regDate;
-    private Date startDate;
-    private Date endDate;
+    private List<EventImage> eventImages;
+
 
 }

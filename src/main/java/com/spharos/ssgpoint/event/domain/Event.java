@@ -1,20 +1,16 @@
 package com.spharos.ssgpoint.event.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
 
 @Entity
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class Event {
 
     @Id
@@ -24,19 +20,18 @@ public class Event {
     @Column(nullable = false, length = 50)
     private String title;
 
-    @Column(nullable = false, length = 500)
+    @Column(length = 500)
     private String content;
 
     @Column(nullable = false)
     private String thumbnailUrl; // S3나 다른 스토리지 서비스에 저장된 이미지의 URL
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false)
     private EventType eventType;
 
-    private Date startDate;
-    private Date endDate;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
+    private LocalDateTime winningDate;
 
-//    todo: 이벤트 생성 주체 추가
 
 }

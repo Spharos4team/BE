@@ -1,20 +1,25 @@
-// com.spharos.ssgpoint.event.application.EventServiceImpl.java
-
 package com.spharos.ssgpoint.event.application;
 
 import com.spharos.ssgpoint.event.domain.Event;
 import com.spharos.ssgpoint.event.domain.EventEntries;
+import com.spharos.ssgpoint.event.domain.EventImage;
 import com.spharos.ssgpoint.event.domain.EventType;
 import com.spharos.ssgpoint.event.dto.EventDto;
+import com.spharos.ssgpoint.event.exception.EventException;
+import com.spharos.ssgpoint.event.infrastructure.EventImageRepository;
 import com.spharos.ssgpoint.event.infrastructure.EventRepository;
 import com.spharos.ssgpoint.event.infrastructure.UserEventRepository;
-import com.spharos.ssgpoint.event.vo.EventAdd;
-import jakarta.validation.constraints.NotNull;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -22,13 +27,27 @@ import java.util.List;
 public class EventServiceImpl implements EventService {
 
     private final EventRepository eventRepository;
-    private final EventImageListService eventImageListService;
-    private final EventImageService eventImageService;
+    private final EventImageRepository eventImageRepository;
+    private final S3Service s3Service;
     private final UserEventRepository userEventRepository;
 
     @Override
-    public List<Event> getEventsByType(String eventType) {
-        return eventRepository.findByEventType(eventType);
+    public List<Event> getEventsByType(EventType type) {
+        List<Event> result;
+        switch (type) {
+            case ONGOING:
+                result = eventRepository.findOngoingEvents();
+                break;
+            case CLOSED:
+                result = eventRepository.findClosedEvents();
+                break;
+            case WINNER:
+                result = eventRepository.findWinnerEvents();
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid EventType: " + type);
+        }
+        return result;
     }
 
     @Override
@@ -37,23 +56,87 @@ public class EventServiceImpl implements EventService {
     }
 
 
-    @Override
-    public EventDto addEvent(@NotNull EventAdd eventAdd) {
-        Event event = Event.builder().title(eventAdd.getTitle()).content(eventAdd.getContent()).eventType(EventType.valueOf(eventAdd.getEventType())).thumbnailUrl(eventAdd.getThumbnailUrl()).startDate(eventAdd.getStartDate()).endDate(eventAdd.getEndDate()).build();
+    @Transactional
+    public boolean addEvent(
+            MultipartFile thumbFile,
+            List<MultipartFile> otherFiles,
+            String title,
+            String content,
+            LocalDateTime startDate,
+            LocalDateTime endDate,
+            LocalDateTime winningDate) throws IOException{
+        try {
+            // Thumbnail Image Upload
+            String thumbImageUrl = s3Service.uploadFile(thumbFile);
 
-        Event savedEvent = eventRepository.save(event);
+            // Determine EventType
+            EventType determinedType = EventType.determineEventType(startDate, endDate, winningDate);
 
-        return new EventDto(savedEvent.getTitle(), savedEvent.getContent(), savedEvent.getEventType().name(), savedEvent.getThumbnailUrl(), eventAdd.getEventImages());
+            // Create and Save Event
+            Event event = Event.builder()
+                    .title(title)
+                    .content(content)
+                    .eventType(determinedType)
+                    .thumbnailUrl(thumbImageUrl)
+                    .startDate(startDate)
+                    .endDate(endDate)
+                    .winningDate(winningDate)
+                    .build();
+
+            Event savedEvent = eventRepository.save(event); // Save the event and get the saved instance
+
+            // Save Event Images
+            for (MultipartFile one : otherFiles) {
+                String imageUrl = s3Service.uploadFile(one);
+                EventImage eventImage = EventImage.builder()
+                        .id(savedEvent.getId())
+                        .imageUrl(imageUrl)
+                        .build();
+                eventImageRepository.save(eventImage);
+            }
+            return true;
+        } catch (DateTimeParseException e) {
+            throw new EventException("날짜 형식이 잘못되었습니다.");
+        } catch (IOException e) {
+            throw new EventException("이미지 업로드 중 오류가 발생했습니다.");
+        } catch (Exception e) {
+            throw new EventException("이벤트 추가 중 오류가 발생했습니다: " + e.getMessage());
+        }
     }
 
 
+
+
     @Override
-    public List<Event> getAllEvents() {
-        return eventRepository.findAll();
+    public List<EventDto> getAllEvents() {
+
+        List<Event> events = eventRepository.findAll();
+        log.info("events: {}", events);
+        List<EventDto> eventDtoList =
+            events.stream().map(
+                event -> {
+                    List<EventImage> eventImages = eventImageRepository.findByEventId(event.getId());
+                    log.info("eventImages: {}", eventImages);
+                    return EventDto.builder()
+                            .id(event.getId())
+                            .title(event.getTitle())
+                            .content(event.getContent())
+                            .eventType(event.getEventType())
+                            .eventImages(eventImages)
+                            .winningDate(event.getWinningDate())
+                            .startDate(event.getStartDate())
+                            .endDate(event.getEndDate())
+                            .thumbnailUrl(event.getThumbnailUrl())
+                            .build();
+                }
+            ).collect(Collectors.toList());
+        log.info("eventDtoList: {}", eventDtoList);
+        return eventDtoList;
     }
 
     @Override
     public List<EventEntries> getEventsParticipatedByUser(String uuid) {
+
         return userEventRepository.findByUuid(uuid);
     }
 
@@ -62,5 +145,17 @@ public class EventServiceImpl implements EventService {
         return userEventRepository.findByUuidAndIsWinning(uuid, true);
     }
 
-
+    @Override
+    public List<EventDto> getEventsList() {
+        List<Event> events = eventRepository.findAll();
+        return events.stream()
+                .map(event -> {
+                    List<EventImage> eventImages = eventImageRepository.findByEventId(event.getId());
+                    List<String> eventImageById = eventImages.stream()
+                            .map(EventImage::getImageUrl)
+                            .collect(Collectors.toList());
+                    return new EventDto(event.getId(), event.getTitle(), event.getContent(), event.getEventType(), event.getThumbnailUrl(), eventImageById);
+                })
+                .collect(Collectors.toList());
+    }
 }

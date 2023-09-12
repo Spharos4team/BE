@@ -7,20 +7,21 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
       format_sql: true
     show-sql: true
 
   datasource:
-    url: jdbc:mysql://localhost:3306/ssgpoint-team4
+    url: jdbc:mysql://localhost:3306/ssgpoint
     username: root
-    password: zxcv4312
+    password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   data:
     redis:
       host: localhost
       port: 6379
+
 
 JWT:
   secret_key: fbcb542e08e7feed1c9ebc3740ee092f43304e0b8a666d63bc36fbe785ad447a
@@ -32,3 +33,22 @@ JWT:
     refresh-expiration-time: 604800000   # 7?
 
 
+cloud:
+  aws:
+    s3:
+      bucket: ssgpoint
+    stack.auto: false
+    region.static: ap-northeast-2
+    credentials:
+      accessKey: AKIATYFWGSCF3AGZCJXF
+      secretKey: 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
+
+store:
+  emart24:
+    prefix: 12345678
+  emarteveryday:
+    prefix: 87654321
+  shinsegae:
+    prefix: 11223344
+  speedmate:
+    prefix: 44332211
