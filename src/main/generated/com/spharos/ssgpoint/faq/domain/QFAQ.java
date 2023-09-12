@@ -7,7 +7,9 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+
 import com.querydsl.core.types.dsl.PathInits;
+
 
 
 /**
@@ -17,12 +19,11 @@ import com.querydsl.core.types.dsl.PathInits;
 public class QFAQ extends EntityPathBase<FAQ> {
 
     private static final long serialVersionUID = 1064255214L;
-
     private static final PathInits INITS = PathInits.DIRECT2;
 
     public static final QFAQ fAQ = new QFAQ("fAQ");
 
-    public final StringPath answer = createString("answer");
+   public final StringPath answer = createString("answer");
 
     public final QFAQCategory category;
 

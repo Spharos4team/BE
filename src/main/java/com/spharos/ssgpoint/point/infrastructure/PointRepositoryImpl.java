@@ -33,6 +33,35 @@ public class PointRepositoryImpl implements PointRepositoryCustom{
     }
 
     @Override
+    public Page<PointFilterDto> findByFilter(String uuid, LocalDate startDate,LocalDate endDate, String pointUse, String pointType,  Pageable pageable) {
+
+        Long userId = queryFactory.select(user.id)
+                .from(user)
+                .where(user.uuid.eq(uuid))
+                .fetchOne();
+
+        List<PointFilterDto> result = queryFactory
+                .select(new QPointFilterDto(point1.id, point1.point, point1.title, point1.content, point1.type,
+                        point1.statusType, point1.createdDate, point1.receipt.id))
+                .from(point1)
+                .where(pointUseEq(pointUse), pointTypeEq(pointType), point1.user.id.eq(userId), point1.createdDate.between(startDate.atStartOfDay(), endDate.atStartOfDay()))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(point1.id.desc())
+                .fetch();
+        long total = queryFactory
+                .select(point1)
+                .from(point1)
+                .where(pointUseEq(pointUse), pointTypeEq(pointType),point1.user.id.eq(userId), point1.createdDate.between(startDate.atStartOfDay(), endDate.atStartOfDay()))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetchCount();
+        return new PageImpl<>(result, pageable, total);
+    }
+
+
+
+   /* @Override
     public Slice<PointFilterDto> findByFilter(Long pointId, String uuid, LocalDate startDate,LocalDate endDate,
                                               String pointUse, String pointType,  Pageable pageable) {
 
@@ -51,14 +80,28 @@ public class PointRepositoryImpl implements PointRepositoryCustom{
                 .fetch();
         return checkLastPage(pageable, results);
     }
-
+*/
     @Override
     public PointFilterSumDto sumPointsByFilter(String uuid, String pointUse, String pointType, LocalDate startDate, LocalDate endDate) {
-        Integer save ;
-        Integer use ;
+        Integer totalSavePoints = 0;
+        Integer totalUsePoints = 0;
 
-    if("1".equals(pointUse)) {
-        save = queryFactory
+        if ("1".equals(pointUse) || "0".equals(pointUse)) {
+            totalSavePoints = calculateTotalPoints(uuid, "1", pointType, startDate, endDate);
+        }
+
+        if ("2".equals(pointUse) || "0".equals(pointUse)) {
+            totalUsePoints = calculateTotalPoints(uuid, "2", pointType, startDate, endDate);
+        }
+
+        return PointFilterSumDto.builder()
+                .savePoint(totalSavePoints)
+                .usePoint(totalUsePoints)
+                .build();
+    }
+
+    private Integer calculateTotalPoints(String uuid, String pointUse, String pointType, LocalDate startDate, LocalDate endDate) {
+        return queryFactory
                 .select(point1.point.sum())
                 .from(point1)
                 .join(point1.user, user)
@@ -69,62 +112,15 @@ public class PointRepositoryImpl implements PointRepositoryCustom{
                         point1.createdDate.between(startDate.atStartOfDay(), endDate.atStartOfDay()))
                 .orderBy(point1.id.desc())
                 .fetchOne();
-
-        use = 0;
     }
-    else if("2".equals(pointUse)){
-            save = 0;
-            use =queryFactory
-                    .select(point1.point.sum())
-                    .from(point1)
-                    .join(point1.user, user)
-                    .on(user.uuid.eq(uuid))
-                    .where(
-                            pointUseEq(pointUse),
-                            pointTypeEq(pointType),
 
-                            point1.createdDate.between(startDate.atStartOfDay(), endDate.atStartOfDay()))
-                    .orderBy(point1.id.desc())
-                    .fetchOne();
-        }
-    else{ //전체니까 적립 사용 둘다
-        save = queryFactory
-                .select(point1.point.sum())
-                .from(point1)
-                .join(point1.user, user)
-                .on(user.uuid.eq(uuid))
-                .where(
-                        pointUseEq("1"),
-                        pointTypeEq(pointType),
-
-                        point1.createdDate.between(startDate.atStartOfDay(), endDate.atStartOfDay()))
-                .orderBy(point1.id.desc())
-                .fetchOne();
-        use =queryFactory
-                .select(point1.point.sum())
-                .from(point1)
-                .join(point1.user, user)
-                .on(user.uuid.eq(uuid))
-                .where(
-                        pointUseEq("2"),
-                        pointTypeEq(pointType),
-                        point1.createdDate.between(startDate.atStartOfDay(), endDate.atStartOfDay()))
-                .orderBy(point1.id.desc())
-                .fetchOne();
-
-    }
-        return PointFilterSumDto.builder()
-                .savePoint(save)
-                .usePoint(use)
-                .build();
-    }
 
     private BooleanExpression pointUseEq(String pointUse) {
         if ("1".equals(pointUse)) { // 적립
             return point1.statusType.eq(적립);
         } else if ("2".equals(pointUse)) { // 사용
             return point1.statusType.in(사용, 사용취소);
-        } else {
+        } else { // "0"일때 경우 전체
             return null;
         }
     }
@@ -134,11 +130,12 @@ public class PointRepositoryImpl implements PointRepositoryCustom{
             return point1.type.in(결제, 선물, 전환, 추후, 소멸);
         } else if ("2".equals(pointType)) { // 이벤트
             return point1.type.eq(이벤트);
-        } else {
-            return point1.type.in(결제, 선물, 전환, 추후, 소멸,이벤트);
+        } else { // "0"일때 경우 전체
+            //return point1.type.in(결제, 선물, 전환, 추후, 소멸,이벤트);
+            return null;
         }
     }
-
+/*
     // no-offset 방식 처리하는 메서드
     private BooleanExpression ltStoreId(Long pointId) {
         if (pointId == null) {
@@ -160,5 +157,5 @@ public class PointRepositoryImpl implements PointRepositoryCustom{
         }
 
         return new SliceImpl<>(results, pageable, hasNext);
-    }
+    }*/
 }

@@ -60,7 +60,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom{
                 .select(point1.receipt.count())
                 .from(point1)
                 .join(point1.user, user)
-                .join(point1.receipt, receipt)
+               // .join(point1.receipt, receipt)
                 .where(user.uuid.eq(uuid).and(point1.statusType.eq(적립)))
                 .fetchOne();
         return result != null ? result : 0;

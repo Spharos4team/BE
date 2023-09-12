@@ -45,6 +45,8 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath pointPassword = createString("pointPassword");
 
+    public final EnumPath<Role> role = createEnum("role", Role.class);
+
     public final NumberPath<Integer> status = createNumber("status", Integer.class);
 
     public final com.spharos.ssgpoint.term.domain.QUserTermList term;

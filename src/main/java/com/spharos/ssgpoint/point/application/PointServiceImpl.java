@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -131,20 +132,24 @@ public class PointServiceImpl implements PointService {
 
 
     // 포인터 필터 적용
-    @Override
+   /* @Override
     public Slice<PointFilterDto> pointFilter(Long id, String UUID, Pageable page, PointFilterVo p) {
         User user = userRepository.findByUuid(UUID).orElseThrow(() ->
                 new IllegalArgumentException("UUID 정보 없음 = " + UUID));
         return pointRepository.findByFilter(id, UUID, p.getStartDate(), p.getEndDate(), p.getPointUse(), p.getPointType(), page);
 
+    }*/
+    public Page<PointFilterDto> pointFilter(String UUID, Pageable page, LocalDate startDate, LocalDate endDate, String pointUse, String pointType){
+       return pointRepository.findByFilter(UUID, startDate, endDate, pointUse, pointType, page);
     }
 
+    // 포인터 필터 사용 적립 합계
     @Override
     public PointFilterSumDto sumPointsByFilter(String UUID, PointFilterVo p) {
         return pointRepository.sumPointsByFilter(UUID,p.getPointUse(),p.getPointType(),p.getStartDate(),p.getEndDate());
     }
 
-    // 포인터 필터 적용된거 적립 사용 합계
+
 
 
 }

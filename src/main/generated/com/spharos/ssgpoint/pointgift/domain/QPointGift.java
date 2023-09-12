@@ -34,6 +34,8 @@ public class QPointGift extends EntityPathBase<PointGift> {
 
     public final NumberPath<Integer> point = createNumber("point", Integer.class);
 
+    public final NumberPath<Long> pointId = createNumber("pointId", Long.class);
+
     public final EnumPath<PointGiftStatusType> status = createEnum("status", PointGiftStatusType.class);
 
     public final EnumPath<PointGiftType> type = createEnum("type", PointGiftType.class);

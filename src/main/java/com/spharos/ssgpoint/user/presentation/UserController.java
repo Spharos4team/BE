@@ -32,8 +32,8 @@ public class UserController {
     private final JwtTokenProvider jwtTokenProvider;
 
 
-    @GetMapping("/user/{UUID}")
-    public ResponseEntity<UserGetOut> getUserByUUID(@PathVariable String UUID) {
+    @GetMapping("/user")
+    public ResponseEntity<UserGetOut> getUserByUUID(@RequestParam String UUID) {
         log.info("INPUT UUID is : {}" , UUID);
         UserGetDto userGetDto = userService.getUserByUUID(UUID);
         log.info("OUTPUT userGetDto is : {}" , userGetDto);
@@ -51,8 +51,8 @@ public class UserController {
     /**
      * 회원 수정
      */
-    @PutMapping("/user/{UUID}")
-    public ResponseEntity<String> updateUser(@PathVariable String UUID,@RequestBody UserUpdateIn userUpdateIn){
+    @PutMapping("/user")
+    public ResponseEntity<String> updateUser(@RequestParam String UUID,@RequestBody UserUpdateIn userUpdateIn){
         ModelMapper modelMapper = new ModelMapper();
         UserUpdateDto userUpdateDto = modelMapper.map(userUpdateIn,UserUpdateDto.class);
         userService.updateUserInfo(UUID,userUpdateDto);
@@ -76,8 +76,8 @@ public class UserController {
     /**
      * 비밀번호 변경
      */
-    @PutMapping("/user/password/{UUID}")
-    public ResponseEntity<String> updatePassword(@PathVariable String UUID, @RequestBody PasswordUpdateInfo passwordUpdateInfo) {
+    @PutMapping("/user/password")
+    public ResponseEntity<String> updatePassword(@RequestParam String UUID, @RequestBody PasswordUpdateInfo passwordUpdateInfo) {
             ModelMapper modelMapper = new ModelMapper();
             PasswordUpdateDto passwordUpdateDto = modelMapper.map(passwordUpdateInfo,PasswordUpdateDto.class);
             userService.updatePassword(UUID,passwordUpdateDto);
@@ -87,8 +87,8 @@ public class UserController {
     /**
      * 광고정보 수신관리 조회
      */
-    @GetMapping("/user/term/{UUID}")
-    public ResponseEntity<Map<String,Boolean>> getTerm(@PathVariable String UUID) {
+    @GetMapping("/user/term")
+    public ResponseEntity<Map<String,Boolean>> getTerm(@RequestParam String UUID) {
         Map<String, Boolean> term = userService.getTerm(UUID);
         return ResponseEntity.ok(term);
     }
@@ -96,8 +96,8 @@ public class UserController {
     /**
      * 광고정보 수신관리 업데이트
      */
-    @PutMapping("/user/term/{UUID}")
-    public ResponseEntity<Map<String,Boolean>> updateTerm(@PathVariable String UUID,@RequestBody TermUpdateInfo termUpdateInfo) {
+    @PutMapping("/user/term")
+    public ResponseEntity<Map<String,Boolean>> updateTerm(@RequestParam String UUID,@RequestBody TermUpdateInfo termUpdateInfo) {
         ModelMapper modelMapper = new ModelMapper();
         TermUpdateDto termUpdateDto = modelMapper.map(termUpdateInfo, TermUpdateDto.class);
         Map<String, Boolean> term = userService.updateTerm(UUID, termUpdateDto);
@@ -107,8 +107,8 @@ public class UserController {
     /**
      * 회원 soft delete
      */
-    @PutMapping("/user/soft-delete/{UUID}")
-    public ResponseEntity<String> changeStatus(@PathVariable String UUID) {
+    @PutMapping("/user/soft-delete")
+    public ResponseEntity<String> changeStatus(@RequestParam String UUID) {
         userService.softDeleteUser(UUID);
         return ResponseEntity.ok("회원탈퇴 성공");
     }
