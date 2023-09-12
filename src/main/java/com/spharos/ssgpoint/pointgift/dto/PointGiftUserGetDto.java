@@ -10,7 +10,8 @@ import lombok.*;
 @NoArgsConstructor
 public class PointGiftUserGetDto {
 
-    private String phone;
+    private String loginId;
     private String name;
+    private String phone;
 
 }

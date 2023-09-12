@@ -2,8 +2,14 @@ package com.spharos.ssgpoint.user.presentation;
 
 import com.spharos.ssgpoint.config.security.JwtTokenProvider;
 import com.spharos.ssgpoint.user.application.UserService;
-import com.spharos.ssgpoint.user.dto.*;
-import com.spharos.ssgpoint.user.vo.*;
+import com.spharos.ssgpoint.user.dto.password.PasswordUpdateDto;
+import com.spharos.ssgpoint.user.dto.shoppinghistory.*;
+import com.spharos.ssgpoint.user.dto.user.*;
+import com.spharos.ssgpoint.user.vo.password.PasswordUpdateInfo;
+import com.spharos.ssgpoint.user.vo.user.TermUpdateInfo;
+import com.spharos.ssgpoint.user.vo.user.UserGetOut;
+import com.spharos.ssgpoint.user.vo.user.UserSignUpIn;
+import com.spharos.ssgpoint.user.vo.user.UserUpdateIn;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -11,6 +17,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -24,15 +31,6 @@ public class UserController {
     private final Environment env;
     private final JwtTokenProvider jwtTokenProvider;
 
-
-    @PostMapping("/user")
-    public void createUser(@RequestBody UserSignUpIn userSignUpIn) {
-        log.info("INPUT Object Data is : {}" , userSignUpIn);
-        ModelMapper modelMapper = new ModelMapper();
-        UserSignUpDto userSignUpDto = modelMapper.map(userSignUpIn, UserSignUpDto.class);
-
-        userService.createUser(userSignUpDto);
-    }
 
     @GetMapping("/user/{UUID}")
     public ResponseEntity<UserGetOut> getUserByUUID(@PathVariable String UUID) {
@@ -117,24 +115,25 @@ public class UserController {
     /**
      * 사용가능 포인트 조회
      */
-    @GetMapping("/user/point/{UUID}")
-    public ResponseEntity<PointGetDto> getPoint(@PathVariable String UUID) {
+    @GetMapping("/user/point")
+    public ResponseEntity<PointGetDto> getPoint(@RequestParam String UUID) {
         PointGetDto pointGetDto = userService.getPoint(UUID);
         return ResponseEntity.ok(pointGetDto);
     }
-    /**
+
+   /* *//**
      * 신세계포인트 이용 - 적립부분
-     */
+     *//*
     @GetMapping("/user/save-point/{UUID}")
     public ResponseEntity<UserSavePointDto> getSavePoint(@PathVariable String UUID) {
         UserSavePointDto userSavePointDto = userService.getSavePoint(UUID);
         return ResponseEntity.ok(userSavePointDto);
-    }
+    }*/
     /**
      * 신세계포인트 이용 - 사용부분
      */
-    @GetMapping("/user/use-point/{UUID}")
-    public ResponseEntity<UserUsePointDto> getUsePoint(@PathVariable String UUID) {
+    @GetMapping("/user/use-point")
+    public ResponseEntity<UserUsePointDto> getUsePoint(@RequestParam String UUID) {
         UserUsePointDto userUsePointDto = userService.getUsePoint(UUID);
         return ResponseEntity.ok(userUsePointDto);
     }
@@ -142,24 +141,33 @@ public class UserController {
     /**
      * 방문 일수 - 바코드 테이블 count
      */
-    @GetMapping("/user/visit/{UUID}")
-    public ResponseEntity<VisitedCountDto> countDate(@PathVariable String UUID){
+    @GetMapping("/user/visit")
+    public ResponseEntity<VisitedCountDto> countDate(@RequestParam String UUID){
         VisitedCountDto visitedCount = userService.getVisitedCount(UUID);
         return ResponseEntity.ok(visitedCount);
     }
     /**
      * 구매 금액
      */
-    @GetMapping("/user/total-point/{UUID}")
-    public ResponseEntity<TotalPointDtoByReceipt> totalPoint(@PathVariable String UUID){
+    @GetMapping("/user/total-point")
+    public ResponseEntity<TotalPointDtoByReceipt> totalPoint(@RequestParam String UUID){
         TotalPointDtoByReceipt totalPoint = userService.getTotalPoint(UUID);
         return ResponseEntity.ok(totalPoint);
     }
 
-    @GetMapping("/shopping-history/{UUID}")
-    public ResponseEntity<UserCompositeDto> getUserData(@PathVariable String UUID) {
-        UserCompositeDto userCompositeDto = new UserCompositeDto();
+    @GetMapping("/user/top3")
+    public ResponseEntity<List<FrequentBrandTop3SumDto>> totalSum3Point(@RequestParam String UUID){
+        List<FrequentBrandTop3SumDto> frequentBrandTop3Sum = userService.getFrequentBrandTop3Sum(UUID);
+        return ResponseEntity.ok(frequentBrandTop3Sum);
+    }
 
+    /**
+     * 쇼핑 히스토리 전체
+     */
+
+    @GetMapping("/shopping-history")
+    public ResponseEntity<UserCompositeDto> getUserData(@RequestParam String UUID) {
+        UserCompositeDto userCompositeDto = new UserCompositeDto();
         userCompositeDto.setPointGetDto(userService.getPoint(UUID));
         userCompositeDto.setUserSavePointDto(userService.getSavePoint(UUID));
         userCompositeDto.setUserUsePointDto(userService.getUsePoint(UUID));

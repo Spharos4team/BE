@@ -1,14 +1,11 @@
 package com.spharos.ssgpoint.temporarycard.presentation;
 
 import com.spharos.ssgpoint.temporarycard.application.TemporaryCardService;
-import com.spharos.ssgpoint.temporarycard.domain.TemporaryCard;
 import com.spharos.ssgpoint.temporarycard.dto.TemporaryCardGetDto;
-import com.spharos.ssgpoint.temporarycard.infrastructure.TemporaryCardRepository;
 import com.spharos.ssgpoint.temporarycard.vo.TemporaryCardGetVo;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,20 +16,21 @@ public class TemporaryCardController {
 
     private final TemporaryCardService temporaryCardService;
 
-    // 임시 발급 카드 조회
-    @GetMapping("/temporary-card")
-    public List<TemporaryCardGetVo> getTemporaryCardByNumber(String number) {
-        List<TemporaryCardGetDto> temporaryCardGetDtoList = temporaryCardService.getTemporaryCardByNumber(number);
+    // 임시 발급 카드를 포인트 카드에 등록
+    @PostMapping("/temporary-card")
+    public ResponseEntity<String> createTemporaryCardByNumber(@RequestParam("UUID") String UUID,
+                                                              @RequestBody TemporaryCardGetVo temporaryCardGetVo) {
+        TemporaryCardGetDto temporaryCardGetDto = TemporaryCardGetDto.builder()
+                .birth(temporaryCardGetVo.getBirth())
+                .name(temporaryCardGetVo.getName())
+                .number(temporaryCardGetVo.getNumber())
+                .CVC(temporaryCardGetVo.getCVC())
+                .agency(temporaryCardGetVo.getAgency())
+                .build();
 
-        return temporaryCardGetDtoList.stream().map(temporaryCard ->
-                TemporaryCardGetVo.builder()
-                        .birth(temporaryCard.getBirth())
-                        .name(temporaryCard.getName())
-                        .number(temporaryCard.getNumber())
-                        .CVC(temporaryCard.getCVC())
-                        .agency(temporaryCard.getAgency())
-                        .build()
-        ).toList();
+        temporaryCardService.createTemporaryCardByNumber(UUID, temporaryCardGetDto);
+
+        return ResponseEntity.ok("임시 발급 카드 등록 완료");
     }
 
 

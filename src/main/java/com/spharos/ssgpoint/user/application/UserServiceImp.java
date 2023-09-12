@@ -7,7 +7,9 @@ import com.spharos.ssgpoint.point.domain.Point;
 import com.spharos.ssgpoint.term.domain.UserTermList;
 import com.spharos.ssgpoint.user.domain.PointHistory;
 import com.spharos.ssgpoint.user.domain.User;
-import com.spharos.ssgpoint.user.dto.*;
+import com.spharos.ssgpoint.user.dto.password.PasswordUpdateDto;
+import com.spharos.ssgpoint.user.dto.shoppinghistory.*;
+import com.spharos.ssgpoint.user.dto.user.*;
 import com.spharos.ssgpoint.user.infrastructure.PasswordHistoryRepository;
 import com.spharos.ssgpoint.user.infrastructure.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -145,7 +147,7 @@ public class UserServiceImp implements UserService{
      */
     @Transactional
     @Override
-    public Map<String, Boolean> updateTerm(String UUID,TermUpdateDto termUpdateDto) {
+    public Map<String, Boolean> updateTerm(String UUID, TermUpdateDto termUpdateDto) {
         log.info("termUpdateDto={}",termUpdateDto.getTermJson());
         UserTermList termJsonByUuid = userRepository.findTermJsonByUuid(UUID).orElseThrow(() -> new IllegalArgumentException("UUID정보 없음"));
         termJsonByUuid.updateTermJson(termUpdateDto.getTermJson());
@@ -167,8 +169,15 @@ public class UserServiceImp implements UserService{
      */
     @Override
     public PointGetDto getPoint(String UUID) {
-        Point topByUuid = userRepository.findTotalByUuid(UUID);
-        Integer totalPoint = topByUuid.getTotalPoint();
+        Integer totalPoint;
+        Optional<Point> totalByUuid = userRepository.findTotalByUuid(UUID);
+
+        if (!totalByUuid.isPresent()) {
+            totalPoint = 0;
+        } else {
+            totalPoint = totalByUuid.get().getTotalPoint();
+        }
+
         return PointGetDto.builder()
                 .totalPoint(totalPoint)
                 .build();

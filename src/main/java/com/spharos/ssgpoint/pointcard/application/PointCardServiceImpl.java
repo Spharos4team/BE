@@ -32,14 +32,13 @@ public class PointCardServiceImpl implements PointCardService {
 
         return fixNumber + randomDigits;
     }
-    
-    // TODO: 추가 수정 필요 (여러 사람이 동시에 가입했을 때)
+
     // 중복 검사
     private String validateNumber(String number) {
-        Optional<PointCard> pointCard = pointCardRepository.findByNumber(number);
+        Optional<PointCard> byNumberUUId = pointCardRepository.findByNumber(number);
 
         // 중복인 경우
-        if (pointCard.isPresent()) {
+        if (byNumberUUId.isPresent()) {
             String subString = number.substring(4, 7);
             int plus = Integer.parseInt(subString) + 1;
             String newNumber = number.substring(0, 4) + String.format("%03d", plus) + number.substring(7);
@@ -103,7 +102,7 @@ public class PointCardServiceImpl implements PointCardService {
 
         return pointCardList.stream().map(pointCard ->
                 PointCardGetDto.builder()
-                        .name(pointCard.getName())
+                        .createdDate(pointCard.getCreatedDate())
                         .number(pointCard.getNumber())
                         .agency(pointCard.getAgency())
                         .build()
