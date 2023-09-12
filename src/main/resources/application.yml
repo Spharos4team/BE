@@ -34,7 +34,7 @@
 
     data:
       redis:
-        host: localhost
+        host: 3.35.193.212
         port: 6379
       web:
         pageable:
