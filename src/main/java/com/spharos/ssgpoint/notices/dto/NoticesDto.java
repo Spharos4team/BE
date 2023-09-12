@@ -1,5 +1,6 @@
 package com.spharos.ssgpoint.notices.dto;
 
+import com.spharos.ssgpoint.notices.domain.Notices;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,5 +16,7 @@ public class NoticesDto {
     private String title;
     private String content;
 
-
+    public static NoticesDto fromEntity(Notices notices) {
+        return new NoticesDto(notices.getId(), notices.getTitle(), notices.getContent());
+    }
 }

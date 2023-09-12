@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @RestController
@@ -47,7 +46,7 @@ public class EventController {
     @GetMapping("/events/{id}")
     public ResponseEntity<Event> getEventById(@PathVariable Long id) {
         Event event = eventService.getEventById(id);
-        return ResponseEntity.of(Optional.ofNullable(event));
+        return event != null ? ResponseEntity.ok(event) : ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
     @PostMapping("/events")

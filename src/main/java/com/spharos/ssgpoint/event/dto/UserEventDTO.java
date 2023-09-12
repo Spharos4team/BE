@@ -14,4 +14,10 @@ public class UserEventDTO {
     private String uuid;
     private String eventName;
     private boolean isWinning;
+
+    public UserEventDTO(Long id, String uuid, String eventName) {
+        this.id = id;
+        this.uuid = uuid;
+        this.eventName = eventName;
+    }
 }

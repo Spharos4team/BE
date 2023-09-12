@@ -19,7 +19,7 @@ public class Question {
     private String uuid;
     private String title;
     private String description;
-    private String status = "Pending"; // Default status
+    private String status = "답변대기"; // Default status
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
     private List<QuestionTag> tags = new ArrayList<>();

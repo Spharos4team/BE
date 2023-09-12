@@ -23,5 +23,7 @@ public class EventOut {
     private LocalDateTime endDate;
     private LocalDateTime winningDate;
 
+
+
     // getters and setters
 }

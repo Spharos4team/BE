@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface QuestionService {
 
-    Long createQuestion(Question question);
+    Long createQuestion(Question question  );
 
     Long createComment(Long questionId, Comment comment);
 

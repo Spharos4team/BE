@@ -17,10 +17,12 @@ public class QuestionController {
     private final QuestionService questionService;
 
     @PostMapping("/question")
-    public ResponseEntity<Long> createQuestion(@RequestBody QuestionDTO questionDTO) {
+    public ResponseEntity<Long> createQuestion(@RequestBody QuestionDTO questionDTO, @RequestParam String uuid) {
+        questionDTO.setUuid(uuid); // 사용자의 uuid를 QuestionDTO에 설정
         Long questionId = questionService.createQuestion(questionDTO.toEntity());
         return ResponseEntity.status(201).body(questionId);
     }
+
 
     @PostMapping("/question/{questionId}/comments")
     public ResponseEntity<Long> createComment(@PathVariable Long questionId, @RequestBody CommentDTO commentDTO) {

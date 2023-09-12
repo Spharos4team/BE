@@ -23,4 +23,6 @@ public class EventAdd {
     private LocalDateTime endDate;
     private LocalDateTime winningDate;
 
+
+
 }

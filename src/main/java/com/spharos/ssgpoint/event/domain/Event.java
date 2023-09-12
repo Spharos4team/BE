@@ -48,5 +48,6 @@ public class Event {
     private LocalDateTime winningDate;
 
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<EventImage> eventImages = new HashSet<>();
+    @JsonIgnoreProperties("event")
+    private Set<EventImage> eventImages;
 }

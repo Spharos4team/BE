@@ -44,14 +44,15 @@ public class FAQController {
         }
     }
 
-    @GetMapping("/faq/categories/main")
-    public ResponseEntity<List<FAQCategory>> getMainCategories() {
-        return ResponseEntity.ok(faqService.getMainCategories());
+    @GetMapping("/faq/parent")
+    public ResponseEntity<List<FAQCategory>> getParentCategories() {
+        return ResponseEntity.ok(faqService.getParentCategories());
     }
 
-    @GetMapping("/faq/categories/sub/{mainCategoryId}")
-    public ResponseEntity<List<FAQCategory>> getSubCategories(@PathVariable Long mainCategoryId) {
-        return ResponseEntity.ok(faqService.getSubCategories(mainCategoryId));
+    @GetMapping("/faq/sub/{parentCategoryId}")
+    public ResponseEntity<List<FAQCategory>> getSubCategories(@PathVariable Long parentCategoryId) {
+        return ResponseEntity.ok(faqService.getSubCategories(parentCategoryId));
     }
+
 
 }
