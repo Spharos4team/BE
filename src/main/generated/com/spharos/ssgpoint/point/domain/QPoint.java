@@ -33,8 +33,6 @@ public class QPoint extends EntityPathBase<Point> {
 
     public final NumberPath<Integer> point = createNumber("point", Integer.class);
 
-    public final com.spharos.ssgpoint.pointcard.domain.QPointCard pointCard;
-
     public final com.spharos.ssgpoint.receipt.domain.QReceipt receipt;
 
     public final EnumPath<PointStatusType> statusType = createEnum("statusType", PointStatusType.class);
@@ -68,7 +66,6 @@ public class QPoint extends EntityPathBase<Point> {
 
     public QPoint(Class<? extends Point> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.pointCard = inits.isInitialized("pointCard") ? new com.spharos.ssgpoint.pointcard.domain.QPointCard(forProperty("pointCard")) : null;
         this.receipt = inits.isInitialized("receipt") ? new com.spharos.ssgpoint.receipt.domain.QReceipt(forProperty("receipt")) : null;
         this.user = inits.isInitialized("user") ? new com.spharos.ssgpoint.user.domain.QUser(forProperty("user"), inits.get("user")) : null;
     }

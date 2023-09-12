@@ -31,6 +31,8 @@ public class QTemporaryCard extends EntityPathBase<TemporaryCard> {
 
     public final StringPath number = createString("number");
 
+    public final NumberPath<Integer> status = createNumber("status", Integer.class);
+
     public QTemporaryCard(String variable) {
         super(TemporaryCard.class, forVariable(variable));
     }

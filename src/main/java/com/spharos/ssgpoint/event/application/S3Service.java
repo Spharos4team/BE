@@ -20,6 +20,12 @@ public class S3Service {
     @Value("${cloud.aws.s3.bucket}")
     private String bucketName;
 
+    /**
+     * 파일을 업로드합니다.
+     * @param file
+     * @return
+     * @throws IOException
+     */
     public String uploadFile(MultipartFile file) throws IOException {
         String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
 

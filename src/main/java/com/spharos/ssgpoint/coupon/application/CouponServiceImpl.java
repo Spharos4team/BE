@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CouponServiceImpl implements CouponService {
 
     private final CouponRepository couponRepository;
@@ -28,7 +29,11 @@ public class CouponServiceImpl implements CouponService {
     private final StoreManager storeManager;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Transactional
+    /**
+     * 새로운 쿠폰을 등록합니다.
+     *
+     * @param couponAdd 쿠폰 생성에 필요한 정보가 담긴 VO.
+     */
     public void registerCoupon(CouponAdd couponAdd) {
         String generatedCouponNumber = storeManager.generateCouponNumber(couponAdd.getStore());
         Coupon coupon = Coupon.builder()
@@ -43,21 +48,33 @@ public class CouponServiceImpl implements CouponService {
                 .build();
 
         couponRepository.save(coupon);
-        logger.info("Coupon with title {} registered successfully.", couponAdd.getTitle());
+        logger.info("쿠폰 '{}'이(가) 성공적으로 등록되었습니다.", couponAdd.getTitle());
     }
 
-    @Transactional
+    /**
+     * 쿠폰을 삭제합니다.
+     *
+     * @param couponId 삭제할 쿠폰의 ID.
+     * @throws IllegalStateException 쿠폰이 사용자에게 할당되어 있을 때 발생합니다.
+     */
     public void deleteCoupon(Long couponId) {
         List<UserCoupon> assignedCoupons = userCouponRepository.findAllByCouponId(couponId);
         if (!assignedCoupons.isEmpty()) {
-            logger.warn("Attempt to delete coupon with ID {} that is assigned to users.", couponId);
-            throw new IllegalStateException("Cannot delete coupon that is assigned to users.");
+            logger.warn("사용자에게 할당된 ID {} 쿠폰을 삭제하려고 했습니다.", couponId);
+            throw new IllegalStateException("쿠폰이 사용자에게 할당되어 있어 삭제할 수 없습니다");
         }
 
         couponRepository.deleteById(couponId);
-        logger.info("Coupon with ID {} deleted successfully.", couponId);
+        logger.info("쿠폰 ID {}가 성공적으로 삭제되었습니다.", couponId);
     }
 
+    /**
+     * 쿠폰을 사용합니다.
+     *
+     * @param couponOut 쿠폰 사용에 필요한 정보가 담긴 VO.
+     * @return 사용된 쿠폰.
+     * @throws CouponNotFoundException 쿠폰을 찾을 수 없을 때 발생합니다.
+     */
     public CouponDto useCoupon(CouponOut couponOut) {
         UserCoupon userCoupon = userCouponRepository.findById(couponOut.getCouponId())
                 .orElseThrow(() -> new CouponNotFoundException(couponOut.getCouponId()));
@@ -66,7 +83,11 @@ public class CouponServiceImpl implements CouponService {
         return new CouponDto(coupon);
     }
 
-
+    /**
+     * 사용 가능한 쿠폰 목록을 가져옵니다.
+     *
+     * @return 사용 가능한 쿠폰 목록.
+     */
     public List<CouponDto> getAvailableCoupons() {
         LocalDate now = LocalDate.now();
         return couponRepository.findAvailableCoupons(now)
@@ -75,6 +96,12 @@ public class CouponServiceImpl implements CouponService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * 사용자가 가진 쿠폰 목록을 가져옵니다.
+     *
+     * @param uuid 사용자 UUID.
+     * @return 사용자가 가진 쿠폰 목록.
+     */
     public List<UserCouponDto> getMyCoupons(String uuid) {
         return userCouponRepository.findAllByUuid(uuid)
                 .stream()
@@ -82,6 +109,11 @@ public class CouponServiceImpl implements CouponService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * 만료된 쿠폰 목록을 가져옵니다.
+     *
+     * @return 만료된 쿠폰 목록.
+     */
     public List<CouponDto> getExpiredCoupons() {
         LocalDate now = LocalDate.now();
         return couponRepository.findAllByEndDateBefore(now)
@@ -90,6 +122,13 @@ public class CouponServiceImpl implements CouponService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * 주어진 ID를 가진 쿠폰을 가져옵니다.
+     *
+     * @param couponId 쿠폰 ID.
+     * @return 해당 ID를 가진 쿠폰.
+     * @throws CouponNotFoundException 쿠폰을 찾을 수 없을 때 발생합니다.
+     */
     @Override
     public CouponDto getCouponById(Long couponId) {
         Coupon coupon = couponRepository.findById(couponId)
@@ -97,7 +136,14 @@ public class CouponServiceImpl implements CouponService {
         return new CouponDto(coupon);
     }
 
-    @Transactional
+    /**
+     * 사용자에게 쿠폰을 할당합니다.
+     *
+     * @param uuid     사용자 UUID.
+     * @param couponId 쿠폰 ID.
+     * @throws CouponNotFoundException 쿠폰을 찾을 수 없을 때 발생합니다.
+     * @throws IllegalStateException  사용자가 이미 해당 쿠폰을 가지고 있을 때 발생합니다.
+     */
     @Override
     public void assignCoupon(String uuid, Long couponId) {
         Coupon coupon = couponRepository.findById(couponId)
@@ -106,8 +152,9 @@ public class CouponServiceImpl implements CouponService {
         UserCoupon existingUserCoupon = userCouponRepository.findByUuidAndCouponId(uuid, couponId)
                 .orElse(null);
         if (existingUserCoupon != null) {
-            logger.warn("User with UUID {} already has the coupon with ID {}", uuid, couponId);
-            throw new IllegalStateException("User already has this coupon.");
+            logger.warn("사용자가 이미 해당 쿠폰을 가지고 있습니다. 쿠폰 ID: {}, 사용자 UUID: {}",
+                    couponId, uuid);
+            throw new IllegalStateException("사용자가 이미 해당 쿠폰을 가지고 있습니다.");
         }
 
         UserCoupon userCoupon = UserCoupon.builder()
@@ -115,7 +162,7 @@ public class CouponServiceImpl implements CouponService {
                 .coupon(coupon)
                 .build();
         userCouponRepository.save(userCoupon);
-        logger.info("Coupon with ID {} has been assigned to user with UUID {}", couponId, uuid);
+        logger.info("쿠폰 ID {}가 사용자 UUID {}에게 할당되었습니다.", couponId, uuid);
     }
 
 }
