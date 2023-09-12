@@ -41,6 +41,7 @@ public class PointRepositoryImpl implements PointRepositoryCustom{
                         point1.statusType, point1.createdDate, point1.receipt.id))
                 .from(point1)
                 .join(point1.user, user)
+                .on(user.uuid.eq(uuid))
                 .where(ltStoreId(pointId),
                         pointUseEq(pointUse), pointTypeEq(pointType),
                         user.uuid.eq(uuid),
@@ -61,10 +62,10 @@ public class PointRepositoryImpl implements PointRepositoryCustom{
                 .select(point1.point.sum())
                 .from(point1)
                 .join(point1.user, user)
+                .on(user.uuid.eq(uuid))
                 .where(
                         pointUseEq(pointUse),
                         pointTypeEq(pointType),
-                        user.uuid.eq(uuid),
                         point1.createdDate.between(startDate.atStartOfDay(), endDate.atStartOfDay()))
                 .orderBy(point1.id.desc())
                 .fetchOne();
@@ -77,10 +78,11 @@ public class PointRepositoryImpl implements PointRepositoryCustom{
                     .select(point1.point.sum())
                     .from(point1)
                     .join(point1.user, user)
+                    .on(user.uuid.eq(uuid))
                     .where(
                             pointUseEq(pointUse),
                             pointTypeEq(pointType),
-                            user.uuid.eq(uuid),
+
                             point1.createdDate.between(startDate.atStartOfDay(), endDate.atStartOfDay()))
                     .orderBy(point1.id.desc())
                     .fetchOne();
@@ -90,10 +92,11 @@ public class PointRepositoryImpl implements PointRepositoryCustom{
                 .select(point1.point.sum())
                 .from(point1)
                 .join(point1.user, user)
+                .on(user.uuid.eq(uuid))
                 .where(
                         pointUseEq("1"),
                         pointTypeEq(pointType),
-                        user.uuid.eq(uuid),
+
                         point1.createdDate.between(startDate.atStartOfDay(), endDate.atStartOfDay()))
                 .orderBy(point1.id.desc())
                 .fetchOne();
@@ -101,10 +104,10 @@ public class PointRepositoryImpl implements PointRepositoryCustom{
                 .select(point1.point.sum())
                 .from(point1)
                 .join(point1.user, user)
+                .on(user.uuid.eq(uuid))
                 .where(
                         pointUseEq("2"),
                         pointTypeEq(pointType),
-                        user.uuid.eq(uuid),
                         point1.createdDate.between(startDate.atStartOfDay(), endDate.atStartOfDay()))
                 .orderBy(point1.id.desc())
                 .fetchOne();

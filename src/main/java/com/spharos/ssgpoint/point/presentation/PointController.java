@@ -30,13 +30,14 @@ public class PointController {
     @PostMapping("/point")
     public void createPoint(@RequestParam("UUID") String UUID, @RequestBody PointCreateVo pointCreateVo) {
 
-        if (pointCreateVo.getType().equals("1")) {
+        if (pointCreateVo.getType().equals("1")) { //결제 적립
             PointCreateDto pointCreateDto = PointCreateDto.builder()
                     .point(pointCreateVo.getPoint())
                     .title(pointCreateVo.getTitle())
                     .content(pointCreateVo.getContent())
                     .statusType(pointCreateVo.getStatusType())
                     .type(pointCreateVo.getType())
+
                     .receipt(PointCreateDto.ReceiptDto.builder()
                             .alliance(pointCreateVo.getReceipt().getAlliance())
                             .brand(pointCreateVo.getReceipt().getBrand())
@@ -46,6 +47,7 @@ public class PointController {
                             .receiptPoint(pointCreateVo.getReceipt().getPoint()) // 변경된 필드명
                             .cardName(pointCreateVo.getReceipt().getCardName())
                             .cardNumber(pointCreateVo.getReceipt().getCardNumber())
+                            .pointCardNumber(pointCreateVo.getReceipt().getPointCardNumber())
                             .build())
                     .build();
             pointService.createPoint(UUID, pointCreateDto);
@@ -56,6 +58,7 @@ public class PointController {
                     .content(pointCreateVo.getContent())
                     .statusType(pointCreateVo.getStatusType())
                     .type(pointCreateVo.getType())
+
                     .build();
             pointService.createPoint(UUID, pointCreateDto);
         }

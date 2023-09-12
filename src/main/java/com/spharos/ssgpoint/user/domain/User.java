@@ -22,6 +22,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class User extends BaseEntity implements UserDetails {
 
     @Id
@@ -66,22 +67,7 @@ public class User extends BaseEntity implements UserDetails {
     private UserTermList term;
 
 
-    @Builder
-    public User(String uuid, String loginId, String name, String password, String phone, String address, String email,
-                Integer status, String pointPassword, UserTermList term,Role role) {
-        this.uuid = uuid;
-        this.loginId = loginId;
-        this.name = name;
-        this.password = password;
-        this.phone = phone;
-        this.address = address;
-        this.email = email;
-        this.status = status;
-        this.pointPassword = pointPassword;
 
-        this.term= term;
-        this.role= role;
-    }
 
     public void updateUserInfo(String address, String email){
         this.address =address;

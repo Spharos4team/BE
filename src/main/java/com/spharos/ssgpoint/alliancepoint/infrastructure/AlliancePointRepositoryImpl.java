@@ -35,8 +35,9 @@ public class AlliancePointRepositoryImpl implements AlliancePointRepositoryCusto
                         point1.statusType, point1.createdDate))
                 .from(point1)
                 .join(point1.user, user)
+                .on(user.uuid.eq(uuid))
                 .where(ltStoreId(pointId),
-                        point1.user.uuid.eq(uuid),
+
                         point1.createdDate.between(startDate.atStartOfDay(), endDate.atStartOfDay()),
                         point1.type.in(전환,제휴사전환)
                 )
@@ -57,8 +58,9 @@ public class AlliancePointRepositoryImpl implements AlliancePointRepositoryCusto
                         point1.point , point1.statusType))
                 .from(point1)
                 .join(point1.user, user)
+                .on(user.uuid.eq(uuid))
                 .where(
-                        point1.user.uuid.eq(uuid),
+
                         point1.createdDate.between(startDate.atStartOfDay(), endDate.atStartOfDay()),
                         point1.type.in(전환,제휴사전환)
                 )
