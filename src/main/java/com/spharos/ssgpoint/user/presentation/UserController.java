@@ -115,11 +115,12 @@ public class UserController {
     /**
      * 사용가능 포인트 조회
      */
-    @GetMapping("/user/point/{UUID}")
-    public ResponseEntity<PointGetDto> getPoint(@PathVariable String UUID) {
+    @GetMapping("/user/point")
+    public ResponseEntity<PointGetDto> getPoint(@RequestParam String UUID) {
         PointGetDto pointGetDto = userService.getPoint(UUID);
         return ResponseEntity.ok(pointGetDto);
     }
+
    /* *//**
      * 신세계포인트 이용 - 적립부분
      *//*
@@ -131,8 +132,8 @@ public class UserController {
     /**
      * 신세계포인트 이용 - 사용부분
      */
-    @GetMapping("/user/use-point/{UUID}")
-    public ResponseEntity<UserUsePointDto> getUsePoint(@PathVariable String UUID) {
+    @GetMapping("/user/use-point")
+    public ResponseEntity<UserUsePointDto> getUsePoint(@RequestParam String UUID) {
         UserUsePointDto userUsePointDto = userService.getUsePoint(UUID);
         return ResponseEntity.ok(userUsePointDto);
     }
@@ -140,31 +141,33 @@ public class UserController {
     /**
      * 방문 일수 - 바코드 테이블 count
      */
-    @GetMapping("/user/visit/{UUID}")
-    public ResponseEntity<VisitedCountDto> countDate(@PathVariable String UUID){
+    @GetMapping("/user/visit")
+    public ResponseEntity<VisitedCountDto> countDate(@RequestParam String UUID){
         VisitedCountDto visitedCount = userService.getVisitedCount(UUID);
         return ResponseEntity.ok(visitedCount);
     }
     /**
      * 구매 금액
      */
-    @GetMapping("/user/total-point/{UUID}")
-    public ResponseEntity<TotalPointDtoByReceipt> totalPoint(@PathVariable String UUID){
+    @GetMapping("/user/total-point")
+    public ResponseEntity<TotalPointDtoByReceipt> totalPoint(@RequestParam String UUID){
         TotalPointDtoByReceipt totalPoint = userService.getTotalPoint(UUID);
         return ResponseEntity.ok(totalPoint);
     }
 
-    @GetMapping("/user/top3/{UUID}")
-    public ResponseEntity<List<FrequentBrandTop3SumDto>> totaltp3Point(@PathVariable String UUID){
+    @GetMapping("/user/top3")
+    public ResponseEntity<List<FrequentBrandTop3SumDto>> totalSum3Point(@RequestParam String UUID){
         List<FrequentBrandTop3SumDto> frequentBrandTop3Sum = userService.getFrequentBrandTop3Sum(UUID);
         return ResponseEntity.ok(frequentBrandTop3Sum);
     }
 
+    /**
+     * 쇼핑 히스토리 전체
+     */
 
-    @GetMapping("/shopping-history/{UUID}")
-    public ResponseEntity<UserCompositeDto> getUserData(@PathVariable String UUID) {
+    @GetMapping("/shopping-history")
+    public ResponseEntity<UserCompositeDto> getUserData(@RequestParam String UUID) {
         UserCompositeDto userCompositeDto = new UserCompositeDto();
-
         userCompositeDto.setPointGetDto(userService.getPoint(UUID));
         userCompositeDto.setUserSavePointDto(userService.getSavePoint(UUID));
         userCompositeDto.setUserUsePointDto(userService.getUsePoint(UUID));
