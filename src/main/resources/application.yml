@@ -61,3 +61,12 @@
       credentials:
         accessKey: AKIATYFWGSCF3AGZCJXF
         secretKey: 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
+  store:
+    emart24:
+      prefix: 12345678
+    emarteveryday:
+      prefix: 87654321
+    shinsegae:
+      prefix: 11223344
+    speedmate:
+      prefix: 44332211
