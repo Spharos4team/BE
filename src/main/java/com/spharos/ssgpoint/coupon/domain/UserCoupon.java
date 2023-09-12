@@ -1,10 +1,7 @@
 package com.spharos.ssgpoint.coupon.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
@@ -17,7 +14,7 @@ public class UserCoupon {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String UUID;
+    private String uuid;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Coupon coupon;
@@ -25,4 +22,11 @@ public class UserCoupon {
     @Column(nullable = false)
     private boolean used;
 
+    public void use() {
+        if (coupon.isValid()) {
+            used = true;
+        } else {
+            throw new IllegalStateException("쿠폰이 유효하지 않습니다.");
+        }
+    }
 }

@@ -2,22 +2,23 @@ package com.spharos.ssgpoint.coupon.application;
 
 import com.spharos.ssgpoint.coupon.dto.CouponDto;
 import com.spharos.ssgpoint.coupon.dto.UserCouponDto;
+import com.spharos.ssgpoint.coupon.vo.CouponAdd;
 
 import java.util.List;
 
 public interface CouponService {
-    void registerCoupon(CouponDto couponDto);
+    void registerCoupon(CouponAdd couponAdd);
+
+    void deleteCoupon(Long couponId);
+
 
     List<CouponDto> getAvailableCoupons();
 
     List<UserCouponDto> getMyCoupons(String uuid);
 
-    void useCoupon(Long couponId);
-
     List<CouponDto> getExpiredCoupons();
 
-    void deleteCoupon(Long couponId);
+    CouponDto getCouponById(Long couponId);
 
-
-    CouponDto createCouponForStore(String storeName);
+    void assignCoupon(String uuid, Long couponId);
 }

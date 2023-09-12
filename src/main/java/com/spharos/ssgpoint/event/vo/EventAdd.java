@@ -1,23 +1,28 @@
 package com.spharos.ssgpoint.event.vo;
 
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
-@ToString
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class EventAdd {
 
     private String title;
     private String content;
-    private String eventType;
+    private String eventType; // Assuming EventType is a String. Replace with the correct type if necessary
+    private MultipartFile thumbnailFile;
+    private MultipartFile bannerFile;
+    private List<MultipartFile> otherFiles;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
+    private LocalDateTime winningDate;
 
-    private String thumbnailUrl;
-    private List<String> eventImages;
 
-    private Date startDate;
-    private Date endDate;
 
 }

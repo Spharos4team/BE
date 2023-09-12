@@ -8,6 +8,9 @@ import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
 
+import com.querydsl.core.types.dsl.PathInits;
+
+
 
 /**
  * QFAQ is a Querydsl query type for FAQ
@@ -16,25 +19,37 @@ import com.querydsl.core.types.Path;
 public class QFAQ extends EntityPathBase<FAQ> {
 
     private static final long serialVersionUID = 1064255214L;
+    private static final PathInits INITS = PathInits.DIRECT2;
 
     public static final QFAQ fAQ = new QFAQ("fAQ");
 
-    public final StringPath content = createString("content");
+   public final StringPath answer = createString("answer");
+
+    public final QFAQCategory category;
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final StringPath title = createString("title");
+    public final StringPath question = createString("question");
 
     public QFAQ(String variable) {
-        super(FAQ.class, forVariable(variable));
+        this(FAQ.class, forVariable(variable), INITS);
     }
 
     public QFAQ(Path<? extends FAQ> path) {
-        super(path.getType(), path.getMetadata());
+        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
     public QFAQ(PathMetadata metadata) {
-        super(FAQ.class, metadata);
+        this(metadata, PathInits.getFor(metadata, INITS));
+    }
+
+    public QFAQ(PathMetadata metadata, PathInits inits) {
+        this(FAQ.class, metadata, inits);
+    }
+
+    public QFAQ(Class<? extends FAQ> type, PathMetadata metadata, PathInits inits) {
+        super(type, metadata, inits);
+        this.category = inits.isInitialized("category") ? new QFAQCategory(forProperty("category"), inits.get("category")) : null;
     }
 
 }

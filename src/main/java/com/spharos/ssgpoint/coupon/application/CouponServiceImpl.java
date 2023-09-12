@@ -1,88 +1,121 @@
 package com.spharos.ssgpoint.coupon.application;
 
 import com.spharos.ssgpoint.coupon.domain.Coupon;
+import com.spharos.ssgpoint.coupon.domain.UserCoupon;
 import com.spharos.ssgpoint.coupon.dto.CouponDto;
 import com.spharos.ssgpoint.coupon.dto.UserCouponDto;
+import com.spharos.ssgpoint.coupon.exception.CouponNotFoundException;
 import com.spharos.ssgpoint.coupon.infrastructure.CouponRepository;
+import com.spharos.ssgpoint.coupon.infrastructure.UserCouponRepository;
+import com.spharos.ssgpoint.coupon.vo.CouponAdd;
+import com.spharos.ssgpoint.coupon.vo.CouponOut;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
-/**
- * 쿠폰 서비스 구현체
- */
 @Service
 @RequiredArgsConstructor
 public class CouponServiceImpl implements CouponService {
 
     private final CouponRepository couponRepository;
+    private final UserCouponRepository userCouponRepository;
     private final StoreManager storeManager;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    /**
-     * @param couponDto 쿠폰 DTO
-     */
-    public void registerCoupon(CouponDto couponDto) {
-        // DTO를 Entity로 변환 후 저장
-    }
-
-    /**
-     * @return 쿠폰 DTO 목록
-     */
-    public List<CouponDto> getAvailableCoupons() {
-        // DTO로 변환 후 반환
-        return null;
-    }
-
-    /**
-     * @param uuid 유저 UUID
-     * @return
-     */
-    public List<UserCouponDto> getMyCoupons(String uuid) {
-        // Fetch user's coupons and convert to DTO
-        return null;
-    }
-
-    /**
-     * @param couponId 쿠폰 ID
-     */
-    public void useCoupon(Long couponId) {
-        // Mark the coupon as used
-    }
-
-    /**
-     * @return 만료된 쿠폰 목록
-     */
-    public List<CouponDto> getExpiredCoupons() {
-        // Fetch expired coupons and convert to DTO
-        return null;
-    }
-
-    /**
-     * @param couponId 쿠폰 ID
-     */
-    @Override
-    public void deleteCoupon(Long couponId) {
-
-    }
-
-
-    /**
-     * @param storeName 가맹점 이름
-     * @return
-     */
-    @Override
-    public CouponDto createCouponForStore(String storeName) {
-        String couponNumber = storeManager.generateCouponNumber(storeName);
-
+    @Transactional
+    public void registerCoupon(CouponAdd couponAdd) {
+        String generatedCouponNumber = storeManager.generateCouponNumber(couponAdd.getStore());
         Coupon coupon = Coupon.builder()
-                .number(Integer.parseInt(couponNumber))
-                .title("Generated Coupon for " + storeName)
-                .description("Description for " + storeName)
-                // ... 다른 필드들 ...
+                .title(couponAdd.getTitle())
+                .description(couponAdd.getDescription())
+                .startDate(couponAdd.getStartDate())
+                .endDate(couponAdd.getEndDate())
+                .store(couponAdd.getStore())
+                .image(couponAdd.getImage())
+                .content(couponAdd.getContent())
+                .number(generatedCouponNumber)
                 .build();
 
         couponRepository.save(coupon);
-        return null;
+        logger.info("Coupon with title {} registered successfully.", couponAdd.getTitle());
     }
+
+    @Transactional
+    public void deleteCoupon(Long couponId) {
+        List<UserCoupon> assignedCoupons = userCouponRepository.findAllByCouponId(couponId);
+        if (!assignedCoupons.isEmpty()) {
+            logger.warn("Attempt to delete coupon with ID {} that is assigned to users.", couponId);
+            throw new IllegalStateException("Cannot delete coupon that is assigned to users.");
+        }
+
+        couponRepository.deleteById(couponId);
+        logger.info("Coupon with ID {} deleted successfully.", couponId);
+    }
+
+    public CouponDto useCoupon(CouponOut couponOut) {
+        UserCoupon userCoupon = userCouponRepository.findById(couponOut.getCouponId())
+                .orElseThrow(() -> new CouponNotFoundException(couponOut.getCouponId()));
+        Coupon coupon = couponRepository.findById(userCoupon.getCoupon().getId())
+                .orElseThrow(() -> new CouponNotFoundException(couponOut.getCouponId()));
+        return new CouponDto(coupon);
+    }
+
+
+    public List<CouponDto> getAvailableCoupons() {
+        LocalDate now = LocalDate.now();
+        return couponRepository.findAvailableCoupons(now)
+                .stream()
+                .map(CouponDto::new)
+                .collect(Collectors.toList());
+    }
+
+    public List<UserCouponDto> getMyCoupons(String uuid) {
+        return userCouponRepository.findAllByUuid(uuid)
+                .stream()
+                .map(UserCouponDto::new)
+                .collect(Collectors.toList());
+    }
+
+    public List<CouponDto> getExpiredCoupons() {
+        LocalDate now = LocalDate.now();
+        return couponRepository.findAllByEndDateBefore(now)
+                .stream()
+                .map(CouponDto::new)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public CouponDto getCouponById(Long couponId) {
+        Coupon coupon = couponRepository.findById(couponId)
+                .orElseThrow(() -> new CouponNotFoundException(couponId));
+        return new CouponDto(coupon);
+    }
+
+    @Transactional
+    @Override
+    public void assignCoupon(String uuid, Long couponId) {
+        Coupon coupon = couponRepository.findById(couponId)
+                .orElseThrow(() -> new CouponNotFoundException(couponId));
+
+        UserCoupon existingUserCoupon = userCouponRepository.findByUuidAndCouponId(uuid, couponId)
+                .orElse(null);
+        if (existingUserCoupon != null) {
+            logger.warn("User with UUID {} already has the coupon with ID {}", uuid, couponId);
+            throw new IllegalStateException("User already has this coupon.");
+        }
+
+        UserCoupon userCoupon = UserCoupon.builder()
+                .uuid(uuid)
+                .coupon(coupon)
+                .build();
+        userCouponRepository.save(userCoupon);
+        logger.info("Coupon with ID {} has been assigned to user with UUID {}", couponId, uuid);
+    }
+
 }

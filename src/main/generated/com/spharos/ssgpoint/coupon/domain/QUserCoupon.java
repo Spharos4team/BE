@@ -28,7 +28,8 @@ public class QUserCoupon extends EntityPathBase<UserCoupon> {
 
     public final BooleanPath used = createBoolean("used");
 
-    public final StringPath UUID = createString("UUID");
+    public final StringPath uuid = createString("uuid");
+
 
     public QUserCoupon(String variable) {
         this(UserCoupon.class, forVariable(variable), INITS);

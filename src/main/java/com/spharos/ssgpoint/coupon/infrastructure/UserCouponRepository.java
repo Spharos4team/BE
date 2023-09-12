@@ -1,15 +1,21 @@
 package com.spharos.ssgpoint.coupon.infrastructure;
 
-import com.spharos.ssgpoint.coupon.domain.Coupon;
 import com.spharos.ssgpoint.coupon.domain.UserCoupon;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
-public interface UserCouponRepository extends JpaRepository<UserCoupon, Long> { // 유저 쿠폰 레포지토리
+public interface UserCouponRepository extends JpaRepository<UserCoupon, Long> {
+    Optional<UserCoupon> findByUuidAndCouponId(@Param("uuid") String uuid, @Param("couponId") Long couponId);
+    // 기타 메서드들...
 
-    Optional<UserCoupon> findByUUIDAndCoupon(String uuid, Coupon coupon); // 유저와 쿠폰에 따른 유저 쿠폰 조회
+    List<UserCoupon> findAllByUuid(@Param("uuid") String uuid);
+
+    List<UserCoupon> findAllByCouponId(@Param("couponId") Long couponId);
 
 
-    // 추가적인 쿼리 메소드 필요 시 여기에 정의
+
+
 }
