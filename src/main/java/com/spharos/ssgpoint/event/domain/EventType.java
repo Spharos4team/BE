@@ -1,20 +1,30 @@
 package com.spharos.ssgpoint.event.domain;
 
 import java.time.LocalDateTime;
+import java.util.EnumSet;
+import java.util.Set;
 
 public enum EventType {
-    ONGOING, CLOSED, WINNER;  // 진행중, 종료, 당첨자 발표
+    ONGOING, CLOSED, WINNER;
 
-    public static EventType determineEventType(LocalDateTime startDate, LocalDateTime endDate, LocalDateTime winningDate) {
+    public static Set<EventType> determineEventTypes(LocalDateTime startDate, LocalDateTime endDate, LocalDateTime winningDate) {
         LocalDateTime now = LocalDateTime.now();
-        if (now.isAfter(startDate) && now.isBefore(endDate)) {
-            return ONGOING;
-        } else if (now.isAfter(endDate) && now.isBefore(winningDate)) {
-            return CLOSED;
-        } else if (now.isAfter(winningDate)) {
-            return WINNER;
-        }
-        throw new IllegalArgumentException("Invalid date parameters for determining event type.");
-    }
+        Set<EventType> eventTypes = EnumSet.noneOf(EventType.class);
 
+        if (now.isAfter(startDate) && now.isBefore(endDate)) {
+            eventTypes.add(ONGOING);
+        }
+        if (now.isAfter(endDate)) {
+            eventTypes.add(CLOSED);
+        }
+        if (now.isAfter(winningDate)) {
+            eventTypes.add(WINNER);
+        }
+
+        if (eventTypes.isEmpty()) {
+            throw new IllegalArgumentException("Invalid Event Date: " + startDate + " " + endDate + " " + winningDate);
+        }
+
+        return eventTypes;
+    }
 }

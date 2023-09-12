@@ -11,42 +11,42 @@ import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
- * QEventImage is a Querydsl query type for EventImage
+ * QUserEvent is a Querydsl query type for UserEvent
  */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
-public class QEventImage extends EntityPathBase<EventImage> {
+public class QUserEvent extends EntityPathBase<UserEvent> {
 
-    private static final long serialVersionUID = -2013731571L;
+    private static final long serialVersionUID = -1720141341L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
-    public static final QEventImage eventImage = new QEventImage("eventImage");
+    public static final QUserEvent userEvent = new QUserEvent("userEvent");
 
     public final QEvent event;
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final StringPath imageAlt = createString("imageAlt");
+    public final StringPath uuid = createString("uuid");
 
-    public final StringPath imageUrl = createString("imageUrl");
+    public final BooleanPath winning = createBoolean("winning");
 
-    public QEventImage(String variable) {
-        this(EventImage.class, forVariable(variable), INITS);
+    public QUserEvent(String variable) {
+        this(UserEvent.class, forVariable(variable), INITS);
     }
 
-    public QEventImage(Path<? extends EventImage> path) {
+    public QUserEvent(Path<? extends UserEvent> path) {
         this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
-    public QEventImage(PathMetadata metadata) {
+    public QUserEvent(PathMetadata metadata) {
         this(metadata, PathInits.getFor(metadata, INITS));
     }
 
-    public QEventImage(PathMetadata metadata, PathInits inits) {
-        this(EventImage.class, metadata, inits);
+    public QUserEvent(PathMetadata metadata, PathInits inits) {
+        this(UserEvent.class, metadata, inits);
     }
 
-    public QEventImage(Class<? extends EventImage> type, PathMetadata metadata, PathInits inits) {
+    public QUserEvent(Class<? extends UserEvent> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.event = inits.isInitialized("event") ? new QEvent(forProperty("event")) : null;
     }

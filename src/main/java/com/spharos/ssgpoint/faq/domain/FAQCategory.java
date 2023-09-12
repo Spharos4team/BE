@@ -1,25 +1,36 @@
 package com.spharos.ssgpoint.faq.domain;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@JsonIdentityInfo(
+        generator = com.fasterxml.jackson.annotation.ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 
 @Entity
 @Getter
 @Setter
 public class FAQCategory {
 
-    @jakarta.persistence.Id
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String title;
+    private String name;
 
     @ManyToOne
-    private FAQCategory parent;
+    @JoinColumn(name = "parent_id")
+    @JsonIgnore
+    private FAQCategory parentCategory;
 
-    // ... Getter, Setter, Constructors
+    @OneToMany(mappedBy = "parentCategory")
+    @JsonManagedReference
+    private List<FAQCategory> subCategories = new ArrayList<>();
 }

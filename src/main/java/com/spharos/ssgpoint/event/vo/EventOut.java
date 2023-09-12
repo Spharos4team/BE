@@ -1,6 +1,5 @@
 package com.spharos.ssgpoint.event.vo;
 
-import com.spharos.ssgpoint.event.domain.EventImage;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -13,17 +12,18 @@ import java.util.List;
 @ToString
 public class EventOut {
 
-    private Long id;
+    private Long eventId;
     private String title;
     private String content;
-
-    private String eventType;
-
+    private String eventType; // Assuming EventType is a String. Replace with the correct type if necessary
+    private String thumbnailUrl;
+    private String bannerUrl;
+    private List<String> eventImages; // Assuming the images are stored as URLs. Replace with the correct type if necessary
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private LocalDateTime winningDate;
-    private String thumbnailUrl;
-    private List<EventImage> eventImages;
 
 
+
+    // getters and setters
 }

@@ -13,12 +13,12 @@ public class FAQ {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String title;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private FAQCategory category;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String content;
+    private String question;
+    private String answer;
 
 
-    // ... Getter, Setter, Constructors
 }

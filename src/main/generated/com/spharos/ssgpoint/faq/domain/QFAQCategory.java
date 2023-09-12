@@ -24,9 +24,11 @@ public class QFAQCategory extends EntityPathBase<FAQCategory> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final QFAQCategory parent;
+    public final StringPath name = createString("name");
 
-    public final StringPath title = createString("title");
+    public final QFAQCategory parentCategory;
+
+    public final ListPath<FAQCategory, QFAQCategory> subCategories = this.<FAQCategory, QFAQCategory>createList("subCategories", FAQCategory.class, QFAQCategory.class, PathInits.DIRECT2);
 
     public QFAQCategory(String variable) {
         this(FAQCategory.class, forVariable(variable), INITS);
@@ -46,7 +48,7 @@ public class QFAQCategory extends EntityPathBase<FAQCategory> {
 
     public QFAQCategory(Class<? extends FAQCategory> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.parent = inits.isInitialized("parent") ? new QFAQCategory(forProperty("parent"), inits.get("parent")) : null;
+        this.parentCategory = inits.isInitialized("parentCategory") ? new QFAQCategory(forProperty("parentCategory"), inits.get("parentCategory")) : null;
     }
 
 }

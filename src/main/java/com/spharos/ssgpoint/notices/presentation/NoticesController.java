@@ -18,15 +18,19 @@ public class NoticesController {
 
     private final NoticesService noticesService;
 
+
+
     @GetMapping("/notices")
     public List<NoticesDto> getAllNotices() {
-        return noticesService.findAllNotices().stream().map(this::convertToDto).collect(Collectors.toList());
+        return noticesService.findAllNotices().stream()
+                .map(NoticesDto::fromEntity)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/notices/{id}")
     public NoticesDto getNoticeById(@PathVariable Long id) {
         Notices notices = noticesService.findNoticeById(id);
-        return convertToDto(notices);
+        return NoticesDto.fromEntity(notices);
     }
 
     @PostMapping("/notices")
@@ -43,7 +47,5 @@ public class NoticesController {
     }
 
 
-    private NoticesDto convertToDto(Notices notices) {
-        return new NoticesDto(notices.getId(), notices.getTitle(), notices.getContent());
-    }
+
 }

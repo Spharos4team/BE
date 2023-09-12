@@ -1,16 +1,23 @@
 package com.spharos.ssgpoint.event.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.*;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class Event {
 
     @Id
@@ -24,14 +31,23 @@ public class Event {
     private String content;
 
     @Column(nullable = false)
-    private String thumbnailUrl; // S3나 다른 스토리지 서비스에 저장된 이미지의 URL
+    private String thumbnailUrl;
 
-    @Column(nullable = false)
-    private EventType eventType;
+    private String bannerUrl;
+
+    @NotNull
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "event_types", joinColumns = @JoinColumn(name = "event_id"))
+    @Column(name = "event_type")
+    @Builder.Default
+    private Set<EventType> eventTypes = new HashSet<>();
 
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private LocalDateTime winningDate;
 
-
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties("event")
+    private Set<EventImage> eventImages;
 }
