@@ -26,12 +26,19 @@ public class FAQController {
 
     @GetMapping("/faq")
     public ResponseEntity<List<FAQDTO>> getAllFAQs() {
-        return ResponseEntity.ok(faqService.getAllFAQs());
+        List<FAQDTO> faqs = faqService.getAllFAQs();
+        if(faqs.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(faqs);
+        }
+        return ResponseEntity.ok(faqs);
     }
-
     @GetMapping("/faq/{categoryId}")
     public ResponseEntity<List<FAQDTO>> getFAQsByCategory(@PathVariable Long categoryId, @RequestParam(required = false) Long subCategoryId) {
-        return ResponseEntity.ok(faqService.getFAQsByCategory(categoryId, subCategoryId));
+        List<FAQDTO> faqsByCategory = faqService.getFAQsByCategory(categoryId, subCategoryId);
+        if(faqsByCategory.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(faqsByCategory);
+        }
+        return ResponseEntity.ok(faqsByCategory);
     }
 
     @DeleteMapping("/faq/{id}")
@@ -40,19 +47,25 @@ public class FAQController {
             faqService.deleteFAQ(id);
             return ResponseEntity.ok("FAQ가 삭제되었습니다");
         } catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("FAQ를 찾을 수 없습니다" + e.getMessage());
         }
     }
 
     @GetMapping("/faq/parent")
     public ResponseEntity<List<FAQCategory>> getParentCategories() {
-        return ResponseEntity.ok(faqService.getParentCategories());
+        List<FAQCategory> parentCategories = faqService.getParentCategories();
+        if(parentCategories.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(parentCategories);
+        }
+        return ResponseEntity.ok(parentCategories);
     }
 
     @GetMapping("/faq/sub/{parentCategoryId}")
     public ResponseEntity<List<FAQCategory>> getSubCategories(@PathVariable Long parentCategoryId) {
-        return ResponseEntity.ok(faqService.getSubCategories(parentCategoryId));
+        List<FAQCategory> subCategories = faqService.getSubCategories(parentCategoryId);
+        if(subCategories.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(subCategories);
+        }
+        return ResponseEntity.ok(subCategories);
     }
-
-
 }
