@@ -23,7 +23,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1")
 @Slf4j
-@CrossOrigin(allowedHeaders = "*")
+//@CrossOrigin(allowedHeaders = "*",origins = "*")
 @RequiredArgsConstructor
 public class UserController {
 
