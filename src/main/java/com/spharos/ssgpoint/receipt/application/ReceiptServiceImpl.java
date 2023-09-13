@@ -40,7 +40,7 @@ public class ReceiptServiceImpl implements ReceiptService {
     public void createPointByReceipt(String UUID, ReceiptGetDto receiptGetDto) {
         Receipt receipt
                 = receiptRepository.findByAllianceAndBrandAndStoreNameAndNumber(receiptGetDto.getAlliance(),
-                        receiptGetDto.getBrand(), receiptGetDto.getStoreName(), receiptGetDto.getNumber())
+                        receiptGetDto.getBrand(), receiptGetDto.getStoreName(), receiptGetDto.getCardNumber())
                 .orElseThrow(() -> new IllegalArgumentException("영수증 일련번호를 다시 확인해 주세요."));
 
         PointCreateDto pointCreateDto = PointCreateDto.builder()

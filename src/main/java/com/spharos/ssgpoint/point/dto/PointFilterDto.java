@@ -1,16 +1,17 @@
 package com.spharos.ssgpoint.point.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.querydsl.core.annotations.QueryProjection;
 import com.spharos.ssgpoint.point.domain.PointStatusType;
 import com.spharos.ssgpoint.point.domain.PointType;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @ToString
-
 @NoArgsConstructor
 public class PointFilterDto {
     private Long pointId;
@@ -19,6 +20,7 @@ public class PointFilterDto {
     private String content;
     private PointType type;
     private PointStatusType statusType;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime createdDate;
     private Long receiptId;
 

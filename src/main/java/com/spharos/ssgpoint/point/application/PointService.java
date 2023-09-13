@@ -7,6 +7,7 @@ import com.spharos.ssgpoint.point.dto.PointFilterSumDto;
 import com.spharos.ssgpoint.point.dto.PointGetDto;
 import com.spharos.ssgpoint.point.vo.PointFilterVo;
 import com.spharos.ssgpoint.pointgift.vo.PointListInVo;
+import com.spharos.ssgpoint.receipt.dto.ReceiptGetDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -22,9 +23,11 @@ public interface PointService {
     // 포인트 목록
     List<PointGetDto> getTotalPointByUser(String UUID, Pageable page);
     List<PointGetDto> getSavePointByUser(String UUID, Pageable page);
-    //Slice<PointFilterDto> pointFilter(Long id, String UUID, Pageable page, PointFilterVo pointFilterVo);
-    Page<PointFilterDto> pointFilter(String UUID, Pageable page, LocalDate startDate, LocalDate endDate, String pointUse, String pointType);
+    Slice<PointFilterDto> pointFilter(Long id, String UUID, Pageable page, LocalDate startDate, LocalDate endDate, String pointUse, String pointType);
+   // Page<PointFilterDto> pointFilter(String UUID, Pageable page, LocalDate startDate, LocalDate endDate, String pointUse, String pointType);
 
     PointFilterSumDto sumPointsByFilter(String UUID, PointFilterVo p);
+
+    ReceiptGetDto getReceiptByPointListReceiptId(Long id);
 
 }
