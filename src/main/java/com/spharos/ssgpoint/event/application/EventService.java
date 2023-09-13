@@ -15,7 +15,6 @@ import java.util.Set;
 public interface EventService {
     List<Event> getEventsByTypes(Set<EventType> types);
 
-
     Event getEventById(Long id);
 
     boolean addEvent(
