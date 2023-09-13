@@ -61,29 +61,13 @@ public class EventServiceImpl implements EventService {
         return result;
     }
 
-    /**
-     * 이벤트를 조회합니다.
-     * @param id
-     * @return
-     */
     @Override
     public Event getEventById(Long id) {
-        return eventRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("다음 이벤트를 찾을수 없습니다: " + id));
+           return eventRepository.findById(id)
+                    .orElseThrow(() -> new EntityNotFoundException("Event not found with id: " + id));
     }
 
-    /**
-     * 이벤트를 생성합니다.
-     * @param bannerFile
-     * @param thumbFile
-     * @param otherFiles
-     * @param title
-     * @param content
-     * @param startDate
-     * @param endDate
-     * @param winningDate
-     * @return
-     * @throws IOException
-     */
+
     @Override
     public boolean addEvent(
             @Nullable MultipartFile bannerFile,
@@ -102,6 +86,9 @@ public class EventServiceImpl implements EventService {
             if (title == null || title.isBlank()) {
                 throw new EventException("Title cannot be null or blank");
             }
+
+            // ... (similar checks for other mandatory fields)
+
             Set<EventType> determinedTypes = EventType.determineEventTypes(startDate, endDate, winningDate);
 
             Event event = Event.builder()
@@ -139,6 +126,8 @@ public class EventServiceImpl implements EventService {
             throw new EventException("이벤트 추가 중 오류가 발생했습니다: " + e.getMessage());
         }
     }
+
+
 
     /**
      * 모든 이벤트를 조회합니다.
