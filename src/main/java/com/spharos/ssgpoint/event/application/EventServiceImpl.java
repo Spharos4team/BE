@@ -1,6 +1,9 @@
 package com.spharos.ssgpoint.event.application;
 
-import com.spharos.ssgpoint.event.domain.*;
+import com.spharos.ssgpoint.event.domain.Event;
+import com.spharos.ssgpoint.event.domain.EventImage;
+import com.spharos.ssgpoint.event.domain.EventType;
+import com.spharos.ssgpoint.event.domain.UserEvent;
 import com.spharos.ssgpoint.event.dto.UserEventDTO;
 import com.spharos.ssgpoint.event.exception.EventException;
 import com.spharos.ssgpoint.event.infrastructure.EventImageRepository;
@@ -12,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
@@ -82,18 +86,22 @@ public class EventServiceImpl implements EventService {
      */
     @Override
     public boolean addEvent(
-            MultipartFile bannerFile,
-            MultipartFile thumbFile,
-            List<MultipartFile> otherFiles,
+            @Nullable MultipartFile bannerFile,
+            @Nullable MultipartFile thumbFile,
+            @Nullable List<MultipartFile> otherFiles,
             String title,
-            String content,
-            LocalDateTime startDate,
-            LocalDateTime endDate,
-            LocalDateTime winningDate) throws IOException {
+            @Nullable String content,
+            @Nullable LocalDateTime startDate,
+            @Nullable LocalDateTime endDate,
+            @Nullable LocalDateTime winningDate) throws IOException {
         try {
-            String bannerUrl = s3Service.uploadFile(bannerFile);
-            String thumbImageUrl = s3Service.uploadFile(thumbFile);
+            String bannerUrl = (bannerFile != null && !bannerFile.isEmpty()) ? s3Service.uploadFile(bannerFile) : null;
+            String thumbImageUrl = (thumbFile != null && !thumbFile.isEmpty()) ? s3Service.uploadFile(thumbFile) : null;
 
+            // Null checks for mandatory fields
+            if (title == null || title.isBlank()) {
+                throw new EventException("Title cannot be null or blank");
+            }
             Set<EventType> determinedTypes = EventType.determineEventTypes(startDate, endDate, winningDate);
 
             Event event = Event.builder()
@@ -109,13 +117,17 @@ public class EventServiceImpl implements EventService {
 
             Event savedEvent = eventRepository.save(event);
 
-            for (MultipartFile file : otherFiles) {
-                String imageUrl = s3Service.uploadFile(file);
-                EventImage eventImage = EventImage.builder()
-                        .event(savedEvent)
-                        .imageUrl(imageUrl)
-                        .build();
-                eventImageRepository.save(eventImage);
+            if (otherFiles != null && !otherFiles.isEmpty()) {
+                for (MultipartFile file : otherFiles) {
+                    if (file != null && !file.isEmpty()) {
+                        String imageUrl = s3Service.uploadFile(file);
+                        EventImage eventImage = EventImage.builder()
+                                .event(savedEvent)
+                                .imageUrl(imageUrl)
+                                .build();
+                        eventImageRepository.save(eventImage);
+                    }
+                }
             }
 
             return true;
@@ -208,7 +220,7 @@ public class EventServiceImpl implements EventService {
      */
     @Override
     public void assignWinnerToUuid(String uuid, Long eventId) {
-try {
+        try {
             UserEvent userEvent = userEventRepository.findByUuidAndEventId(uuid, eventId);
             if (userEvent == null) {
                 throw new EventException("이벤트에 참여하지 않은 사용자입니다.");
@@ -221,9 +233,3 @@ try {
 
     }
 }
-
-
-
-
-
-
