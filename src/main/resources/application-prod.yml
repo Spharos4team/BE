@@ -33,7 +33,7 @@ spring:
 
   data:
     redis:
-      host: redis
+      host: 3.35.193.212
       port: 6379
     web:
       pageable:
