@@ -10,6 +10,7 @@ import com.querydsl.core.types.Path;
 import com.querydsl.core.types.dsl.PathInits;
 
 
+
 /**
  * QEventImage is a Querydsl query type for EventImage
  */
@@ -17,6 +18,7 @@ import com.querydsl.core.types.dsl.PathInits;
 public class QEventImage extends EntityPathBase<EventImage> {
 
     private static final long serialVersionUID = -2013731571L;
+
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
@@ -31,6 +33,7 @@ public class QEventImage extends EntityPathBase<EventImage> {
     public final StringPath imageUrl = createString("imageUrl");
 
     public QEventImage(String variable) {
+
         this(EventImage.class, forVariable(variable), INITS);
     }
 
@@ -49,6 +52,7 @@ public class QEventImage extends EntityPathBase<EventImage> {
     public QEventImage(Class<? extends EventImage> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.event = inits.isInitialized("event") ? new QEvent(forProperty("event")) : null;
+
     }
 
 }

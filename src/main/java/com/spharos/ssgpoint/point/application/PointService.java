@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -21,8 +22,8 @@ public interface PointService {
     // 포인트 목록
     List<PointGetDto> getTotalPointByUser(String UUID, Pageable page);
     List<PointGetDto> getSavePointByUser(String UUID, Pageable page);
-    Slice<PointFilterDto> pointFilter(Long id, String UUID, Pageable page, PointFilterVo pointFilterVo);
-
+    //Slice<PointFilterDto> pointFilter(Long id, String UUID, Pageable page, PointFilterVo pointFilterVo);
+    Page<PointFilterDto> pointFilter(String UUID, Pageable page, LocalDate startDate, LocalDate endDate, String pointUse, String pointType);
 
     PointFilterSumDto sumPointsByFilter(String UUID, PointFilterVo p);
 

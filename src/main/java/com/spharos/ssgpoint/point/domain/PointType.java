@@ -12,7 +12,7 @@ public enum PointType implements CodeValue {
     전환("4", "전환"),
     추후("5", "추후"),
     소멸("6", "소멸"),
-    제휴사전환("7", "제휴사전환");
+    포인트전환("7", "다른포인트에서전환");
 
     private final String code;
     private final String value;

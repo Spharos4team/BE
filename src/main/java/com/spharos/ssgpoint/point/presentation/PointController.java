@@ -10,12 +10,15 @@ import com.spharos.ssgpoint.point.vo.*;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -66,19 +69,36 @@ public class PointController {
     }
 
 
-    // 포인트필터 목록
+    /*// 포인트필터 목록
     @GetMapping("/point-list")
     public ResponseEntity<Slice<PointFilterOutVo>> pointListFilter(@RequestParam("UUID") String UUID,
                                                                    @RequestParam(value = "lastId", required = false) Long lastId,
-                                                                   @PageableDefault(size = 10, sort = "createdDate") Pageable pageRequest,
-                                                                   @RequestBody PointFilterVo pointFilterVo) {
+                                                                    @PageableDefault(size = 10) Pageable pageRequest,
+                                                       @RequestParam  @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+                                                       @RequestParam  @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
+                                                       @RequestParam String pointUse, @RequestParam String pointType) {
         ModelMapper modelMapper = new ModelMapper();
-        Slice<PointFilterOutVo> pointFilterOutVos = modelMapper.map(pointService.pointFilter(lastId, UUID, pageRequest, pointFilterVo)
+        Slice<PointFilterOutVo> pointFilterOutVos = modelMapper.map(pointService.pointFilter(lastId, UUID, pageRequest,
+        startDate,endDate, pointUse, pointType)
                 , new TypeToken<Slice<PointFilterOutVo>>() {}.getType());
 
         // ResponseEntity로 감싸서 반환
         return ResponseEntity.ok(pointFilterOutVos);
     }
+*/
+
+    @GetMapping("/point-list")
+    public ResponseEntity<Page<PointFilterDto>> pageRe(@RequestParam("UUID") String UUID,
+                                                       @PageableDefault(size = 10) Pageable pageRequest,
+                                                       @RequestParam  @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+                                                       @RequestParam  @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
+                                                       @RequestParam String pointUse, @RequestParam String pointType) {
+        Page<PointFilterDto> pointFilterDto = pointService.pointFilter(UUID, pageRequest, startDate,endDate, pointUse, pointType);
+
+        // ResponseEntity로 감싸서 반환
+        return ResponseEntity.ok(pointFilterDto);
+    }
+
 
     // 포인트 목록 적립 사용 포인트 합계
     @GetMapping("/point-list-sum")

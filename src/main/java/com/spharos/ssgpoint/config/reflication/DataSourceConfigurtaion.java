@@ -13,7 +13,7 @@ import org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy;
 import javax.sql.DataSource;
 import java.util.Map;
 
-//Configuration
+@Configuration
 public class DataSourceConfigurtaion {
     // 데이터베이스 연결을 결정하는 데 사용할 상수를 정의한다.
     public static final String MASTER_DATASOURCE = "masterDataSource";
