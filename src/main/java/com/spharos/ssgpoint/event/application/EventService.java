@@ -6,6 +6,7 @@ import com.spharos.ssgpoint.event.domain.UserEvent;
 import com.spharos.ssgpoint.event.dto.UserEventDTO;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,14 +19,14 @@ public interface EventService {
     Event getEventById(Long id);
 
     boolean addEvent(
-            MultipartFile bannerFile,
+            @Nullable MultipartFile bannerFile,
             MultipartFile thumbFile,
-            List<MultipartFile> otherFiles,
+            @Nullable List<MultipartFile> otherFiles,
             String title,
             String content,
             LocalDateTime startDate,
             LocalDateTime endDate,
-            LocalDateTime winningDate
+            @Nullable LocalDateTime winningDate
     ) throws IOException;
 
     List<Event> getAllEvents();

@@ -7,9 +7,7 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
-
 import com.querydsl.core.types.dsl.PathInits;
-
 
 
 /**
@@ -41,7 +39,6 @@ public class QEvent extends EntityPathBase<Event> {
     public final StringPath title = createString("title");
 
     public final DateTimePath<java.time.LocalDateTime> winningDate = createDateTime("winningDate", java.time.LocalDateTime.class);
-
 
     public QEvent(String variable) {
         super(Event.class, forVariable(variable));
