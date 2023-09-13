@@ -31,6 +31,11 @@ public class EventServiceImpl implements EventService {
     private final S3Service s3Service;
     private final UserEventRepository userEventRepository;
 
+    /**
+     * 이벤트를 조회합니다.
+     * @param types
+     * @return 조회된 이벤트 리스트
+     */
     @Override
     public List<Event> getEventsByTypes(Set<EventType> types) {
         List<Event> result = new ArrayList<>();
@@ -52,12 +57,29 @@ public class EventServiceImpl implements EventService {
         return result;
     }
 
-
+    /**
+     * 이벤트를 조회합니다.
+     * @param id
+     * @return
+     */
     @Override
     public Event getEventById(Long id) {
         return eventRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("다음 이벤트를 찾을수 없습니다: " + id));
     }
 
+    /**
+     * 이벤트를 생성합니다.
+     * @param bannerFile
+     * @param thumbFile
+     * @param otherFiles
+     * @param title
+     * @param content
+     * @param startDate
+     * @param endDate
+     * @param winningDate
+     * @return
+     * @throws IOException
+     */
     @Override
     public boolean addEvent(
             MultipartFile bannerFile,
@@ -106,20 +128,31 @@ public class EventServiceImpl implements EventService {
         }
     }
 
-
-
+    /**
+     * 모든 이벤트를 조회합니다.
+     * @return
+     */
     @Override
     public List<Event> getAllEvents() {
 
         return eventRepository.findAll();
     }
 
+    /**
+     * 참여한 이벤트를 조회합니다.
+     * @param uuid
+     * @return
+     */
     @Override
     public List<UserEvent> getEventsParticipatedByUuid(String uuid) {
         return userEventRepository.findByUuid(uuid);
     }
 
-
+    /**
+     * 당첨된 이벤트를 조회합니다.
+     * @param uuid
+     * @return
+     */
     @Override
     public List<UserEventDTO> getWinningEventsByUuid(String uuid) {
         List<UserEvent> winningEvents = userEventRepository.findByUuidAndWinning(uuid, true);
@@ -139,8 +172,11 @@ public class EventServiceImpl implements EventService {
     }
 
 
-
-
+    /**
+     * 사용자가 이벤트에 참여합니다.
+     * @param uuid
+     * @param eventId
+     */
     @Override
     public void assignEventToUuid(String uuid, Long eventId) {
         try {
@@ -165,6 +201,11 @@ public class EventServiceImpl implements EventService {
         }
     }
 
+    /**
+     * 이벤트 당첨자를 지정합니다.
+     * @param uuid
+     * @param eventId
+     */
     @Override
     public void assignWinnerToUuid(String uuid, Long eventId) {
 try {

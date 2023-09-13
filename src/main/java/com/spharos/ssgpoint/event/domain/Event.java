@@ -50,4 +50,8 @@ public class Event {
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties("event")
     private Set<EventImage> eventImages;
+
+    public boolean hasEventType(EventType eventType) {
+        return eventTypes.contains(eventType);
+    }
 }

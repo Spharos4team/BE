@@ -34,6 +34,11 @@ public class StoreManager {
         );
     }
 
+    /**
+     * 매장 이름을 입력받아 쿠폰 번호를 생성합니다.
+     * @param storeName
+     * @return
+     */
     public String generateCouponNumber(String storeName) {
         String storePrefix = storePrefixes.get(storeName);
         if (storePrefix == null) {

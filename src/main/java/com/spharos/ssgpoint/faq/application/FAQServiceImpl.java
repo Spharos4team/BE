@@ -24,6 +24,12 @@ public class FAQServiceImpl implements FAQService {
     private final ModelMapper modelMapper = new ModelMapper();
 
 
+    /**
+     * FAQ를 생성합니다.
+     *
+     * @param faqDTO FAQ 생성에 필요한 정보가 담긴 DTO. categoryId 필드를 통해 카테고리 ID를 받습니다.
+     * @throws ResourceNotFoundException 주어진 카테고리 ID를 가진 카테고리를 찾을 수 없을 때 발생합니다.
+     */
     @Override
     public void createFAQ(FAQDTO faqDTO) {
         FAQCategory category = faqCategoryRepository.findById(faqDTO.getCategoryId())
@@ -40,7 +46,12 @@ public class FAQServiceImpl implements FAQService {
     }
 
 
-
+    /**
+     * 주어진 ID를 가진 FAQ를 삭제합니다.
+     *
+     * @param id 삭제할 FAQ의 ID.
+     * @throws ResourceNotFoundException 주어진 ID를 가진 FAQ를 찾을 수 없을 때 발생합니다.
+     */
     @Override
     public void deleteFAQ(Long id) {
         if (!faqRepository.existsById(id)) {
@@ -49,7 +60,14 @@ public class FAQServiceImpl implements FAQService {
         faqRepository.deleteById(id);
     }
 
-
+    /**
+     * 주어진 카테고리 ID와 서브 카테고리 ID에 따라 FAQ 목록을 가져옵니다.
+     *
+     * @param categoryId    카테고리 ID.
+     * @param subCategoryId 서브 카테고리 ID (null 가능).
+     * @return 해당 카테고리와 서브 카테고리에 속하는 FAQ 목록.
+     * @throws ResourceNotFoundException 주어진 카테고리 ID 또는 서브 카테고리 ID를 찾을 수 없을 때 발생합니다.
+     */
     @Override
     public List<FAQDTO> getFAQsByCategory(Long categoryId, Long subCategoryId) {
         FAQCategory category = faqCategoryRepository.findById(categoryId)
@@ -83,6 +101,11 @@ public class FAQServiceImpl implements FAQService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * 모든 FAQ 목록을 가져옵니다.
+     *
+     * @return 모든 FAQ 목록.
+     */
     @Override
     public List<FAQDTO> getAllFAQs() {
         List<FAQ> faqs = faqRepository.findAll();
@@ -99,11 +122,22 @@ public class FAQServiceImpl implements FAQService {
 
     }
 
+    /**
+     * 모든 부모 카테고리 목록을 가져옵니다.
+     *
+     * @return 부모 카테고리가 없는 카테고리 목록.
+     */
     @Override
     public List<FAQCategory> getParentCategories() {
         return faqCategoryRepository.findByParentCategoryIsNull();
     }
 
+    /**
+     * 주어진 부모 ID를 가진 모든 서브 카테고리 목록을 가져옵니다.
+     *
+     * @param parentId 부모 카테고리의 ID.
+     * @return 주어진 부모 ID를 가진 서브 카테고리 목록.
+     */
     @Override
     public List<FAQCategory> getSubCategories(Long parentId) {
         return faqCategoryRepository.findByParentCategory_Id(parentId);
