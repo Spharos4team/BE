@@ -26,8 +26,6 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath address = createString("address");
 
-    public final StringPath barCode = createString("barCode");
-
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdDate = _super.createdDate;
 

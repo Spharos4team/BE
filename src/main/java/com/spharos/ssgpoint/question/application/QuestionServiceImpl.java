@@ -22,7 +22,12 @@ public class QuestionServiceImpl implements QuestionService {
     private final CommentRepository commentRepository;
 
 
-
+    /**
+     * 문의글을 생성합니다.
+     *
+     * @param question 생성할 문의글 정보가 담긴 DTO.
+     * @return 생성된 문의글의 ID.
+     */
     @Override
     public Long createQuestion(Question question) {
         List<QuestionTag> selectedTags = question.getTags();
@@ -42,11 +47,15 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
 
-
+    /**
+     * 문의글을 삭제합니다.
+     *
+     * @param questionId 삭제할 문의글의 ID.
+     */
     @Override
     public Long createComment(Long questionId, Comment comment) {
         Question question = questionRepository.findById(questionId)
-                .orElseThrow(() -> new IllegalArgumentException("Question not found: " + questionId));
+                .orElseThrow(() -> new IllegalArgumentException("문의글을 찾을 수 없습니다 " + questionId));
         comment.setQuestion(question);
         Comment savedComment = commentRepository.save(comment);
 
@@ -57,7 +66,11 @@ public class QuestionServiceImpl implements QuestionService {
         return savedComment.getId();
     }
 
-
+    /**
+     *  문의글을 삭제합니다.
+     * @param uuid
+     * @return
+     */
     @Override
     public List<QuestionDTO> getUserQuestions(String uuid) {
         List<Question> questions = questionRepository.findByUuid(uuid);
@@ -74,11 +87,15 @@ public class QuestionServiceImpl implements QuestionService {
                 .collect(Collectors.toList());
     }
 
-
+    /**
+     * 문의글을 삭제합니다.
+     * @param questionId
+     * @return
+     */
     @Override
     public String getQuestionStatus(Long questionId) {
         Question question = questionRepository.findById(questionId)
-                .orElseThrow(() -> new IllegalArgumentException("Question not found: " + questionId));
+                .orElseThrow(() -> new IllegalArgumentException("문의글을 찾을수 없습니다. " + questionId));
         return question.getStatus();
     }
 }

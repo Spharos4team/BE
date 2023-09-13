@@ -35,6 +35,8 @@ public class QReceipt extends EntityPathBase<Receipt> {
 
     public final NumberPath<Integer> point = createNumber("point", Integer.class);
 
+    public final StringPath pointCardNumber = createString("pointCardNumber");
+
     public final NumberPath<Integer> status = createNumber("status", Integer.class);
 
     public final StringPath storeName = createString("storeName");

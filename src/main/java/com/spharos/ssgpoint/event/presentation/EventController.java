@@ -16,9 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
-import java.util.EnumSet;
 import java.util.List;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -37,11 +36,15 @@ public class EventController {
             return ResponseEntity.ok(events);
         } else {
             EventType eventType = EventType.valueOf(type.toUpperCase());
-            Set<EventType> eventTypes = EnumSet.of(eventType);
-            List<Event> events = eventService.getEventsByTypes(eventTypes);
-            return ResponseEntity.ok(events);
+            List<Event> events = eventService.getAllEvents();
+            List<Event> filteredEvents = events.stream()
+                    .filter(event -> event.hasEventType(eventType))
+                    .collect(Collectors.toList());
+
+            return ResponseEntity.ok(filteredEvents);
         }
     }
+
 
     @GetMapping("/events/{id}")
     public ResponseEntity<Event> getEventById(@PathVariable Long id) {
@@ -51,14 +54,14 @@ public class EventController {
 
     @PostMapping("/events")
     public ResponseEntity<String> addEvent(
-            @RequestParam("bannerFile") MultipartFile bannerFile,
+            @RequestParam(value = "bannerFile", required = false) MultipartFile bannerFile,
             @RequestParam("thumbFile") MultipartFile thumbFile,
-            @RequestParam("otherFiles") List<MultipartFile> otherFiles,
+            @RequestParam(value = "otherFiles", required = false) List<MultipartFile> otherFiles,
             @RequestParam("title") String title,
             @RequestParam("content") String content,
             @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime startDate,
             @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime endDate,
-            @RequestParam("winningDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime winningDate
+            @RequestParam(value = "winningDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime winningDate
     ) {
         try {
             boolean isAdded = eventService.addEvent(bannerFile, thumbFile, otherFiles, title, content, startDate, endDate, winningDate);
@@ -120,4 +123,5 @@ public class EventController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 내부 오류가 발생했습니다.");
         }
     }
+
 }
