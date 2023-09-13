@@ -53,7 +53,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             if (request.getServletPath().contains("/api/v1/auth/signup")
-                    || request.getServletPath().contains("/api/v1/auth/login")) {
+                    || request.getServletPath().contains("/api/v1/auth/login")
+                    || request.getServletPath().contains("/api/v1/event/**")
+                     || request.getServletPath().contains("/api/v1/events/**")
+            ) {
                 filterChain.doFilter(request, response);
                 return;
             }
