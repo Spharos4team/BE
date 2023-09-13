@@ -2,12 +2,9 @@ server:
   port: 8000
 
 spring:
-  profiles:
-    active: local
-
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         #          show_sql: true
@@ -21,22 +18,30 @@ spring:
     #      driver-class-name: com.mysql.cj.jdbc.Driver
     master:
       hikari:
-        jdbc-url: jdbc:mysql://localhost:3310/ssgdb
+        jdbc-url: jdbc:mysql://3.35.193.212:3310/ssgdb
         read-only: false
         username: root
         password: 1234
         driver-class-name: com.mysql.cj.jdbc.Driver
     slave:
       hikari:
-        jdbc-url: jdbc:mysql://localhost:3311/ssgdb
+        jdbc-url: jdbc:mysql://3.35.193.212:3311/ssgdb
         read-only: true
         username: root
         password: 1234
         driver-class-name: com.mysql.cj.jdbc.Driver
 
+  data:
+    redis:
+      host: optimistic_blackburn
+      port: 6379
+    web:
+      pageable:
+        one-indexed-parameters: true
+
 
 logging.level:
-  org.hibernate.SQL: debu
+  org.hibernate.SQL: debug
 
 JWT:
   secret_key: fbcb542e08e7feed1c9ebc3740ee092f43304e0b8a666d63bc36fbe785ad447a
