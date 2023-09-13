@@ -49,7 +49,7 @@ public class SecurityConfiguration {
                         authorizeHttpRequests -> authorizeHttpRequests.requestMatchers(org.springframework.web.cors.CorsUtils::isPreFlightRequest)
                                 .permitAll()
                                 .requestMatchers("/api/v1/auth/**","/swagger-ui/**", "/swagger-resources/**", "/api-docs/**",
-                                        "/api/v1/event/all","api/v1/events/**", "/v3/**")
+                                        "/api/v1/event/**","api/v1/events/**", "/v3/**")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()
