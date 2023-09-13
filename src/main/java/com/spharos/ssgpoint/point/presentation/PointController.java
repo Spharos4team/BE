@@ -7,6 +7,7 @@ import com.spharos.ssgpoint.point.dto.PointFilterDto;
 import com.spharos.ssgpoint.point.dto.PointFilterSumDto;
 import com.spharos.ssgpoint.point.dto.PointGetDto;
 import com.spharos.ssgpoint.point.vo.*;
+import com.spharos.ssgpoint.receipt.dto.ReceiptGetDto;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -69,7 +70,7 @@ public class PointController {
     }
 
 
-    /*// 포인트필터 목록
+    // 포인트필터 목록
     @GetMapping("/point-list")
     public ResponseEntity<Slice<PointFilterOutVo>> pointListFilter(@RequestParam("UUID") String UUID,
                                                                    @RequestParam(value = "lastId", required = false) Long lastId,
@@ -85,8 +86,8 @@ public class PointController {
         // ResponseEntity로 감싸서 반환
         return ResponseEntity.ok(pointFilterOutVos);
     }
-*/
 
+/*
     @GetMapping("/point-list")
     public ResponseEntity<Page<PointFilterDto>> pageRe(@RequestParam("UUID") String UUID,
                                                        @PageableDefault(size = 10) Pageable pageRequest,
@@ -98,6 +99,7 @@ public class PointController {
         // ResponseEntity로 감싸서 반환
         return ResponseEntity.ok(pointFilterDto);
     }
+*/
 
 
     // 포인트 목록 적립 사용 포인트 합계
@@ -109,5 +111,11 @@ public class PointController {
         ModelMapper modelMapper = new ModelMapper();
         return ResponseEntity.ok(modelMapper.map(pointFilterSumDto, PointFilterSumVo.class));
 
+    }
+    // 포인트 내역 영수증 보기
+    @GetMapping("/point-list/receipt")
+    public ResponseEntity<ReceiptGetDto> pointListReceipt(@RequestParam("id") Long id) {
+        ReceiptGetDto receiptGetDto = pointService.getReceiptByPointListReceiptId(id);
+        return ResponseEntity.ok(receiptGetDto);
     }
 }

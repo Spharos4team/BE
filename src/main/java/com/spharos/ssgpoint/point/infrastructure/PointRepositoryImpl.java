@@ -32,7 +32,7 @@ public class PointRepositoryImpl implements PointRepositoryCustom{
         this.queryFactory = new JPAQueryFactory(em);
     }
 
-    @Override
+    /*@Override
     public Page<PointFilterDto> findByFilter(String uuid, LocalDate startDate,LocalDate endDate, String pointUse, String pointType,  Pageable pageable) {
 
         Long userId = queryFactory.select(user.id)
@@ -58,10 +58,10 @@ public class PointRepositoryImpl implements PointRepositoryCustom{
                 .fetchCount();
         return new PageImpl<>(result, pageable, total);
     }
+*/
 
 
-
-   /* @Override
+    @Override
     public Slice<PointFilterDto> findByFilter(Long pointId, String uuid, LocalDate startDate,LocalDate endDate,
                                               String pointUse, String pointType,  Pageable pageable) {
 
@@ -80,7 +80,7 @@ public class PointRepositoryImpl implements PointRepositoryCustom{
                 .fetch();
         return checkLastPage(pageable, results);
     }
-*/
+
     @Override
     public PointFilterSumDto sumPointsByFilter(String uuid, String pointUse, String pointType, LocalDate startDate, LocalDate endDate) {
         Integer totalSavePoints = 0;
@@ -135,7 +135,6 @@ public class PointRepositoryImpl implements PointRepositoryCustom{
             return null;
         }
     }
-/*
     // no-offset 방식 처리하는 메서드
     private BooleanExpression ltStoreId(Long pointId) {
         if (pointId == null) {
@@ -157,5 +156,5 @@ public class PointRepositoryImpl implements PointRepositoryCustom{
         }
 
         return new SliceImpl<>(results, pageable, hasNext);
-    }*/
+    }
 }

@@ -63,10 +63,9 @@ public class UserController {
      * 회원가입 시 아이디 중복 확인
      */
     @GetMapping("/user/check-loginId")
-    public ResponseEntity<String> validateDuplicateLoginId(@RequestBody UserSignUpIn userSignUpIn){
-        log.info("INPUT Object Data is : {}" , userSignUpIn);
+    public ResponseEntity<String> validateDuplicateLoginId(@RequestParam String loginId){
         UserSignUpDto userSignUpDto = UserSignUpDto.builder()
-                .loginId(userSignUpIn.getLoginId())
+                .loginId(loginId)
                 .build();
         userService.validateDuplicateLoginId(userSignUpDto);
         return ResponseEntity.ok("사용 가능한 아이디");

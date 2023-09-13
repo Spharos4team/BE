@@ -48,7 +48,10 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(
                         authorizeHttpRequests -> authorizeHttpRequests.requestMatchers(org.springframework.web.cors.CorsUtils::isPreFlightRequest)
                                 .permitAll()
-                                .requestMatchers("/api/v1/auth/**","/swagger-ui/**", "/swagger-resources/**", "/api-docs/**",
+                                .requestMatchers("/api/v1/auth/**", //회원가입, 로그인
+                                        "/api/v1/user/check-loginId", // 회원가입 로그인 id 중복 확인
+
+                                        "/swagger-ui/**", "/swagger-resources/**", "/api-docs/**",
                                         "/api/v1/event/**","api/v1/events/**", "/v3/**")
                                 .permitAll()
                                 .anyRequest()

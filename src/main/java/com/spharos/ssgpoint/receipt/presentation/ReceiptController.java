@@ -31,10 +31,12 @@ public class ReceiptController {
                 .alliance(receiptGetVo.getAlliance())
                 .brand(receiptGetVo.getBrand())
                 .storeName(receiptGetVo.getStoreName())
-                .number(receiptGetVo.getNumber())
+                .cardNumber(receiptGetVo.getNumber())
                 .build();
 
         receiptService.createPointByReceipt(UUID, receiptGetDto);
     }
+
+
 
 }

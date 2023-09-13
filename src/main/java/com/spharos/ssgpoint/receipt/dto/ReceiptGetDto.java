@@ -13,7 +13,8 @@ public class ReceiptGetDto {
     private String alliance;
     private String brand;
     private String storeName;
-    private String number;
+    private String cardNumber;
     private Integer point;
+    private String pointCardNumber;
 
 }

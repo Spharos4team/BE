@@ -10,6 +10,7 @@ import com.spharos.ssgpoint.point.vo.PointCreateVo;
 import com.spharos.ssgpoint.point.vo.PointFilterVo;
 import com.spharos.ssgpoint.pointcard.domain.PointCard;
 import com.spharos.ssgpoint.receipt.domain.Receipt;
+import com.spharos.ssgpoint.receipt.dto.ReceiptGetDto;
 import com.spharos.ssgpoint.receipt.infrastructure.ReceiptRepository;
 import com.spharos.ssgpoint.user.domain.User;
 import com.spharos.ssgpoint.user.infrastructure.UserRepository;
@@ -131,25 +132,29 @@ public class PointServiceImpl implements PointService {
     }
 
 
-    // 포인터 필터 적용
-   /* @Override
-    public Slice<PointFilterDto> pointFilter(Long id, String UUID, Pageable page, PointFilterVo p) {
+    // 포인터 내역 필터 적용
+    @Override
+    public Slice<PointFilterDto> pointFilter(Long id, String UUID, Pageable page,LocalDate startDate, LocalDate endDate, String pointUse, String pointType) {
         User user = userRepository.findByUuid(UUID).orElseThrow(() ->
                 new IllegalArgumentException("UUID 정보 없음 = " + UUID));
-        return pointRepository.findByFilter(id, UUID, p.getStartDate(), p.getEndDate(), p.getPointUse(), p.getPointType(), page);
+        return pointRepository.findByFilter(id, UUID, startDate, endDate,pointUse, pointType, page);
 
-    }*/
-    public Page<PointFilterDto> pointFilter(String UUID, Pageable page, LocalDate startDate, LocalDate endDate, String pointUse, String pointType){
-       return pointRepository.findByFilter(UUID, startDate, endDate, pointUse, pointType, page);
     }
+   /* public Page<PointFilterDto> pointFilter(String UUID, Pageable page, LocalDate startDate, LocalDate endDate, String pointUse, String pointType){
+       return pointRepository.findByFilter(UUID, startDate, endDate, pointUse, pointType, page);
+    }*/
 
-    // 포인터 필터 사용 적립 합계
+    // 포인터 내역 필터 사용 적립 합계
     @Override
     public PointFilterSumDto sumPointsByFilter(String UUID, PointFilterVo p) {
         return pointRepository.sumPointsByFilter(UUID,p.getPointUse(),p.getPointType(),p.getStartDate(),p.getEndDate());
     }
 
-
+    //포인트 내역 영수증 보기
+    @Override
+    public ReceiptGetDto getReceiptByPointListReceiptId(Long id) {
+        return receiptRepository.findReceiptById(id);
+    }
 
 
 }
