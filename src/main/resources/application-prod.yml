@@ -33,7 +33,7 @@ spring:
 
   data:
     redis:
-      host: optimistic_blackburn
+      host: redis
       port: 6379
     web:
       pageable:
