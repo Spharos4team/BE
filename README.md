@@ -45,6 +45,38 @@ Tools
  
 
 📍 디렉터리 구조
-https://www.notion.so/Naming-Rules-45f590047d2f43c09f13be508c570a44?pvs=4#815547b70076475b8e8e43c1ecd8a8ba
+├─gradle
+│  └─wrapper
+└─src
+├─main
+│  ├─java
+│  │  └─com
+│  │      └─spharos
+│  │          ├─ssgpoint
+│  │          │  ├─coupon
+│  │          │  │  ├─application
+│  │          │  │  │  ├─OrderProvider.java
+│  │          │  │  │  └─OrderService.java
+│  │          │  │  ├─domain
+│  │          │  │  │  ├─Order.java
+│  │          │  │  │  └─OrderDTO.java
+│  │          │  │  ├─infrastructure
+│  │          │  │  │  └─OrderRepository.java
+│  │          │  │  └─presentation
+│  │          │  │  │  └─OrderController.java
+│  │          │  ├─reivew
+│  │          │  │  ├─application
+│  │          │  │  ├─domain
+│  │          │  │  ├─infrastructure
+│  │          │  │  └─presentation
+│  │          │  └─test
+│  │          └─utils
+│  │              └─jwt
+│  ├─resources
+└─test
+└─java
+└─com
+└─ssg
+└─ssg_be
 
 📍 개발 산출물
