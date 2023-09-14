@@ -71,39 +71,8 @@
 
 ## ⚙ 디렉터리 구조예시
 
-├─gradle
-│  └─wrapper
-└─src
-├─main
-│  ├─java
-│  │  └─com
-│  │      └─spharos
-│  │          ├─ssgpoint
-│  │          │  ├─coupon
-│  │          │  │  ├─application
-│  │          │  │  │  ├─OrderProvider.java
-│  │          │  │  │  └─OrderService.java
-│  │          │  │  ├─domain
-│  │          │  │  │  ├─Order.java
-│  │          │  │  │  └─OrderDTO.java
-│  │          │  │  ├─infrastructure
-│  │          │  │  │  └─OrderRepository.java
-│  │          │  │  └─presentation
-│  │          │  │  │  └─OrderController.java
-│  │          │  ├─reivew
-│  │          │  │  ├─application
-│  │          │  │  ├─domain
-│  │          │  │  ├─infrastructure
-│  │          │  │  └─presentation
-│  │          │  └─test
-│  │          └─utils
-│  │              └─jwt
-│  ├─resources
-└─test
-└─java
-└─com
-└─ssg
-└─ssg_be
+![image](https://github.com/Spharos4team/ssg-point-BE/assets/129583887/ab5bbfd4-29a4-464c-a650-f1d01b8e5aea)
+
 
 &nbsp;
 
