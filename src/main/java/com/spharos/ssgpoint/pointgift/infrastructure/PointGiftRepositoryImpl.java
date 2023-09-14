@@ -19,6 +19,7 @@ import org.springframework.data.domain.SliceImpl;
 import java.time.LocalDate;
 import java.util.List;
 
+import static com.spharos.ssgpoint.point.domain.PointStatusType.*;
 import static com.spharos.ssgpoint.point.domain.PointType.*;
 import static com.spharos.ssgpoint.point.domain.QPoint.point1;
 import static com.spharos.ssgpoint.user.domain.QUser.user;
@@ -43,7 +44,6 @@ public class PointGiftRepositoryImpl implements PointGiftRepositoryCustom{
                 .join(point1.user, user)
                 .on(user.uuid.eq(uuid))
                 .where(ltStoreId(pointId),
-
                         point1.createdDate.between(startDate.atStartOfDay(), endDate.atStartOfDay()),
                         point1.type.eq(선물)
                 )
@@ -53,6 +53,36 @@ public class PointGiftRepositoryImpl implements PointGiftRepositoryCustom{
 
         return checkLastPage(pageable, results);
     }
+
+    @Override
+    public Slice<PointGiftListDto> findMyPointGiftList(Long pointId,String uuid, Pageable pageable) {
+
+        List<PointGiftListDto> results = queryFactory
+                .select(Projections.fields(PointGiftListDto.class,
+                        point1.id , point1.point, point1.title, point1.content, point1.type,
+                        point1.statusType, point1.createdDate))
+                .from(point1)
+                .join(point1.user, user)
+                .on(user.uuid.eq(uuid))
+                .where(
+                        ltStoreId(pointId),
+                        point1.type.eq(선물)
+                )
+                .orderBy(point1.id.desc())
+                .limit(pageable.getPageSize() + 1).fetch();
+
+
+        return checkLastPage(pageable, results);
+    }
+
+
+
+
+
+
+
+
+
 
     @Override
     public PointFilterSumDto sumPointsGiftByFilter(String uuid, LocalDate startDate, LocalDate endDate) {
@@ -95,6 +125,9 @@ public class PointGiftRepositoryImpl implements PointGiftRepositoryCustom{
                 .usePoint(use)
                 .build();
     }
+
+
+
 
 
         // no-offset 방식 처리하는 메서드

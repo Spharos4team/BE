@@ -20,7 +20,7 @@ public interface PointGiftRepository extends JpaRepository<PointGift, Long>, Poi
     @Query("select new com.spharos.ssgpoint.pointgift.dto.PointGiftMessageDto(p.message) from PointGift p where p.id = :id")
     PointGiftMessageDto findGiftMessageById(Long id);
 
-    @Query("select new com.spharos.ssgpoint.pointgift.dto.PointGiftCheckDto(p.id) from PointGift p where p.name = :name " +
+    @Query("select new com.spharos.ssgpoint.pointgift.dto.PointGiftCheckDto(p.id,p.point,p.createdDate) from PointGift p where p.name = :name " +
             "and p.status = '0' order by p.id desc limit 1")
     Optional<PointGiftCheckDto> findIdByGift(@Param("name")String name);
 

@@ -3,10 +3,7 @@ package com.spharos.ssgpoint.pointgift.presentation;
 import com.spharos.ssgpoint.point.dto.PointFilterSumDto;
 import com.spharos.ssgpoint.point.vo.PointFilterSumVo;
 import com.spharos.ssgpoint.pointgift.application.PointGiftService;
-import com.spharos.ssgpoint.pointgift.dto.PointGiftCheckDto;
-import com.spharos.ssgpoint.pointgift.dto.PointGiftCreateDto;
-import com.spharos.ssgpoint.pointgift.dto.PointGiftIdDto;
-import com.spharos.ssgpoint.pointgift.dto.PointGiftUserGetDto;
+import com.spharos.ssgpoint.pointgift.dto.*;
 import com.spharos.ssgpoint.pointgift.vo.PointGiftCreateVo;
 import com.spharos.ssgpoint.pointgift.vo.PointListInVo;
 
@@ -73,7 +70,7 @@ public class PointGiftController {
     }
 
 
-    //포인트 선물 목록
+    //포인트 내역 ->선물 목록
     @GetMapping("/point/gift-list")
     public ResponseEntity<Slice<PointListOutVo>> pointListFilter(@RequestParam("UUID") String UUID,
                                                                  @RequestParam(value = "lastId", required = false) Long lastId,
@@ -88,6 +85,19 @@ public class PointGiftController {
         return ResponseEntity.ok(pointFilterOutVos);
 
     }
+    //포인트 선물 -> 전체 날짜
+    @GetMapping("/mypoint/gift-list")
+    public ResponseEntity<Slice<PointListOutVo>> myPointListFilter(@RequestParam("UUID") String UUID,
+                                                                 @RequestParam(value = "lastId", required = false) Long lastId,
+                                                                 @PageableDefault(size=10, sort="createdDate") Pageable pageRequest){
+
+        ModelMapper modelMapper = new ModelMapper();
+        Slice<PointListOutVo> pointFilterOutVos = modelMapper.map(pointGiftService.getMyPointGiftList(lastId, UUID, pageRequest)
+                , new TypeToken<Slice<PointListOutVo>>() {}.getType());
+        return ResponseEntity.ok(pointFilterOutVos);
+
+    }
+
 
     //포인트 선물 목록 적립 사용 금액
     @GetMapping("/point/gift-sum")

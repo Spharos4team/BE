@@ -1,5 +1,6 @@
 package com.spharos.ssgpoint.pointgift.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.spharos.ssgpoint.point.domain.PointStatusType;
 import com.spharos.ssgpoint.point.domain.PointType;
 
@@ -12,6 +13,7 @@ public class PointListOutVo {
     private String content;
     private PointType type;
     private PointStatusType statusType;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime createdDate;
 
 }

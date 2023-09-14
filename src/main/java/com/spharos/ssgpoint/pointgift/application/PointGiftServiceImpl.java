@@ -164,12 +164,15 @@ public class PointGiftServiceImpl implements PointGiftService {
                 .build()
         ).toList();
     }
+
     // 포인트 내역 - 선물
     @Override
     public Slice<PointGiftListDto> getPointGiftList(Long lastId, String UUID, Pageable page, LocalDate startDate, LocalDate endDate) {
         return pointGiftRepository.findPointGiftList(lastId, UUID,startDate, endDate, page);
 
     }
+
+
     // 포인트 내역 - 선물 적립 사용 합계
     @Override
     public PointFilterSumDto sumPointsGiftByFilter(String UUID, LocalDate startDate, LocalDate endDate) {
@@ -188,7 +191,11 @@ public class PointGiftServiceImpl implements PointGiftService {
         }
     }
 
-
+    //포인트 선물- 전체 리스트
+    @Override
+    public Slice<PointGiftListDto> getMyPointGiftList(Long pointId, String uuid, Pageable page) {
+        return pointGiftRepository.findMyPointGiftList(pointId,uuid, page);
+    }
 
 
 }
