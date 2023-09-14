@@ -17,8 +17,11 @@ import org.modelmapper.TypeToken;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 @RestController
 @RequiredArgsConstructor
@@ -73,11 +76,12 @@ public class PointGiftController {
     public ResponseEntity<Slice<PointListOutVo>> pointListFilter(@RequestParam("UUID") String UUID,
                                                                  @RequestParam(value = "lastId", required = false) Long lastId,
                                                                  @PageableDefault(size=10, sort="createdDate") Pageable pageRequest
-            , @RequestBody PointListInVo pointGiftListVo){
+            , @RequestParam  @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+                                                                 @RequestParam  @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate){
 
         ModelMapper modelMapper = new ModelMapper();
 
-        Slice<PointListOutVo> pointFilterOutVos = modelMapper.map(pointGiftService.getPointGiftList(lastId, UUID, pageRequest, pointGiftListVo)
+        Slice<PointListOutVo> pointFilterOutVos = modelMapper.map(pointGiftService.getPointGiftList(lastId, UUID, pageRequest, startDate, endDate)
                 , new TypeToken<Slice<PointListOutVo>>() {}.getType());
         return ResponseEntity.ok(pointFilterOutVos);
 
@@ -86,9 +90,10 @@ public class PointGiftController {
     //포인트 선물 목록 적립 사용 금액
     @GetMapping("/point/gift-sum")
     public ResponseEntity<PointFilterSumVo> giftPointListSum(@RequestParam("UUID") String UUID,
-                                                              @RequestBody PointListInVo pointGiftListVo){
+                                                             @RequestParam  @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+                                                             @RequestParam  @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate){
 
-        PointFilterSumDto pointFilterSumDto = pointGiftService.sumPointsGiftByFilter(UUID, pointGiftListVo);
+        PointFilterSumDto pointFilterSumDto = pointGiftService.sumPointsGiftByFilter(UUID, startDate,endDate);
         ModelMapper modelMapper = new ModelMapper();
         return ResponseEntity.ok(modelMapper.map(pointFilterSumDto, PointFilterSumVo.class));
     }

@@ -200,7 +200,7 @@ public class AuthenticationService {
                         .uuid(user.getUuid())
                         .bardCode(barCode)
                         .build())
-                .uuid(uuid)
+
                 .build();
     }
 

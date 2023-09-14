@@ -17,7 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1")
 @Slf4j
-@CrossOrigin(allowedHeaders = "*")
+//@CrossOrigin(allowedHeaders = "*")
 @RequiredArgsConstructor
 public class TermController {
     private final TermService termService;

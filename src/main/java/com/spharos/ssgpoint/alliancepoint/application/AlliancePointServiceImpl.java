@@ -19,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -119,17 +120,18 @@ public class AlliancePointServiceImpl implements AlliancePointService {
         }
     }
 
+
     //전환 포인트 리스트
     @Override
-    public Slice<AlliancePointListDto> getPointAllianceList(Long lastId, String uuid, Pageable page, PointListInVo p) {
-       return alliancePointRepository.findPointAllianceList(lastId, uuid, p.getStartDate(), p.getEndDate(), page);
+    public Slice<AlliancePointListDto> getPointAllianceList(Long lastId, String uuid, Pageable page, LocalDate startDate, LocalDate endDate) {
+       return alliancePointRepository.findPointAllianceList(lastId, uuid, startDate, endDate, page);
     }
 
 
     //전환 포인트 적립 사용 합계
     @Override
-    public PointFilterSumDto sumPointsAllianceByFilter(String UUID, PointListInVo p) {
-        return alliancePointRepository.sumPointsAllianceByFilter(UUID, p.getStartDate(), p.getEndDate());
+    public PointFilterSumDto sumPointsAllianceByFilter(String UUID, LocalDate startDate, LocalDate endDate) {
+        return alliancePointRepository.sumPointsAllianceByFilter(UUID,startDate,endDate);
     }
 
 

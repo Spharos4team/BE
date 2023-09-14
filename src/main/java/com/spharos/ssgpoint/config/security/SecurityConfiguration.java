@@ -50,9 +50,10 @@ public class SecurityConfiguration {
                                 .permitAll()
                                 .requestMatchers("/api/v1/auth/**", //회원가입, 로그인
                                         "/api/v1/user/check-loginId", // 회원가입 로그인 id 중복 확인
-
                                         "/swagger-ui/**", "/swagger-resources/**", "/api-docs/**",
-                                        "/api/v1/event/**","api/v1/events/**", "/v3/**")
+                                        "/api/v1/event/**","api/v1/events/**",  //이벤트
+                                        "/api/v1/coupon/avaliable", //쿠폰
+                                        "/v3/**")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()

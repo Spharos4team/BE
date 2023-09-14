@@ -7,7 +7,10 @@ import com.spharos.ssgpoint.point.dto.PointFilterDto;
 import com.spharos.ssgpoint.point.dto.PointFilterSumDto;
 import com.spharos.ssgpoint.point.dto.PointGetDto;
 import com.spharos.ssgpoint.point.vo.*;
+import com.spharos.ssgpoint.pointgift.dto.PointGiftMessageDto;
+import com.spharos.ssgpoint.pointgift.vo.PointGiftMessageVo;
 import com.spharos.ssgpoint.receipt.dto.ReceiptGetDto;
+import com.spharos.ssgpoint.receipt.vo.ReceiptGetVo;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -105,17 +108,30 @@ public class PointController {
     // 포인트 목록 적립 사용 포인트 합계
     @GetMapping("/point-list-sum")
     public ResponseEntity<PointFilterSumVo> pointListFilterSum(@RequestParam("UUID") String UUID,
-                                                            @RequestBody PointFilterVo pointFilterVo) {
+                                                               @RequestParam  @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+                                                               @RequestParam  @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
+                                                               @RequestParam String pointUse, @RequestParam String pointType) {
 
-        PointFilterSumDto pointFilterSumDto = pointService.sumPointsByFilter(UUID, pointFilterVo);
+        PointFilterSumDto pointFilterSumDto = pointService.sumPointsByFilter(UUID, startDate, endDate, pointUse, pointType);
         ModelMapper modelMapper = new ModelMapper();
         return ResponseEntity.ok(modelMapper.map(pointFilterSumDto, PointFilterSumVo.class));
 
     }
     // 포인트 내역 영수증 보기
     @GetMapping("/point-list/receipt")
-    public ResponseEntity<ReceiptGetDto> pointListReceipt(@RequestParam("id") Long id) {
+    public ResponseEntity<ReceiptGetVo> pointListReceipt(@RequestParam("id") Long id) {
         ReceiptGetDto receiptGetDto = pointService.getReceiptByPointListReceiptId(id);
-        return ResponseEntity.ok(receiptGetDto);
+        ModelMapper modelMapper = new ModelMapper();
+        return ResponseEntity.ok(modelMapper.map(receiptGetDto, ReceiptGetVo.class));
     }
+
+    // 포인트 내역 메세지 보기
+    @GetMapping("/point-list/message")
+    public ResponseEntity<PointGiftMessageVo> pointListMessage(@RequestParam("id") Long id) {
+        PointGiftMessageDto pointGiftMessageDto = pointService.getGiftMessage(id);
+        ModelMapper modelMapper = new ModelMapper();
+        return ResponseEntity.ok(modelMapper.map(pointGiftMessageDto, PointGiftMessageVo.class));
+    }
+
+
 }

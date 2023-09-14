@@ -21,7 +21,7 @@ public interface UserRepository extends JpaRepository<User, Long>, UserRepositor
     @Query("SELECT u.term FROM User u  WHERE u.uuid = :uuid")
     Optional<UserTermList> findTermJsonByUuid(@Param("uuid") String uuid);
 
-    @Query("SELECT p from Point p join p.user u where u.uuid = :uuid order by p.createdDate desc limit 1")
+    @Query("SELECT p from Point p join p.user u where u.uuid = :uuid order by p.id desc limit 1")
     Optional<Point> findTotalByUuid(@Param("uuid") String uuid);
 
 }
