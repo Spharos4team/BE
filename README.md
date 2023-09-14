@@ -45,38 +45,8 @@ Tools
  
 
 📍 디렉터리 구조
-├─gradle
-│  └─wrapper
-└─src
-├─main
-│  ├─java
-│  │  └─com
-│  │      └─spharos
-│  │          ├─ssgpoint
-│  │          │  ├─coupon
-│  │          │  │  ├─application
-│  │          │  │  │  ├─OrderProvider.java
-│  │          │  │  │  └─OrderService.java
-│  │          │  │  ├─domain
-│  │          │  │  │  ├─Order.java
-│  │          │  │  │  └─OrderDTO.java
-│  │          │  │  ├─infrastructure
-│  │          │  │  │  └─OrderRepository.java
-│  │          │  │  └─presentation
-│  │          │  │  │  └─OrderController.java
-│  │          │  ├─reivew
-│  │          │  │  ├─application
-│  │          │  │  ├─domain
-│  │          │  │  ├─infrastructure
-│  │          │  │  └─presentation
-│  │          │  └─test
-│  │          └─utils
-│  │              └─jwt
-│  ├─resources
-└─test
-└─java
-└─com
-└─ssg
-└─ssg_be
+![image](https://github.com/Spharos4team/ssg-point-BE/assets/129583887/dfe77f52-c3bc-4802-a1b7-7bcf55570028)
+
+
 
 📍 개발 산출물
