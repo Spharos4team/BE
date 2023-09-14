@@ -41,4 +41,6 @@ public class QuestionDTO {
 
         return question;
     }
+
+    private List<String> comments; // 문의글에 달린 댓글을 저장하는 필드
 }

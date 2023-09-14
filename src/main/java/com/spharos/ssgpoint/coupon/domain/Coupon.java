@@ -29,6 +29,10 @@ public class Coupon {
 
     private String image;
 
+    private String storeImage1;
+
+    private String storeImage2;
+
     private String content;
 
     private LocalDate startDate;  // java.time.LocalDate로 변경

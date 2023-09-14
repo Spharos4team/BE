@@ -22,6 +22,9 @@ public class Question {
     private String status = "답변대기"; // Default status
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
     private List<QuestionTag> tags = new ArrayList<>();
 
 }

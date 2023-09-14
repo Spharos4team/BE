@@ -82,10 +82,18 @@ public class QuestionServiceImpl implements QuestionService {
                     dto.setTitle(question.getTitle());
                     dto.setDescription(question.getDescription());
                     dto.setStatus(question.getStatus());
+
+                    // 문의글에 달린 댓글을 QuestionDTO에 설정
+                    List<String> comments = question.getComments().stream()
+                            .map(Comment::getComment)
+                            .collect(Collectors.toList());
+                    dto.setComments(comments);
+
                     return dto;
                 })
                 .collect(Collectors.toList());
     }
+
 
     /**
      * 문의글을 삭제합니다.

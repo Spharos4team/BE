@@ -43,6 +43,8 @@ public class CouponServiceImpl implements CouponService {
                 .endDate(couponAdd.getEndDate())
                 .store(couponAdd.getStore())
                 .image(couponAdd.getImage())
+                .storeImage1(couponAdd.getStoreImage1())
+                .storeImage2(couponAdd.getStoreImage2())
                 .content(couponAdd.getContent())
                 .number(generatedCouponNumber)
                 .build();

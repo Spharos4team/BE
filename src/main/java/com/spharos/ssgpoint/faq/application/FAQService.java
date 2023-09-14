@@ -13,4 +13,5 @@ public interface FAQService {
 
     List<FAQCategory> getParentCategories();
     List<FAQCategory> getSubCategories(Long parentCategoryId);
+
 }
