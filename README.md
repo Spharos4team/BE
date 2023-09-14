@@ -45,27 +45,6 @@ Tools
  
 
 📍 디렉터리 구조
-[└─src
-    ├─main
-    │  ├─java
-    │  │  └─com
-    │  │      └─ssg
-    │  │          ├─config # config, security, exception, etc.. 관리
-    │  │          ├─ssg_be
-    │  │          │  ├─point
-    │  │          │  │  ├─application # Service 폴더
-    │  │          │  │  ├─domain # 해당 도메인의 entity 폴더
-    │  │          │  │  ├─dto # DTO 폴더
-    │  │          │  │  ├─infrastructure # Repository 폴더
-    │  │          │  │  └─presentation # Controller 폴더
-    │  │          │  │  └─vo # VO 폴더  
-    │  │          │  └─ ... # 나머지 도메인
-    │  │          └─utils
-    │  │              ├─jwt
-    │  │              ├─oauth
-    │  │              └─s3
-    │  └─resources # application.yml 관리
-    └─test
- ](https://www.notion.so/Naming-Rules-45f590047d2f43c09f13be508c570a44?pvs=4#815547b70076475b8e8e43c1ecd8a8ba)https://www.notion.so/Naming-Rules-45f590047d2f43c09f13be508c570a44?pvs=4#815547b70076475b8e8e43c1ecd8a8ba
+https://www.notion.so/Naming-Rules-45f590047d2f43c09f13be508c570a44?pvs=4#815547b70076475b8e8e43c1ecd8a8ba
 
 📍 개발 산출물
