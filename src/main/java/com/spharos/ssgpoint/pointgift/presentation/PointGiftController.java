@@ -4,6 +4,7 @@ import com.spharos.ssgpoint.point.dto.PointFilterSumDto;
 import com.spharos.ssgpoint.point.vo.PointFilterSumVo;
 import com.spharos.ssgpoint.pointgift.application.PointGiftService;
 import com.spharos.ssgpoint.pointgift.dto.PointGiftCreateDto;
+import com.spharos.ssgpoint.pointgift.dto.PointGiftIdDto;
 import com.spharos.ssgpoint.pointgift.dto.PointGiftUserGetDto;
 import com.spharos.ssgpoint.pointgift.vo.PointGiftCreateVo;
 import com.spharos.ssgpoint.pointgift.vo.PointListInVo;
@@ -47,7 +48,7 @@ public class PointGiftController {
 
     // 포인트 선물 보내기
     @PostMapping("/point/gift")
-    public ResponseEntity<String> createPointGift(@RequestParam("UUID") String UUID, @RequestBody PointGiftCreateVo pointGiftCreateVo) {
+    public ResponseEntity<PointGiftIdDto> createPointGift(@RequestParam("UUID") String UUID, @RequestBody PointGiftCreateVo pointGiftCreateVo) {
         PointGiftCreateDto pointGiftCreateDto = PointGiftCreateDto.builder()
                 .point(pointGiftCreateVo.getPoint())
                 .message(pointGiftCreateVo.getMessage())
@@ -58,8 +59,8 @@ public class PointGiftController {
                 .name(pointGiftCreateVo.getName())
                 .build();
 
-        pointGiftService.createPointGift(UUID, pointGiftCreateDto);
-        return ResponseEntity.ok("포인트 선물 완료");
+        return ResponseEntity.ok(pointGiftService.createPointGift(UUID, pointGiftCreateDto));
+
     }
 
     // 포인트 선물 수락/거절

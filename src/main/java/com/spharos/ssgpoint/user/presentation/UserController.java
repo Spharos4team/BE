@@ -120,14 +120,7 @@ public class UserController {
         return ResponseEntity.ok(pointGetDto);
     }
 
-   /* *//**
-     * 신세계포인트 이용 - 적립부분
-     *//*
-    @GetMapping("/user/save-point/{UUID}")
-    public ResponseEntity<UserSavePointDto> getSavePoint(@PathVariable String UUID) {
-        UserSavePointDto userSavePointDto = userService.getSavePoint(UUID);
-        return ResponseEntity.ok(userSavePointDto);
-    }*/
+
     /**
      * 신세계포인트 이용 - 사용부분
      */
