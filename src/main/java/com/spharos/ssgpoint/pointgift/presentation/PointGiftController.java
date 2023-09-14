@@ -85,21 +85,8 @@ public class PointGiftController {
         return ResponseEntity.ok(pointFilterOutVos);
 
     }
-    //포인트 선물 -> 전체 날짜
-    @GetMapping("/mypoint/gift-list")
-    public ResponseEntity<Slice<PointListOutVo>> myPointListFilter(@RequestParam("UUID") String UUID,
-                                                                 @RequestParam(value = "lastId", required = false) Long lastId,
-                                                                 @PageableDefault(size=10, sort="createdDate") Pageable pageRequest){
 
-        ModelMapper modelMapper = new ModelMapper();
-        Slice<PointListOutVo> pointFilterOutVos = modelMapper.map(pointGiftService.getMyPointGiftList(lastId, UUID, pageRequest)
-                , new TypeToken<Slice<PointListOutVo>>() {}.getType());
-        return ResponseEntity.ok(pointFilterOutVos);
-
-    }
-
-
-    //포인트 선물 목록 적립 사용 금액
+    //포인트내역 -> 선물 목록 적립 사용 금액
     @GetMapping("/point/gift-sum")
     public ResponseEntity<PointFilterSumVo> giftPointListSum(@RequestParam("UUID") String UUID,
                                                              @RequestParam  @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
@@ -109,6 +96,20 @@ public class PointGiftController {
         ModelMapper modelMapper = new ModelMapper();
         return ResponseEntity.ok(modelMapper.map(pointFilterSumDto, PointFilterSumVo.class));
     }
+
+    //포인트 선물 -> 전체 날짜
+    @GetMapping("/mypoint/gift-list")
+    public ResponseEntity<Slice<PointListOutVo>> myPointListFilter(@RequestParam("UUID") String UUID,
+                                                                   @RequestParam(value = "lastId", required = false) Long lastId,
+                                                                   @PageableDefault(size=10, sort="createdDate") Pageable pageRequest){
+
+        ModelMapper modelMapper = new ModelMapper();
+        Slice<PointListOutVo> pointFilterOutVos = modelMapper.map(pointGiftService.getMyPointGiftList(lastId, UUID, pageRequest)
+                , new TypeToken<Slice<PointListOutVo>>() {}.getType());
+        return ResponseEntity.ok(pointFilterOutVos);
+
+    }
+
 
     //포인트 선물 페이지 조회시 선물왔는지 확인
     //선물 없으면 무조건 id=0 있으면 해당하는 선물id 반환

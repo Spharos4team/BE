@@ -32,7 +32,7 @@ public class PointRepositoryImpl implements PointRepositoryCustom{
         this.queryFactory = new JPAQueryFactory(em);
     }
 
-    /*@Override
+    @Override
     public Page<PointFilterDto> findByFilter(String uuid, LocalDate startDate,LocalDate endDate, String pointUse, String pointType,  Pageable pageable) {
 
         Long userId = queryFactory.select(user.id)
@@ -58,9 +58,9 @@ public class PointRepositoryImpl implements PointRepositoryCustom{
                 .fetchCount();
         return new PageImpl<>(result, pageable, total);
     }
-*/
 
 
+/*
     @Override
     public Slice<PointFilterDto> findByFilter(Long pointId, String uuid, LocalDate startDate,LocalDate endDate,
                                               String pointUse, String pointType,  Pageable pageable) {
@@ -73,13 +73,13 @@ public class PointRepositoryImpl implements PointRepositoryCustom{
                 .on(user.uuid.eq(uuid))
                 .where(ltStoreId(pointId),
                         pointUseEq(pointUse), pointTypeEq(pointType),
-
                         point1.createdDate.between(startDate.atStartOfDay(), endDate.atStartOfDay()))
                 .orderBy(point1.id.desc())
                 .limit(pageable.getPageSize()+1)
                 .fetch();
         return checkLastPage(pageable, results);
     }
+*/
 
     @Override
     public PointFilterSumDto sumPointsByFilter(String uuid, String pointUse, String pointType, LocalDate startDate, LocalDate endDate) {
