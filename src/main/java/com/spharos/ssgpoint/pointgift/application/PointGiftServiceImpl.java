@@ -9,10 +9,7 @@ import com.spharos.ssgpoint.point.vo.PointFilterVo;
 import com.spharos.ssgpoint.pointgift.domain.PointGift;
 import com.spharos.ssgpoint.pointgift.domain.PointGiftStatusType;
 import com.spharos.ssgpoint.pointgift.domain.PointGiftType;
-import com.spharos.ssgpoint.pointgift.dto.PointGiftCreateDto;
-import com.spharos.ssgpoint.pointgift.dto.PointGiftGetDto;
-import com.spharos.ssgpoint.pointgift.dto.PointGiftListDto;
-import com.spharos.ssgpoint.pointgift.dto.PointGiftMessageDto;
+import com.spharos.ssgpoint.pointgift.dto.*;
 import com.spharos.ssgpoint.pointgift.infrastructure.PointGiftRepository;
 import com.spharos.ssgpoint.pointgift.vo.PointListInVo;
 import com.spharos.ssgpoint.user.domain.User;
@@ -54,7 +51,7 @@ public class PointGiftServiceImpl implements PointGiftService {
 
     // 포인트 선물 보내기
     @Override
-    public void createPointGift(String UUID, PointGiftCreateDto pointGiftCreateDto) {
+    public PointGiftIdDto createPointGift(String UUID, PointGiftCreateDto pointGiftCreateDto) {
         // 보낸 사람 포인트 테이블에 저장
         PointCreateDto pointCreateDto = PointCreateDto.builder()
                 .point(pointGiftCreateDto.getPoint())
@@ -67,8 +64,8 @@ public class PointGiftServiceImpl implements PointGiftService {
 
         Point point = pointService.createPoint(UUID, pointCreateDto);
 
-        // 포인트 선물 테이블에 저장 - 할필요없는데
-        pointGiftRepository.save(PointGift.builder()
+
+        PointGift save = pointGiftRepository.save(PointGift.builder()
                 .point(pointGiftCreateDto.getPoint())
                 .message(pointGiftCreateDto.getMessage())
                 .type(PointGiftType.valueOf(pointGiftCreateDto.getType()))
@@ -76,8 +73,10 @@ public class PointGiftServiceImpl implements PointGiftService {
                 .UUID(pointGiftCreateDto.getUUID())
                 .loginId(pointGiftCreateDto.getLoginId())
                 .name(pointGiftCreateDto.getName())
-                        .pointId(point.getId())
+                .pointId(point.getId())
                 .build());
+        return PointGiftIdDto.builder().id(save.getId()).build();
+
     }
 
     // 포인트 선물 수락/거절
