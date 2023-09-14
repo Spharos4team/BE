@@ -1,5 +1,6 @@
 package com.spharos.ssgpoint.pointgift.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.querydsl.core.annotations.QueryProjection;
 import com.spharos.ssgpoint.point.domain.PointStatusType;
 import com.spharos.ssgpoint.point.domain.PointType;
@@ -20,6 +21,7 @@ public class PointGiftListDto {
     private String content;
     private PointType type;
     private PointStatusType statusType;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime createdDate;
 
 }

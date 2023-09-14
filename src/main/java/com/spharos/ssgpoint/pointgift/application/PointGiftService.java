@@ -26,7 +26,11 @@ public interface PointGiftService {
     // 포인트 선물 목록 (테스트 용)
     List<PointGiftGetDto> getPointGiftByUser(String UUID);
 
+    //포인트 내역 선물
     Slice<PointGiftListDto> getPointGiftList(Long pointId, String uuid, Pageable page, LocalDate startDate, LocalDate endDate);
+    //포인트 선물 -전부
+    Slice<PointGiftListDto> getMyPointGiftList(Long pointId, String uuid, Pageable page);
+
 
     PointFilterSumDto sumPointsGiftByFilter(String UUID, LocalDate startDate, LocalDate endDate);
     PointGiftCheckDto checkPointGift(String name);
