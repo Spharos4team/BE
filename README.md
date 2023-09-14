@@ -9,8 +9,9 @@
 
 ### Project Repositories
 
-- [프론트엔드]프론트 깃 주소
-- [백엔드]백엔드 깃 주소
+- 프론트엔드(https://github.com/Spharos4team/ssg-point-FE)
+- 백엔드(https://github.com/Spharos4team/ssg-point-BE)
+
 
 &nbsp;
 
