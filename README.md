@@ -71,7 +71,8 @@
 
 ## ⚙ 디렉터리 구조예시
 
-![image](https://github.com/Spharos4team/ssg-point-BE/assets/129583887/ab5bbfd4-29a4-464c-a650-f1d01b8e5aea)
+![image](https://github.com/Spharos4team/ssg-point-BE/assets/129583887/64d95aea-87df-471f-88a8-37440a39fd46)
+
 
 
 &nbsp;
