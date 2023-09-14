@@ -74,7 +74,7 @@ public class PointController {
 
 
     // 포인트필터 목록
-    @GetMapping("/point-list")
+/*    @GetMapping("/point-list")
     public ResponseEntity<Slice<PointFilterOutVo>> pointListFilter(@RequestParam("UUID") String UUID,
                                                                    @RequestParam(value = "lastId", required = false) Long lastId,
                                                                     @PageableDefault(size = 10) Pageable pageRequest,
@@ -86,23 +86,23 @@ public class PointController {
         startDate,endDate, pointUse, pointType)
                 , new TypeToken<Slice<PointFilterOutVo>>() {}.getType());
 
-        // ResponseEntity로 감싸서 반환
-        return ResponseEntity.ok(pointFilterOutVos);
-    }
 
-/*
+        return ResponseEntity.ok(pointFilterOutVos);
+    }*/
+
     @GetMapping("/point-list")
-    public ResponseEntity<Page<PointFilterDto>> pageRe(@RequestParam("UUID") String UUID,
+    public ResponseEntity<Page<PointFilterOutVo>> pageRe(@RequestParam("UUID") String UUID,
                                                        @PageableDefault(size = 10) Pageable pageRequest,
                                                        @RequestParam  @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
                                                        @RequestParam  @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
                                                        @RequestParam String pointUse, @RequestParam String pointType) {
         Page<PointFilterDto> pointFilterDto = pointService.pointFilter(UUID, pageRequest, startDate,endDate, pointUse, pointType);
+        ModelMapper modelMapper = new ModelMapper();
+        Page<PointFilterOutVo> e = modelMapper.map(pointFilterDto, new TypeToken<Page<PointFilterOutVo>>() {}.getType());
 
         // ResponseEntity로 감싸서 반환
-        return ResponseEntity.ok(pointFilterDto);
+        return ResponseEntity.ok(e);
     }
-*/
 
 
     // 포인트 목록 적립 사용 포인트 합계
