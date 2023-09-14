@@ -14,8 +14,9 @@
 
 &nbsp;
 
-## ⚙ [Notion]노션 주소
+## ⚙ [진행상황 문서] 
 
+https://o365kopo-my.sharepoint.com/:x:/g/personal/2342340609_office_kopo_ac_kr/EYLym80vPfNEkD1LTHE3-I0BMcPmY5THUxFNL70RggX6ew?e=WkQlon
 
 
 ## ⚙ 시스템 아키텍처
