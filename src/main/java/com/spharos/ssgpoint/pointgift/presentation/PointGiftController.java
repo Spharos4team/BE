@@ -3,6 +3,7 @@ package com.spharos.ssgpoint.pointgift.presentation;
 import com.spharos.ssgpoint.point.dto.PointFilterSumDto;
 import com.spharos.ssgpoint.point.vo.PointFilterSumVo;
 import com.spharos.ssgpoint.pointgift.application.PointGiftService;
+import com.spharos.ssgpoint.pointgift.dto.PointGiftCheckDto;
 import com.spharos.ssgpoint.pointgift.dto.PointGiftCreateDto;
 import com.spharos.ssgpoint.pointgift.dto.PointGiftIdDto;
 import com.spharos.ssgpoint.pointgift.dto.PointGiftUserGetDto;
@@ -97,5 +98,12 @@ public class PointGiftController {
         PointFilterSumDto pointFilterSumDto = pointGiftService.sumPointsGiftByFilter(UUID, startDate,endDate);
         ModelMapper modelMapper = new ModelMapper();
         return ResponseEntity.ok(modelMapper.map(pointFilterSumDto, PointFilterSumVo.class));
+    }
+
+    //포인트 선물 페이지 조회시 선물왔는지 확인
+    //선물 없으면 무조건 id=0 있으면 해당하는 선물id 반환
+    @GetMapping("/point/gift-check")
+    public ResponseEntity<PointGiftCheckDto> checkPointGift(@RequestParam("name") String name){
+        return ResponseEntity.ok(pointGiftService.checkPointGift(name));
     }
 }

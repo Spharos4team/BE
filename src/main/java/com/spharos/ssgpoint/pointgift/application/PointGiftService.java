@@ -29,5 +29,6 @@ public interface PointGiftService {
     Slice<PointGiftListDto> getPointGiftList(Long pointId, String uuid, Pageable page, LocalDate startDate, LocalDate endDate);
 
     PointFilterSumDto sumPointsGiftByFilter(String UUID, LocalDate startDate, LocalDate endDate);
+    PointGiftCheckDto checkPointGift(String name);
 
 }
