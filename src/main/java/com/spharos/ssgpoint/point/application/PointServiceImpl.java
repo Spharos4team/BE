@@ -9,6 +9,8 @@ import com.spharos.ssgpoint.point.infrastructure.PointRepository;
 import com.spharos.ssgpoint.point.vo.PointCreateVo;
 import com.spharos.ssgpoint.point.vo.PointFilterVo;
 import com.spharos.ssgpoint.pointcard.domain.PointCard;
+import com.spharos.ssgpoint.pointgift.dto.PointGiftMessageDto;
+import com.spharos.ssgpoint.pointgift.infrastructure.PointGiftRepository;
 import com.spharos.ssgpoint.receipt.domain.Receipt;
 import com.spharos.ssgpoint.receipt.dto.ReceiptGetDto;
 import com.spharos.ssgpoint.receipt.infrastructure.ReceiptRepository;
@@ -35,6 +37,7 @@ public class PointServiceImpl implements PointService {
     private final PointRepository pointRepository;
 
     private final ReceiptRepository receiptRepository;
+    private PointGiftRepository pointGiftRepository;
 
     // 포인트 생성
     @Override
@@ -146,14 +149,20 @@ public class PointServiceImpl implements PointService {
 
     // 포인터 내역 필터 사용 적립 합계
     @Override
-    public PointFilterSumDto sumPointsByFilter(String UUID, PointFilterVo p) {
-        return pointRepository.sumPointsByFilter(UUID,p.getPointUse(),p.getPointType(),p.getStartDate(),p.getEndDate());
+    public PointFilterSumDto sumPointsByFilter(String UUID, LocalDate startDate, LocalDate endDate, String pointUse, String pointType) {
+        return pointRepository.sumPointsByFilter(UUID,pointUse,pointType,startDate,endDate);
     }
 
     //포인트 내역 영수증 보기
     @Override
     public ReceiptGetDto getReceiptByPointListReceiptId(Long id) {
         return receiptRepository.findReceiptById(id);
+    }
+
+    //포인트 내역 메세지 보기
+    @Override
+    public PointGiftMessageDto getGiftMessage(Long id){
+        return pointGiftRepository.findGiftMessageById(id);
     }
 
 

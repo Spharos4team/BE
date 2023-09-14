@@ -73,7 +73,7 @@ public class PointRepositoryImpl implements PointRepositoryCustom{
                 .on(user.uuid.eq(uuid))
                 .where(ltStoreId(pointId),
                         pointUseEq(pointUse), pointTypeEq(pointType),
-                        user.uuid.eq(uuid),
+
                         point1.createdDate.between(startDate.atStartOfDay(), endDate.atStartOfDay()))
                 .orderBy(point1.id.desc())
                 .limit(pageable.getPageSize()+1)

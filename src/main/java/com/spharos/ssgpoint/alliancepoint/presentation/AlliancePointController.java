@@ -21,9 +21,11 @@ import org.modelmapper.TypeToken;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -78,12 +80,13 @@ public class AlliancePointController {
     (@RequestParam("UUID") String UUID,
      @RequestParam(value = "lastId", required = false) Long lastId,
      @PageableDefault(size = 10, sort = "createdDate") Pageable pageRequest,
-     @RequestBody PointListInVo pointFilterVo)
+     @RequestParam  @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+     @RequestParam  @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate)
     {
         ModelMapper modelMapper = new ModelMapper();
-        Slice<AlliancePointListDto> pointAllianceList = alliancePointService.getPointAllianceList(lastId, UUID, pageRequest, pointFilterVo);
+        //Slice<AlliancePointListDto> pointAllianceList = alliancePointService.getPointAllianceList(lastId, UUID, pageRequest, startDate,endDate);
         Slice<PointListOutVo> pointFilterOutVos = modelMapper.map(alliancePointService.getPointAllianceList(lastId,
-                        UUID, pageRequest, pointFilterVo)
+                        UUID, pageRequest, startDate,endDate)
                 , new TypeToken<Slice<PointListOutVo>>() {}.getType());
 
         // ResponseEntity로 감싸서 반환
@@ -94,9 +97,10 @@ public class AlliancePointController {
     // 전환 포인트 목록 적립 사용 합계
     @GetMapping("/point/alliance/sum")
     public ResponseEntity<PointFilterSumVo> giftPointListSum(@RequestParam("UUID") String UUID,
-                                                              @RequestBody PointListInVo pointGiftListVo){
+                                                             @RequestParam  @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+                                                             @RequestParam  @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate){
 
-        PointFilterSumDto pointFilterSumDto = alliancePointService.sumPointsAllianceByFilter(UUID, pointGiftListVo);
+        PointFilterSumDto pointFilterSumDto = alliancePointService.sumPointsAllianceByFilter(UUID, startDate,endDate);
         ModelMapper modelMapper = new ModelMapper();
         return ResponseEntity.ok(modelMapper.map(pointFilterSumDto, PointFilterSumVo.class));
 
