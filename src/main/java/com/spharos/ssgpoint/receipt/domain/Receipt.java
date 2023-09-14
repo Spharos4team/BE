@@ -51,4 +51,5 @@ public class Receipt {
         this.status = status;
     }
 
+    //
 }
