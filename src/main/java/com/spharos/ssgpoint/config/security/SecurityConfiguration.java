@@ -53,7 +53,10 @@ public class SecurityConfiguration {
                                         "/api/v1/user/check-loginId", // 회원가입 로그인 id 중복 확인
                                         "/swagger-ui/**", "/swagger-resources/**", "/api-docs/**",
                                         "/api/v1/event/**","api/v1/events/**",  //이벤트
-                                        "/api/v1/coupon/avaliable", //쿠폰
+                                        "/api/v1/coupon/avaliable",    //쿠폰
+                                        "/api/v1/faq/**", //faq
+                                        "/api/v1/notice/**", //공지사항
+                                        "/api/v1/question/**", //1:1문의
                                         "/v3/**")
                                 .permitAll()
                                 .anyRequest()

@@ -185,6 +185,7 @@ public class AuthenticationService {
         String uuid = jwtTokenProvider.getUUID(accessToken);
 
         Optional<Point> totalByUuid = userRepository.findTotalByUuid(uuid);
+
         String barCode = pointCardRepository.findNumberByUUID(uuid); //바코드 가져오기(바코드는 유니크
         int totalPoint = (totalByUuid.isPresent()) ? totalByUuid.get().getTotalPoint() : 0;
 
@@ -200,7 +201,6 @@ public class AuthenticationService {
                         .uuid(user.getUuid())
                         .bardCode(barCode)
                         .build())
-
                 .build();
     }
 
