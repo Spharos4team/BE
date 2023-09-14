@@ -18,4 +18,7 @@ public class PointGiftCheckDto {
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime localDate;
+
+    private String name;
+    private String loginId;
 }
