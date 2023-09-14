@@ -204,56 +204,6 @@ public class AuthenticationService {
                 .build();
     }
 
-    /**
-     * refresh 토큰 재발급
-     */
-    /*public void refreshToken(
-            HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
-        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        final String refreshToken;
-        final String UUID;
-        if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
-            return ;
-        }
-        refreshToken = authHeader.substring(7);
-        UUID = jwtTokenProvider.getUUID(refreshToken);
-        if (UUID != null) {
-            User user = this.userRepository.findByUuid(UUID)
-                    .orElseThrow();
-            if (jwtTokenProvider.validateToken(refreshToken, user)) { // refresh 토큰 검증해서 만료 안되었으면
-
-                String redisInRefreshToken = (String) redisTemplate.opsForValue().get(UUID); //레디스에서 key uuid로 value refreshToken 가져온다 todo: 레디스에 로그아웃해서 저장된거 없을떄 예외처리 해야함
-                if(!redisInRefreshToken.equals(refreshToken)){    //내가 가진 refreshtoken이랑 레디스 refreshtoken 다르면 예외
-                    throw new CustomException("Refresh Token doesn't match.");
-                }
-
-                //내가 가진 refreshtoken이랑 레디스 refreshtoken같으면 레디스 안에 수정
-                String newAccessToken = jwtTokenProvider.generateToken(user);
-                String newRefreshToken = jwtTokenProvider.generateRefreshToken(user);
-
-                redisTemplate.opsForValue().set(
-                        UUID,
-                        newRefreshToken,
-                        refreshExpirationTime,
-                        TimeUnit.MILLISECONDS
-                    );
-
-                response.setHeader("authorization", "bearer "+ newAccessToken);
-                response.setHeader("refreshToken", "bearer "+ newRefreshToken);
-
-                AuthenticationResponse authResponse = AuthenticationResponse.builder()
-                        .accessToken(newAccessToken)
-                        .refreshToken(newRefreshToken)
-                        .build();
-                new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
-            }
-            else{
-                throw new ExpiredJwtException(null, null, "Refresh Token Expired");
-            }
-        }
-    }*/
-
 
     public AuthenticationResponse refreshToken(String refreshToken) {
 
@@ -300,6 +250,5 @@ public class AuthenticationService {
         redisTemplate.delete(uuid); //Token 삭제
 
     }
-
 
 }

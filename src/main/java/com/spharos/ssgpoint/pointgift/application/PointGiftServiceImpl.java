@@ -176,6 +176,18 @@ public class PointGiftServiceImpl implements PointGiftService {
         return pointGiftRepository.sumPointsGiftByFilter(UUID, startDate, endDate);
     }
 
+    //포인트 선물 클릭시 선물 왔는지 조회
+    @Override
+    public PointGiftCheckDto checkPointGift(String name) {
+        Optional<PointGiftCheckDto> idByGift = pointGiftRepository.findIdByGift(name);
+        if(!idByGift.isPresent()){
+            return PointGiftCheckDto.builder().id(0L).build();
+        }
+        else{
+            return idByGift.get();
+        }
+    }
+
 
 
 
