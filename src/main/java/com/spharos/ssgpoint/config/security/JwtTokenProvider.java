@@ -69,19 +69,13 @@ public class JwtTokenProvider {
      */
     public Claims extractAllClaims(String token)  {
 
-            /*return Jwts.parserBuilder()
-                    .setSigningKey(getSigningKey())
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();*/
-        try{return Jwts.parserBuilder()
+
+        return Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())
                 .build()
                 .parseClaimsJws(token)
-                .getBody();}
-        catch (ExpiredJwtException e){
-            throw new ExpiredJwtException(null,null,"토큰이 만료되었습니다.3333");
-        }
+                .getBody();
+
 
     }
     /** 4

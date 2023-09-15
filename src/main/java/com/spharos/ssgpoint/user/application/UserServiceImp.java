@@ -211,13 +211,6 @@ public class UserServiceImp implements UserService{
     @Override
     public List<FrequentBrandTop3CountDto>  getFrequentBrandTop3Count(String UUID) {
         List<Tuple> listTop3ByUUID = userRepository.findCountListTop3ByUUID(UUID);
-        /*List<FrequentBrandTop3CountDto> frequentBrandTop3DtoList = new ArrayList<>();
-        for (Tuple tuple : listTop3ByUUID) {
-            frequentBrandTop3DtoList.add(FrequentBrandTop3CountDto.builder()
-                    .alliance(tuple.get(0, String.class))
-                    .totalCount(tuple.get(1, Long.class))
-                    .build());
-        }*/
         List<FrequentBrandTop3CountDto> frequentBrandTop3DtoList = listTop3ByUUID.stream()
                 .map(tuple -> FrequentBrandTop3CountDto.builder()
                         .alliance(tuple.get(0, String.class))
@@ -232,13 +225,6 @@ public class UserServiceImp implements UserService{
     @Override
     public List<FrequentBrandTop3SumDto>  getFrequentBrandTop3Sum(String UUID) {
         List<Tuple> listTop3ByUUID = userRepository.findSumListTop3ByUUID(UUID);
-        /*List<FrequentBrandTop3SumDto> frequentBrandTop3DtoList = new ArrayList<>();
-        for (Tuple tuple : listTop3ByUUID) {
-            frequentBrandTop3DtoList.add(FrequentBrandTop3SumDto.builder()
-                    .alliance(tuple.get(0, String.class))
-                            .totalSum(tuple.get(1, Integer.class))
-                    .build());
-        }*/
         List<FrequentBrandTop3SumDto> frequentBrandTop3DtoList = listTop3ByUUID.stream()
                 .map(tuple -> FrequentBrandTop3SumDto.builder()
                         .alliance(tuple.get(0, String.class))
