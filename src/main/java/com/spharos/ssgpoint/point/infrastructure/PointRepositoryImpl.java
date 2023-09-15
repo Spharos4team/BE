@@ -42,7 +42,7 @@ public class PointRepositoryImpl implements PointRepositoryCustom{
                 .from(point1)
                 .join(point1.user, user)
                 .on(user.uuid.eq(uuid))
-                .where(ltStoreId(pointId),
+                .where(ltPointId(pointId),
                         pointUseEq(pointUse), pointTypeEq(pointType),
                         point1.createdDate.between(startDate.atStartOfDay(), endDate.atStartOfDay()))
                 .orderBy(point1.id.desc())
@@ -105,7 +105,7 @@ public class PointRepositoryImpl implements PointRepositoryCustom{
         }
     }
     // no-offset
-    private BooleanExpression ltStoreId(Long pointId) {
+    private BooleanExpression ltPointId(Long pointId) {
         if (pointId == null) {
             return null;
         }

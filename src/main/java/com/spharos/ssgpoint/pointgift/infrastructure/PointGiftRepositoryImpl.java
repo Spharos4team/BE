@@ -43,7 +43,7 @@ public class PointGiftRepositoryImpl implements PointGiftRepositoryCustom{
                 .from(point1)
                 .join(point1.user, user)
                 .on(user.uuid.eq(uuid))
-                .where(ltStoreId(pointId),
+                .where(ltPointId(pointId),
                         point1.createdDate.between(startDate.atStartOfDay(), endDate.atStartOfDay()),
                         point1.type.eq(선물)
                 )
@@ -65,7 +65,7 @@ public class PointGiftRepositoryImpl implements PointGiftRepositoryCustom{
                 .join(point1.user, user)
                 .on(user.uuid.eq(uuid))
                 .where(
-                        ltStoreId(pointId),
+                        ltPointId(pointId),
                         point1.type.eq(선물)
                 )
                 .orderBy(point1.id.desc())
@@ -74,14 +74,6 @@ public class PointGiftRepositoryImpl implements PointGiftRepositoryCustom{
 
         return checkLastPage(pageable, results);
     }
-
-
-
-
-
-
-
-
 
 
     @Override
@@ -131,7 +123,7 @@ public class PointGiftRepositoryImpl implements PointGiftRepositoryCustom{
 
 
         // no-offset 방식 처리하는 메서드
-    private BooleanExpression ltStoreId(Long pointId) {
+    private BooleanExpression ltPointId(Long pointId) {
        if (pointId == null) {
             return null;
        }
