@@ -31,8 +31,7 @@ public interface PointRepository extends JpaRepository<Point, Long> , PointRepos
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value ="1000")})
     @Query("SELECT p.totalPoint FROM Point p"
-            + " JOIN p.user u on u.id = p.user.id"
-            + " WHERE u.uuid = :uuid"
+            + " JOIN p.user u on u.uuid= :uuid"
             + " ORDER BY p.id DESC LIMIT 1")
     Integer findTotalPoint(@Param("uuid") String uuid);
 
