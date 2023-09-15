@@ -136,17 +136,14 @@ public class PointServiceImpl implements PointService {
 
 
     // 포인터 내역 필터 적용
-    /*@Override
+    @Override
     public Slice<PointFilterDto> pointFilter(Long id, String UUID, Pageable page,LocalDate startDate, LocalDate endDate, String pointUse, String pointType) {
         User user = userRepository.findByUuid(UUID).orElseThrow(() ->
                 new IllegalArgumentException("UUID 정보 없음 = " + UUID));
         return pointRepository.findByFilter(id, UUID, startDate, endDate,pointUse, pointType, page);
 
-    }*/
-    @Override
-    public Page<PointFilterDto> pointFilter(String UUID, Pageable page, LocalDate startDate, LocalDate endDate, String pointUse, String pointType){
-       return pointRepository.findByFilter(UUID, startDate, endDate, pointUse, pointType, page);
     }
+
 
     // 포인터 내역 필터 사용 적립 합계
     @Override

@@ -33,35 +33,6 @@ public class PointRepositoryImpl implements PointRepositoryCustom{
     }
 
     @Override
-    public Page<PointFilterDto> findByFilter(String uuid, LocalDate startDate,LocalDate endDate, String pointUse, String pointType,  Pageable pageable) {
-
-        Long userId = queryFactory.select(user.id)
-                .from(user)
-                .where(user.uuid.eq(uuid))
-                .fetchOne();
-
-        List<PointFilterDto> result = queryFactory
-                .select(new QPointFilterDto(point1.id, point1.point, point1.title, point1.content, point1.type,
-                        point1.statusType, point1.createdDate, point1.receipt.id))
-                .from(point1)
-                .where(pointUseEq(pointUse), pointTypeEq(pointType), point1.user.id.eq(userId), point1.createdDate.between(startDate.atStartOfDay(), endDate.atStartOfDay()))
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .orderBy(point1.id.desc())
-                .fetch();
-        long total = queryFactory
-                .select(point1)
-                .from(point1)
-                .where(pointUseEq(pointUse), pointTypeEq(pointType),point1.user.id.eq(userId), point1.createdDate.between(startDate.atStartOfDay(), endDate.atStartOfDay()))
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetchCount();
-        return new PageImpl<>(result, pageable, total);
-    }
-
-
-/*
-    @Override
     public Slice<PointFilterDto> findByFilter(Long pointId, String uuid, LocalDate startDate,LocalDate endDate,
                                               String pointUse, String pointType,  Pageable pageable) {
 
@@ -79,7 +50,6 @@ public class PointRepositoryImpl implements PointRepositoryCustom{
                 .fetch();
         return checkLastPage(pageable, results);
     }
-*/
 
     @Override
     public PointFilterSumDto sumPointsByFilter(String uuid, String pointUse, String pointType, LocalDate startDate, LocalDate endDate) {
@@ -131,30 +101,24 @@ public class PointRepositoryImpl implements PointRepositoryCustom{
         } else if ("2".equals(pointType)) { // 이벤트
             return point1.type.eq(이벤트);
         } else { // "0"일때 경우 전체
-            //return point1.type.in(결제, 선물, 전환, 추후, 소멸,이벤트);
             return null;
         }
     }
-    // no-offset 방식 처리하는 메서드
+    // no-offset
     private BooleanExpression ltStoreId(Long pointId) {
         if (pointId == null) {
             return null;
         }
-
         return point1.id.lt(pointId);
     }
 
-    // 무한 스크롤 방식 처리하는 메서드
+    // 무한 스크롤
     private Slice<PointFilterDto> checkLastPage(Pageable pageable, List<PointFilterDto> results) {
-
         boolean hasNext = false;
-
-        // 조회한 결과 개수가 요청한 페이지 사이즈보다 크면 뒤에 더 있음, next = true
         if (results.size() > pageable.getPageSize()) {
             hasNext = true;
             results.remove(pageable.getPageSize());
         }
-
         return new SliceImpl<>(results, pageable, hasNext);
     }
 }
