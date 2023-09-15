@@ -36,7 +36,7 @@ public class AlliancePointRepositoryImpl implements AlliancePointRepositoryCusto
                 .from(point1)
                 .join(point1.user, user)
                 .on(user.uuid.eq(uuid))
-                .where(ltStoreId(pointId),
+                .where(ltPointId(pointId),
 
                         point1.createdDate.between(startDate.atStartOfDay(), endDate.atStartOfDay()),
                         point1.type.in(전환,포인트전환)
@@ -94,7 +94,7 @@ public class AlliancePointRepositoryImpl implements AlliancePointRepositoryCusto
 
 
     // no-offset 방식 처리하는 메서드
-    private BooleanExpression ltStoreId(Long pointId) {
+    private BooleanExpression ltPointId(Long pointId) {
         if (pointId == null) {
             return null;
         }
