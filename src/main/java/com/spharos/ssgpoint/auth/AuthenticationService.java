@@ -214,9 +214,10 @@ public class AuthenticationService {
                     .orElseThrow();
              // refresh 토큰 검증해서 만료 안되었으면
 
-        String redisInRefreshToken = (String) redisTemplate.opsForValue().get(UUID); //레디스에서 key uuid로 value refreshToken 가져온다 todo: 레디스에 로그아웃해서 저장된거 없을떄 예외처리 해야함
+        String redisInRefreshToken = (String) redisTemplate.opsForValue().get(UUID); //레디스에서 key uuid로 value refreshToken 가져온다
         if(!redisInRefreshToken.equals(refreshToken)){    //내가 가진 refreshtoken이랑 레디스 refreshtoken 다르면 예외
-            throw new CustomException("Refresh Token doesn't match.");
+            throw new CustomException("Refresh Token doesn't match."); // Redis에서 해당 유저 UUIO key 를 삭제하고 재로그인 하도록 클라이언트를 리턴한다
+            //redisTemplate.delete(uuid);  = 토큰삭제
         }
 
                 //내가 가진 refreshtoken이랑 레디스 refreshtoken같으면 레디스 안에 수정
