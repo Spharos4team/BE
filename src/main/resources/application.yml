@@ -15,8 +15,8 @@ JWT:
   header: Authorization
   prefix: Bearer
   token:
-    access-expiration-time: 60000000000  # 원래 14400000 12??
-    refresh-expiration-time: 60000   # 1분 7?  180000  604800000
+    access-expiration-time: 14400000
+    refresh-expiration-time: 604800000
 cloud:
   aws:
     s3:
