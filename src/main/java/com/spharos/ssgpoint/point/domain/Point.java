@@ -30,20 +30,24 @@ public class Point extends BaseEntity {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
     private String content;
+
+    @Column(nullable = false)
+    @Convert(converter = PointStatusTypeConverter.class)
+    private PointStatusType statusType;
 
     @Column(nullable = false)
     @Convert(converter = PointTypeConverter.class)
     private PointType type;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private PointCard pointCard;
-
-    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Receipt receipt;
 
+
+    public void changeGiftStatus(String content) {
+        this.content = content;
+    }
 }

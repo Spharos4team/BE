@@ -1,37 +1,32 @@
 package com.spharos.ssgpoint.auth;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spharos.ssgpoint.auth.vo.AuthenticationRequest;
 import com.spharos.ssgpoint.auth.vo.AuthenticationResponse;
-import com.spharos.ssgpoint.auth.vo.RefreshTokenVo;
 import com.spharos.ssgpoint.config.security.JwtTokenProvider;
 import com.spharos.ssgpoint.exception.CustomException;
 import com.spharos.ssgpoint.point.domain.Point;
+import com.spharos.ssgpoint.pointcard.domain.PointCard;
+import com.spharos.ssgpoint.pointcard.domain.PointCardType;
+import com.spharos.ssgpoint.pointcard.domain.PointCardTypeConverter;
+import com.spharos.ssgpoint.pointcard.dto.PointCardCreateDto;
+import com.spharos.ssgpoint.pointcard.infrastructure.PointCardRepository;
 import com.spharos.ssgpoint.term.domain.UserTermList;
 
-
-import com.spharos.ssgpoint.token.infrastructure.RefreshTokenRepository;
+import com.spharos.ssgpoint.user.domain.Role;
 import com.spharos.ssgpoint.user.domain.User;
-import com.spharos.ssgpoint.user.dto.UserSignUpDto;
+import com.spharos.ssgpoint.user.dto.user.UserSignUpDto;
 import com.spharos.ssgpoint.user.infrastructure.UserRepository;
 
-import io.jsonwebtoken.ExpiredJwtException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
@@ -45,8 +40,9 @@ public class AuthenticationService {
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManager authenticationManager;
-    private final RefreshTokenRepository tokenRepository;
+
     private final RedisTemplate redisTemplate;
+    private final PointCardRepository  pointCardRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -73,6 +69,7 @@ public class AuthenticationService {
                 .address(userSignUpDto.getAddress())
                 .term(termList)
                 .status(1)
+                .role(Role.USER)
                 .build();
 
         String jwtToken = jwtTokenProvider.generateToken(user);
@@ -80,10 +77,34 @@ public class AuthenticationService {
         user.hashPassword(user.getPassword());
         User saveUser = userRepository.save(user);
 
+
         //생성후 바코드 저장
-        String pointBardCode = createPointBardCode(user);
-        String validateBarcode = validateBarcode(pointBardCode);
-        saveUser.generateBarcode(validateBarcode);
+        String pointBardCode1 = createPointBardCode(user);
+        String validateBarcode1 = validateBarcode(pointBardCode1);
+        String pointBardCode2 = createPointBardCode(user);
+        String validateBarcode2 = validateBarcode(pointBardCode2);
+
+        //회원가입후 포인트카드  무조건 2개 생성
+        PointCardType pointCardType
+                = new PointCardTypeConverter().convertToEntityAttribute("ON");
+        PointCard build = PointCard.builder()
+                .agency("신세계")
+                .UUID(uuidString)
+                .number(validateBarcode1)
+                .type(pointCardType)
+                .build();
+        pointCardRepository.save(build);
+
+        PointCard build1 = PointCard.builder()
+                .agency("신세계")
+                .UUID(uuidString)
+                .number(validateBarcode2)
+                .type(pointCardType)
+                .build();
+
+        pointCardRepository.save(build);
+        pointCardRepository.save(build1);
+
 
         return AuthenticationResponse.builder()
                         .accessToken(jwtToken)
@@ -123,7 +144,7 @@ public class AuthenticationService {
      * 바코드만들고 만든거 중복 검사 , todo:추가 수정 필요함
      */
     private String validateBarcode(String checkBarcode) {
-        Optional<User> byBarCode = userRepository.findByBarCode(checkBarcode);
+        Optional<PointCard> byBarCode = pointCardRepository.findByNumber(checkBarcode);
         if (byBarCode.isPresent()){
             //중복인경우
             String substring = checkBarcode.substring(4, 7);
@@ -155,16 +176,18 @@ public class AuthenticationService {
         );
 
         User user = userRepository.findByLoginId(authenticationRequest.getLoginId()).orElseThrow(()-> new IllegalArgumentException("아이디가 존재하지 않습니다."));
+        if (user.getStatus() == 0) {
+            throw new IllegalArgumentException("탈퇴한 회원입니다.");
+        }
         log.info("user is : {}" , user.getUuid());
         String accessToken = jwtTokenProvider.generateToken(user);
         String refreshToken = jwtTokenProvider.generateRefreshToken(user);
         String uuid = jwtTokenProvider.getUUID(accessToken);
 
+        Optional<Point> totalByUuid = userRepository.findTotalByUuid(uuid);
 
-        Point pointByUUID = userRepository.findTotalByUuid(uuid);
-        int totalPoint = (pointByUUID != null) ? pointByUUID.getTotalPoint() : 0;
-
-        log.info("uuid is: {}" , uuid);
+        String barCode = pointCardRepository.findNumberByUUID(uuid); //바코드 가져오기(바코드는 유니크
+        int totalPoint = (totalByUuid.isPresent()) ? totalByUuid.get().getTotalPoint() : 0;
 
         log.info("accessToken is : {}" , accessToken);
         log.info("refreshToken is : {}" , refreshToken);
@@ -173,64 +196,13 @@ public class AuthenticationService {
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .user(AuthenticationResponse.User.builder()
-                        .barcode(user.getBarCode())
                         .name(user.getName())
                         .point(totalPoint)
                         .uuid(user.getUuid())
+                        .bardCode(barCode)
                         .build())
-                .uuid(uuid)
                 .build();
     }
-
-    /**
-     * refresh 토큰 재발급
-     */
-    /*public void refreshToken(
-            HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
-        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        final String refreshToken;
-        final String UUID;
-        if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
-            return ;
-        }
-        refreshToken = authHeader.substring(7);
-        UUID = jwtTokenProvider.getUUID(refreshToken);
-        if (UUID != null) {
-            User user = this.userRepository.findByUuid(UUID)
-                    .orElseThrow();
-            if (jwtTokenProvider.validateToken(refreshToken, user)) { // refresh 토큰 검증해서 만료 안되었으면
-
-                String redisInRefreshToken = (String) redisTemplate.opsForValue().get(UUID); //레디스에서 key uuid로 value refreshToken 가져온다 todo: 레디스에 로그아웃해서 저장된거 없을떄 예외처리 해야함
-                if(!redisInRefreshToken.equals(refreshToken)){    //내가 가진 refreshtoken이랑 레디스 refreshtoken 다르면 예외
-                    throw new CustomException("Refresh Token doesn't match.");
-                }
-
-                //내가 가진 refreshtoken이랑 레디스 refreshtoken같으면 레디스 안에 수정
-                String newAccessToken = jwtTokenProvider.generateToken(user);
-                String newRefreshToken = jwtTokenProvider.generateRefreshToken(user);
-
-                redisTemplate.opsForValue().set(
-                        UUID,
-                        newRefreshToken,
-                        refreshExpirationTime,
-                        TimeUnit.MILLISECONDS
-                    );
-
-                response.setHeader("authorization", "bearer "+ newAccessToken);
-                response.setHeader("refreshToken", "bearer "+ newRefreshToken);
-
-                AuthenticationResponse authResponse = AuthenticationResponse.builder()
-                        .accessToken(newAccessToken)
-                        .refreshToken(newRefreshToken)
-                        .build();
-                new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
-            }
-            else{
-                throw new ExpiredJwtException(null, null, "Refresh Token Expired");
-            }
-        }
-    }*/
 
 
     public AuthenticationResponse refreshToken(String refreshToken) {
@@ -242,9 +214,10 @@ public class AuthenticationService {
                     .orElseThrow();
              // refresh 토큰 검증해서 만료 안되었으면
 
-        String redisInRefreshToken = (String) redisTemplate.opsForValue().get(UUID); //레디스에서 key uuid로 value refreshToken 가져온다 todo: 레디스에 로그아웃해서 저장된거 없을떄 예외처리 해야함
+        String redisInRefreshToken = (String) redisTemplate.opsForValue().get(UUID); //레디스에서 key uuid로 value refreshToken 가져온다
         if(!redisInRefreshToken.equals(refreshToken)){    //내가 가진 refreshtoken이랑 레디스 refreshtoken 다르면 예외
-            throw new CustomException("Refresh Token doesn't match.");
+            throw new CustomException("Refresh Token doesn't match."); // Redis에서 해당 유저 UUIO key 를 삭제하고 재로그인 하도록 클라이언트를 리턴한다
+            //redisTemplate.delete(uuid);  = 토큰삭제
         }
 
                 //내가 가진 refreshtoken이랑 레디스 refreshtoken같으면 레디스 안에 수정
@@ -264,14 +237,7 @@ public class AuthenticationService {
                 .build();
 
 
-
     }
-
-
-
-
-
-
 
 
     /**
@@ -283,35 +249,7 @@ public class AuthenticationService {
         String uuid = jwtTokenProvider.getUUID(refreshToken);
         log.info("u is : {}" , uuid);
         redisTemplate.delete(uuid); //Token 삭제
-        /*if (redisTemplate.opsForValue().get("JWT_TOKEN:" + admin.getLoginId()) != null) {
-            redisTemplate.delete("JWT_TOKEN:" + admin.getLoginId()); //Token 삭제
-        }*/
-    }
-
-
-
-
-
-
-
-
-
-
-    /*private void saveUserToken(User user, String refreshToken) {
-
 
     }
-
-    private void revokeAllUserTokens(User user) {
-        var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getUuid());
-        if (validUserTokens.isEmpty())
-            return;
-        validUserTokens.forEach(token -> {
-            token.setExpired(true);
-            token.setRevoked(true);
-        });
-        tokenRepository.saveAll(validUserTokens);
-    }*/
-
 
 }

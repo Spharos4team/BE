@@ -2,8 +2,15 @@ package com.spharos.ssgpoint.alliancepoint.application;
 
 import com.spharos.ssgpoint.alliancepoint.dto.AlliancePointCreateDto;
 import com.spharos.ssgpoint.alliancepoint.dto.AlliancePointGetDto;
+import com.spharos.ssgpoint.alliancepoint.dto.AlliancePointListDto;
 import com.spharos.ssgpoint.alliancepoint.dto.AlliancePointUpdateDto;
+import com.spharos.ssgpoint.point.dto.PointFilterSumDto;
+import com.spharos.ssgpoint.pointgift.vo.PointListInVo;
+import org.springframework.cglib.core.Local;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface AlliancePointService {
@@ -15,6 +22,11 @@ public interface AlliancePointService {
     List<AlliancePointGetDto> getAlliancePointByUUID(String UUID);
 
     // 제휴사 포인트 전환
-    void updateAlliancePoint(String UUID, String type, String Access, AlliancePointUpdateDto alliancePointUpdateDto);
+    void updateAlliancePoint(String UUID, String type, String status, AlliancePointUpdateDto alliancePointUpdateDto);
 
+    //제휴사 포인트 내역
+    Slice<AlliancePointListDto> getPointAllianceList(Long pointId, String uuid, Pageable page, LocalDate startDate, LocalDate endDate);
+
+    //전환 포인트 적립 사용 합계
+    PointFilterSumDto sumPointsAllianceByFilter(String UUID, LocalDate startDate, LocalDate endDate);
 }

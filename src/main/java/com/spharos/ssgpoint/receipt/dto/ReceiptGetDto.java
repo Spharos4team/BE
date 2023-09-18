@@ -10,7 +10,11 @@ import lombok.*;
 @NoArgsConstructor
 public class ReceiptGetDto {
 
+    private String alliance;
+    private String brand;
     private String storeName;
+    private String cardNumber;
     private Integer point;
+    private String pointCardNumber;
 
 }

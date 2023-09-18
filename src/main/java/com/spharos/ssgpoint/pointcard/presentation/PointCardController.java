@@ -24,7 +24,7 @@ public class PointCardController {
                 .number(pointCardCreateVo.getNumber())
                 .agency(pointCardCreateVo.getAgency())
                 .UUID(UUID)
-                .pointCardType(pointCardCreateVo.getPointCardType())
+                .type(pointCardCreateVo.getType())
                 .build();
 
         pointCardService.createPointCard(UUID, pointCardCreateDto);
@@ -37,7 +37,7 @@ public class PointCardController {
 
         return pointCardGetDtoList.stream().map(pointCardGetDto ->
                 PointCardGetVo.builder()
-                        .name(pointCardGetDto.getName())
+                        .createdDate(pointCardGetDto.getCreatedDate().toLocalDate())
                         .number(pointCardGetDto.getNumber())
                         .agency(pointCardGetDto.getAgency())
                         .build()

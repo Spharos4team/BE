@@ -1,6 +1,6 @@
 package com.spharos.ssgpoint.event.application;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.UUID;
 
-
+@RequiredArgsConstructor
 @Service
 public class S3Service {
 
@@ -20,11 +20,12 @@ public class S3Service {
     @Value("${cloud.aws.s3.bucket}")
     private String bucketName;
 
-    @Autowired
-    public S3Service(S3Client s3Client) {
-        this.s3Client = s3Client;
-    }
-
+    /**
+     * 파일을 업로드합니다.
+     * @param file
+     * @return
+     * @throws IOException
+     */
     public String uploadFile(MultipartFile file) throws IOException {
         String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
 
@@ -38,4 +39,8 @@ public class S3Service {
 
         return "https://" + bucketName + ".s3.amazonaws.com/" + fileName;
     }
+
+
+
+
 }

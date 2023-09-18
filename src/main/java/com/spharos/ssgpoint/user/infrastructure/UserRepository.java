@@ -15,13 +15,13 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long>, UserRepositoryCustom{
     Optional<User> findByLoginId(String loginId);
     Optional<User> findByUuid(String UUID);
-    Optional<User> findByBarCode(String barCode);
+
     Optional<User> findByPhoneAndName(String phone, String name);
 
     @Query("SELECT u.term FROM User u  WHERE u.uuid = :uuid")
     Optional<UserTermList> findTermJsonByUuid(@Param("uuid") String uuid);
 
-    @Query("SELECT p from Point p join p.user u where u.uuid = :uuid order by p.updatedDate desc limit 1")
-    Point findTotalByUuid(@Param("uuid") String uuid);
+    @Query("SELECT p from Point p join p.user u where u.uuid = :uuid order by p.id desc limit 1")
+    Optional<Point> findTotalByUuid(@Param("uuid") String uuid);
 
 }

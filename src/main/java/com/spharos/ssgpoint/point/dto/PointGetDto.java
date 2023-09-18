@@ -1,5 +1,6 @@
 package com.spharos.ssgpoint.point.dto;
 
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -13,11 +14,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class PointGetDto {
 
-    private Integer totalPoint;
     private Integer point;
     private String title;
     private String content;
     private String type;
+    private String statusType;
     private LocalDateTime createdDate;
+
 
 }

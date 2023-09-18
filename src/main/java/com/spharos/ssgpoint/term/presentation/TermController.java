@@ -17,7 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1")
 @Slf4j
-@CrossOrigin(origins = "*",allowedHeaders = "*")
+//@CrossOrigin(allowedHeaders = "*")
 @RequiredArgsConstructor
 public class TermController {
     private final TermService termService;
@@ -48,8 +48,8 @@ public class TermController {
      *     "백화점":0
      * }
      */
-    @GetMapping("/termList/{UUID}")
-    public ResponseEntity<List<ServiceTermListDto>> getTermList(@PathVariable String UUID) {
+    @GetMapping("/termList")
+    public ResponseEntity<List<ServiceTermListDto>> getTermList(@RequestParam String UUID) {
         List<ServiceTermListDto> termList = termService.getTermList(UUID);
         return ResponseEntity.ok(termList);
     }

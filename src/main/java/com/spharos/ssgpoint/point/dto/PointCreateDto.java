@@ -2,6 +2,7 @@ package com.spharos.ssgpoint.point.dto;
 
 
 import com.spharos.ssgpoint.point.vo.PointCreateVo;
+import com.spharos.ssgpoint.pointcard.domain.PointCard;
 import com.spharos.ssgpoint.receipt.domain.Receipt;
 import lombok.*;
 
@@ -15,9 +16,9 @@ public class PointCreateDto {
     private Integer point;
     private String title;
     private String content;
+    private String statusType;
     private String type;
     private String user;
-    private Long pointCardId;
 
     private ReceiptDto receipt;
 
@@ -30,9 +31,10 @@ public class PointCreateDto {
         private String storeName;
         private String number;
         private Integer amount;
-        private Integer receiptPoint; // 주의: receiptPoint로 이름 변경
+        private Integer receiptPoint;
         private String cardName;
         private String cardNumber;
+        private String pointCardNumber;
 
     }
 

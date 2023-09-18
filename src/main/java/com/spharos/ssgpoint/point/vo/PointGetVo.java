@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 public class PointGetVo {
 
     private Integer point;
-    private Integer totalPoint;
     private String title;
     private String content;
     private String type;

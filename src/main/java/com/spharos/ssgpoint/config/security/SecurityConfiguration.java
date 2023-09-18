@@ -17,6 +17,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -43,8 +46,18 @@ public class SecurityConfiguration {
         return httpSecurity
                 .csrf(CsrfConfigurer::disable)
                 .authorizeHttpRequests(
-                        authorizeHttpRequests -> authorizeHttpRequests
-                                .requestMatchers("/api/v1/auth/**","/swagger-ui/**", "/swagger-resources/**", "/api-docs/**","/v3/**")
+                        authorizeHttpRequests -> authorizeHttpRequests.requestMatchers(org.springframework.web.cors.CorsUtils::isPreFlightRequest)
+                                .permitAll()
+                                .requestMatchers("/api/v1/auth/signup", //회원가입,
+                                        "/api/v1/auth/login",// 로그인
+                                        "/api/v1/user/check-loginId", // 회원가입 로그인 id 중복 확인
+                                        "/swagger-ui/**", "/swagger-resources/**", "/api-docs/**",
+                                        "/api/v1/event/**","api/v1/events/**",  //이벤트
+                                        "/api/v1/coupon/avaliable",    //쿠폰
+                                        "/api/v1/faq/**", //faq
+                                        "/api/v1/notice/**", //공지사항
+                                        "/api/v1/question/**", //1:1문의
+                                        "/v3/**")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()
@@ -63,5 +76,17 @@ public class SecurityConfiguration {
 
 
     }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource () {
+        return request -> {
+            var cors = new org.springframework.web.cors.CorsConfiguration();
+            cors.setAllowedOriginPatterns(List.of("*"));
+            cors.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+            cors.setAllowedHeaders(List.of("*"));
+            return cors;
+        };
+    }
+
 
 }

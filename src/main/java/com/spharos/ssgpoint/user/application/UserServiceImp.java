@@ -7,7 +7,9 @@ import com.spharos.ssgpoint.point.domain.Point;
 import com.spharos.ssgpoint.term.domain.UserTermList;
 import com.spharos.ssgpoint.user.domain.PointHistory;
 import com.spharos.ssgpoint.user.domain.User;
-import com.spharos.ssgpoint.user.dto.*;
+import com.spharos.ssgpoint.user.dto.password.PasswordUpdateDto;
+import com.spharos.ssgpoint.user.dto.shoppinghistory.*;
+import com.spharos.ssgpoint.user.dto.user.*;
 import com.spharos.ssgpoint.user.infrastructure.PasswordHistoryRepository;
 import com.spharos.ssgpoint.user.infrastructure.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -145,7 +148,7 @@ public class UserServiceImp implements UserService{
      */
     @Transactional
     @Override
-    public Map<String, Boolean> updateTerm(String UUID,TermUpdateDto termUpdateDto) {
+    public Map<String, Boolean> updateTerm(String UUID, TermUpdateDto termUpdateDto) {
         log.info("termUpdateDto={}",termUpdateDto.getTermJson());
         UserTermList termJsonByUuid = userRepository.findTermJsonByUuid(UUID).orElseThrow(() -> new IllegalArgumentException("UUID정보 없음"));
         termJsonByUuid.updateTermJson(termUpdateDto.getTermJson());
@@ -167,8 +170,15 @@ public class UserServiceImp implements UserService{
      */
     @Override
     public PointGetDto getPoint(String UUID) {
-        Point topByUuid = userRepository.findTotalByUuid(UUID);
-        Integer totalPoint = topByUuid.getTotalPoint();
+        Integer totalPoint;
+        Optional<Point> totalByUuid = userRepository.findTotalByUuid(UUID);
+
+        if (!totalByUuid.isPresent()) {
+            totalPoint = 0;
+        } else {
+            totalPoint = totalByUuid.get().getTotalPoint();
+        }
+
         return PointGetDto.builder()
                 .totalPoint(totalPoint)
                 .build();
@@ -201,27 +211,27 @@ public class UserServiceImp implements UserService{
     @Override
     public List<FrequentBrandTop3CountDto>  getFrequentBrandTop3Count(String UUID) {
         List<Tuple> listTop3ByUUID = userRepository.findCountListTop3ByUUID(UUID);
-        List<FrequentBrandTop3CountDto> frequentBrandTop3DtoList = new ArrayList<>();
-        for (Tuple tuple : listTop3ByUUID) {
-            frequentBrandTop3DtoList.add(FrequentBrandTop3CountDto.builder()
-                    .alliance(tuple.get(0, String.class))
-                    .totalCount(tuple.get(1, Long.class))
-                    .build());
-        }
-    return frequentBrandTop3DtoList;
+        List<FrequentBrandTop3CountDto> frequentBrandTop3DtoList = listTop3ByUUID.stream()
+                .map(tuple -> FrequentBrandTop3CountDto.builder()
+                        .alliance(tuple.get(0, String.class))
+                        .totalCount(tuple.get(1, Long.class))
+                        .build())
+                .collect(Collectors.toList());
+
+        return frequentBrandTop3DtoList;
 
     }
 
     @Override
     public List<FrequentBrandTop3SumDto>  getFrequentBrandTop3Sum(String UUID) {
         List<Tuple> listTop3ByUUID = userRepository.findSumListTop3ByUUID(UUID);
-        List<FrequentBrandTop3SumDto> frequentBrandTop3DtoList = new ArrayList<>();
-        for (Tuple tuple : listTop3ByUUID) {
-            frequentBrandTop3DtoList.add(FrequentBrandTop3SumDto.builder()
-                    .alliance(tuple.get(0, String.class))
-                            .totalSum(tuple.get(1, Integer.class))
-                    .build());
-        }
+        List<FrequentBrandTop3SumDto> frequentBrandTop3DtoList = listTop3ByUUID.stream()
+                .map(tuple -> FrequentBrandTop3SumDto.builder()
+                        .alliance(tuple.get(0, String.class))
+                        .totalSum(tuple.get(1, Integer.class))
+                        .build())
+                .collect(Collectors.toList());
+
         return frequentBrandTop3DtoList;
 
     }

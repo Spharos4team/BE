@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -19,8 +19,7 @@ public class Coupon {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true, length = 20)
-    private Integer number;
+    private String number;
 
     @Column(length = 45, nullable = false)
     private String title;
@@ -30,19 +29,27 @@ public class Coupon {
 
     private String image;
 
+    private String storeImage1;
+
+    private String storeImage2;
+
     private String content;
 
-    private Date startDate;
-
-    private Date endDate;
+    private LocalDate startDate;  // java.time.LocalDate로 변경
+    private LocalDate endDate;    // java.time.LocalDate로 변경
 
     @Column(length = 45)
     private String store;
 
     private String barcode;
 
-    private boolean isActive;  // New field to check if the coupon is active or not
+    private boolean isActive;
 
-    private boolean isUsed;   // New field to check if the coupon is used or not
+    private boolean isUsed;
 
+    public boolean isValid() {
+        LocalDate now = LocalDate.now();  // java.time.LocalDate로 변경
+        return this.isActive && !this.isUsed && !this.startDate.isAfter(now) && !this.endDate.isBefore(now);
+    }
 }
+

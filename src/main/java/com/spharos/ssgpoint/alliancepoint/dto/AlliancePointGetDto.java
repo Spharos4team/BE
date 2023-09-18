@@ -12,5 +12,6 @@ public class AlliancePointGetDto {
 
     private Integer point;
     private String type;
-
+    private String fromPoint;
+    private String toPoint;
 }

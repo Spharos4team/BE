@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -68,19 +69,13 @@ public class JwtTokenProvider {
      */
     public Claims extractAllClaims(String token)  {
 
-            /*return Jwts.parserBuilder()
-                    .setSigningKey(getSigningKey())
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();*/
-        try{return Jwts.parserBuilder()
+
+        return Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())
                 .build()
                 .parseClaimsJws(token)
-                .getBody();}
-        catch (ExpiredJwtException e){
-            throw new ExpiredJwtException(null,null,"토큰이 만료되었습니다.3333");
-        }
+                .getBody();
+
 
     }
     /** 4
@@ -168,7 +163,6 @@ public class JwtTokenProvider {
         Claims claims = extractAllClaims(token);
         String uuid = claims.get("sub", String.class);
         return userRepository.findByUuid(uuid).get().getLoginId();
-       // return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
 

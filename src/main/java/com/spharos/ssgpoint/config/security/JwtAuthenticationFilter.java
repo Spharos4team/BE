@@ -53,7 +53,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             if (request.getServletPath().contains("/api/v1/auth/signup")
-                    || request.getServletPath().contains("/api/v1/auth/login")) {
+                    || request.getServletPath().contains("/api/v1/auth/login")
+            ) {
                 filterChain.doFilter(request, response);
                 return;
             }
@@ -64,8 +65,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {
                 filterChain.doFilter(request, response);
                 return;
-                /*request.setAttribute("exception", JwtExceptionCode.NOT_FOUND_TOKEN.getCode());
-                throw new BadCredentialsException("throw new not found token exception");*/
+
             }
             jwt = authHeader.substring(7);
             //UUID = jwtTokenProvider.getUUID(jwt);
@@ -88,13 +88,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
 
             filterChain.doFilter(request, response);
-        } /*catch (ExpiredJwtException e) {
-                throw new BadCredentialsException("throw new expired token exception");
-            } catch (JwtException | IllegalArgumentException e) {
-                setErrorResponse(response, ErrorCode.INVALID_TOKEN);
-            }catch (NullPointerException e) {
-                filterChain.doFilter(request, response);
-            }*/ catch (NullPointerException | IllegalStateException e) {
+        } catch (NullPointerException | IllegalStateException e) {
             request.setAttribute("exception", JwtExceptionCode.NOT_FOUND_TOKEN.getCode());
             throw new BadCredentialsException("throw new not found token exception");
         } catch (SecurityException | MalformedJwtException e) {

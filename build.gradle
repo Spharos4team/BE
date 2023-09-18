@@ -33,7 +33,9 @@ dependencies {
 	implementation 'software.amazon.awssdk:s3:2.20.138'
 
 
-		implementation 'org.jetbrains:annotations:24.0.0'
+
+
+	implementation 'org.jetbrains:annotations:24.0.0'
 
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.mysql:mysql-connector-j'
@@ -74,3 +76,4 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+

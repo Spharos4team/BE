@@ -41,6 +41,8 @@ public class PointGift extends BaseEntity {
     @Column(nullable = false, length = 100)
     private String name;
 
+    private Long pointId;
+
     public void update(String status) {
         this.status = PointGiftStatusType.valueOf(status);
     }

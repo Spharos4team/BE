@@ -2,28 +2,40 @@ package com.spharos.ssgpoint.coupon.vo;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Getter
 @ToString
 @EqualsAndHashCode
-@RequiredArgsConstructor
+@NoArgsConstructor
 public class CouponAdd {
 
-    private final String title;
-    private final String description;
-    private final Date startDate;
-    private final Date endDate;
-    private final String store;
-    private final String image;
-    private final String content;
+    private String title;
+    private String description;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private String store;
+    private String image;
+    private String storeImage1;
+    private String storeImage2;
+    private String content;
 
-    public boolean isValidDateRange() {
-        return !startDate.after(endDate);
+    public CouponAdd(String title, String description, LocalDate startDate, LocalDate endDate, String store, String image, String storeImage1, String storeImage2, String content) {
+        this.title = title;
+        this.description = description;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.store = store;
+        this.image = image;
+        this.storeImage1 = storeImage1;
+        this.storeImage2 = storeImage2;
+        this.content = content;
     }
 
-    // 기타 필요한 메서드들...
+    public boolean isValidDateRange() {
+        return !this.startDate.isAfter(this.endDate);
+    }
 }
