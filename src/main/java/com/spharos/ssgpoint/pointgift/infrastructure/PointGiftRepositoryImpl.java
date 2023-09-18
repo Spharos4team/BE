@@ -35,7 +35,6 @@ public class PointGiftRepositoryImpl implements PointGiftRepositoryCustom{
     public Slice<PointGiftListDto> findPointGiftList(Long pointId, String uuid, LocalDate startDate, LocalDate endDate,
                                                      Pageable pageable) {
 
-
         List<PointGiftListDto> results = queryFactory
                 .select(Projections.fields(PointGiftListDto.class,
                         point1.id , point1.point, point1.title, point1.content, point1.type,
@@ -49,7 +48,6 @@ public class PointGiftRepositoryImpl implements PointGiftRepositoryCustom{
                 )
                 .orderBy(point1.id.desc())
                 .limit(pageable.getPageSize() + 1).fetch();
-
 
         return checkLastPage(pageable, results);
     }
@@ -119,10 +117,7 @@ public class PointGiftRepositoryImpl implements PointGiftRepositoryCustom{
     }
 
 
-
-
-
-        // no-offset 방식 처리하는 메서드
+    // no-offset 방식 처리하는 메서드
     private BooleanExpression ltPointId(Long pointId) {
        if (pointId == null) {
             return null;
@@ -130,7 +125,7 @@ public class PointGiftRepositoryImpl implements PointGiftRepositoryCustom{
        return point1.id.lt(pointId);
     }
 
-        // 무한 스크롤 방식 처리하는 메서드
+    // 무한 스크롤 방식 처리하는 메서드
     private Slice<PointGiftListDto> checkLastPage(Pageable pageable, List<PointGiftListDto> results) {
 
         boolean hasNext = false;
